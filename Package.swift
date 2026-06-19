@@ -29,10 +29,19 @@ let package = Package(
             path: "Sources/ElementaryPines",
             swiftSettings: featureFlags
         ),
+        .target(
+            name: "TestUtilities",
+            dependencies: [
+                .product(name: "Elementary", package: "elementary")
+            ],
+            path: "Tests/TestUtilities",
+            swiftSettings: featureFlags
+        ),
         .testTarget(
             name: "ElementaryPinesTests",
             dependencies: [
-                .target(name: "ElementaryPines")
+                .target(name: "ElementaryPines"),
+                .target(name: "TestUtilities"),
             ],
             swiftSettings: featureFlags
         ),
