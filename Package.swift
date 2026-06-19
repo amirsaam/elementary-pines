@@ -14,11 +14,18 @@ let package = Package(
         .tvOS(.v17),
         .watchOS(.v10),
     ],
-    products: [],
-    dependencies: [],
+    products: [
+        .library(name: "ElementaryPines", targets: ["ElementaryPines"])
+    ],
+    dependencies: [
+        .package(url: "https://github.com/elementary-swift/elementary.git", from: "0.7.0")
+    ],
     targets: [
         .target(
             name: "ElementaryPines",
+            dependencies: [
+                .product(name: "Elementary", package: "elementary")
+            ],
             path: "Sources/ElementaryPines",
             swiftSettings: featureFlags
         ),
