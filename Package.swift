@@ -44,7 +44,8 @@ let package = Package(
                 .target(name: "TestUtilities"),
             ],
             exclude: [
-                "Button/SnapshotFixtures"
+                "Button/SnapshotFixtures",
+                "Badge/SnapshotFixtures",
             ],
             swiftSettings: featureFlags
         ),
