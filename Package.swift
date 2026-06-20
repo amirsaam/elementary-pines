@@ -43,6 +43,9 @@ let package = Package(
                 .target(name: "ElementaryPines"),
                 .target(name: "TestUtilities"),
             ],
+            exclude: [
+                "Button/SnapshotFixtures"
+            ],
             swiftSettings: featureFlags
         ),
     ]

@@ -1,4 +1,5 @@
 import Elementary
+import Foundation
 import XCTest
 
 /// Asserts that the rendered HTML of `html` matches the `expected` string
@@ -8,10 +9,10 @@ import XCTest
 /// the diff is obvious.
 ///
 /// Snapshot test pattern: read the expected string from a fixture file
-/// under `Tests/<TestTarget>/SnapshotFixtures/`, pass it as `expected`:
+/// using `fixtureURL(_:file:)` and pass it as `expected`:
 ///
 /// ```swift
-/// let expected = try String(contentsOf: snapshotURL, encoding: .utf8)
+/// let expected = try String(contentsOf: fixtureURL("button.html"), encoding: .utf8)
 /// HTMLAssertEqual(button { "Save" }.pinesButtonStyle(.solid), expected)
 /// ```
 public func HTMLAssertEqual(
@@ -36,4 +37,23 @@ public func HTMLAssertEqual(
             line: line
         )
     }
+}
+
+/// Resolves a snapshot fixture path relative to the calling test file.
+///
+/// Convention: fixtures live in `SnapshotFixtures/` alongside the test file's
+/// containing directory. So a test at
+/// `Tests/ElementaryPinesTests/Button/ButtonStyleModifierTests.swift` can
+/// reference `SnapshotFixtures/foo.html` to resolve to
+/// `Tests/ElementaryPinesTests/Button/SnapshotFixtures/foo.html`.
+///
+/// - Parameters:
+///   - name: The fixture file name (e.g. `"button-solid-neutral.html"`).
+///   - file: The calling test file (auto-populated).
+/// - Returns: The file URL of the snapshot fixture.
+public func fixtureURL(_ name: String, file: StaticString = #filePath) -> URL {
+    URL(fileURLWithPath: String(describing: file))
+        .deletingLastPathComponent()
+        .appendingPathComponent("SnapshotFixtures")
+        .appendingPathComponent(name)
 }
