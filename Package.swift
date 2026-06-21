@@ -46,6 +46,7 @@ let package = Package(
             exclude: [
                 "Button/SnapshotFixtures",
                 "Badge/SnapshotFixtures",
+                "Card/SnapshotFixtures",
             ],
             swiftSettings: featureFlags
         ),
