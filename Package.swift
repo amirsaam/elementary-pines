@@ -47,6 +47,7 @@ let package = Package(
                 "Button/SnapshotFixtures",
                 "Badge/SnapshotFixtures",
                 "Card/SnapshotFixtures",
+                "Icons/SnapshotFixtures",
             ],
             swiftSettings: featureFlags
         ),
