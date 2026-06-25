@@ -1,7 +1,9 @@
 /// Severity variants for `pinesAlert`.
 ///
-/// Each variant applies a colored border, text, and icon color to the alert
-/// container. Pass to `pinesAlert(_:icon:content:)`:
+/// Each variant maps to a specific `PinesColor` (info→blue, success→green,
+/// warning→yellow, danger→red) and applies a matching colored border, text,
+/// and icon color to the alert container. Pass to
+/// `pinesAlert(_:icon:content:)`:
 ///
 /// ```swift
 /// pinesAlert(.info) {
@@ -17,17 +19,24 @@ public enum PinesAlertVariant: Sendable {
 }
 
 extension PinesAlertVariant {
+    /// The `PinesColor` that this variant renders in. Used as the source for
+    /// the class-name template below so we never hardcode a color name.
+    public var color: PinesColor {
+        switch self {
+        case .info: return .blue
+        case .success: return .green
+        case .warning: return .yellow
+        case .danger: return .red
+        }
+    }
+
     /// Extra Tailwind utility classes appended to the alert's outer div for
     /// this variant. Must be appended *after* the base classes so the
     /// `[&>svg]:text-{color}-500` overrides `[&>svg]:text-foreground` per
     /// Tailwind's later-class-wins specificity rule.
     public var classesSuffix: String {
-        switch self {
-        case .info: return " border-blue-500 text-blue-700 [&>svg]:text-blue-500"
-        case .success: return " border-green-500 text-green-700 [&>svg]:text-green-500"
-        case .warning: return " border-yellow-500 text-yellow-700 [&>svg]:text-yellow-500"
-        case .danger: return " border-red-500 text-red-700 [&>svg]:text-red-500"
-        }
+        let c = color.rawValue
+        return " border-\(c)-500 text-\(c)-700 [&>svg]:text-\(c)-500"
     }
 
     /// The default icon to auto-insert for this variant when
