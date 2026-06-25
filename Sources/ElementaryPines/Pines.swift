@@ -24,7 +24,5 @@ import Elementary
 /// }
 /// ```
 public func pinesSetup() -> some HTML {
-    style {
-        HTMLRaw("[x-cloak] { display: none !important; }")
-    }
+    style { "[x-cloak] { display: none !important; }" }
 }
