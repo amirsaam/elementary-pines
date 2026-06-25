@@ -30,9 +30,14 @@ public func pinesIcon(
     }()
     let className = [sizeClass, colorClass].filter { !$0.isEmpty }.joined(separator: " ")
 
-    return HTMLRaw(
-        #"""
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="\#(className)"><path stroke-linecap="round" stroke-linejoin="round" d="\#(path)" /></svg>
-        """#
-    )
+    return svg(
+        HTMLAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg"),
+        HTMLAttribute(name: "fill", value: "none"),
+        HTMLAttribute(name: "viewBox", value: "0 0 24 24"),
+        HTMLAttribute(name: "stroke-width", value: "1.5"),
+        HTMLAttribute(name: "stroke", value: "currentColor"),
+        .class(className)
+    ) {
+        HTMLRaw(#"<path stroke-linecap="round" stroke-linejoin="round" d="\#(path)" />"#)
+    }
 }
