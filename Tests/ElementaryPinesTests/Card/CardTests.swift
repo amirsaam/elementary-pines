@@ -36,4 +36,46 @@ final class CardTests: XCTestCase {
             expected
         )
     }
+
+    func testImageCard() throws {
+        let expected = try String(
+            contentsOf: fixtureURL("card-image.html"),
+            encoding: .utf8
+        )
+        HTMLAssertEqual(
+            pinesCard(.image, image: "photo.jpg") {
+                h3 { "Title" }
+                p { "Body" }
+            },
+            expected
+        )
+    }
+
+    func testHorizontalCard() throws {
+        let expected = try String(
+            contentsOf: fixtureURL("card-horizontal.html"),
+            encoding: .utf8
+        )
+        HTMLAssertEqual(
+            pinesCard(.horizontal, image: "photo.jpg") {
+                h3 { "Title" }
+                p { "Body" }
+            },
+            expected
+        )
+    }
+
+    func testStatCard() throws {
+        let expected = try String(
+            contentsOf: fixtureURL("card-stat.html"),
+            encoding: .utf8
+        )
+        HTMLAssertEqual(
+            pinesCard(.stat) {
+                p(.class("text-3xl font-bold")) { "1,234" }
+                p(.class("text-sm text-neutral-500")) { "Total users" }
+            },
+            expected
+        )
+    }
 }
