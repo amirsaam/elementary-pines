@@ -3,10 +3,10 @@ import ElementaryPines
 import TestUtilities
 import XCTest
 
-/// Verifies that users can pass Alpine directives (`x-text`, `x-model`,
-/// `x-on:`, `x-data`, etc.) as attribute values to elements inside our
-/// components. These are snapshot tests against the rendered HTML — they
-/// confirm the directives survive Elementary's renderer.
+/// Verifies that Alpine directives (`x-text`, `x-model`, `x-on:`, `x-data`,
+/// `x-show`, `$store`, `$el`, etc.) survive Elementary's renderer when
+/// applied to elements inside Pines components. These are snapshot tests
+/// against the rendered HTML.
 ///
 /// Three patterns are supported:
 /// 1. **Modifier-style elements** (`.pinesButtonStyle`, `.pinesBadgeStyle`) —
@@ -21,11 +21,11 @@ import XCTest
 /// `HTMLAttribute` would shorten the call site. Not currently provided.
 final class AlpineDirectiveTests: XCTestCase {
     func testXTextInAlert() throws {
-        // x-text on a child of pinesAlert — Alpine will replace the text
+        // x-text on a child of pinesAlert — Alpine replaces the text
         // content with the value of the `title` JavaScript expression at
         // runtime. The x-text attribute must survive the render. The
-        // variant overload auto-inserts the icon, so we don't add one
-        // explicitly (would duplicate).
+        // variant overload auto-inserts the icon, so the content omits
+        // an explicit pinesIcon (which would duplicate).
         let expected = try String(
             contentsOf: fixtureURL("alpine-x-text.html"),
             encoding: .utf8

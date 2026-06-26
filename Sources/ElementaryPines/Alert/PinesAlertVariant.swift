@@ -20,7 +20,7 @@ public enum PinesAlertVariant: Sendable {
 
 extension PinesAlertVariant {
     /// The `PinesColor` that this variant renders in. Used as the source for
-    /// the class-name template below so we never hardcode a color name.
+    /// the class-name template below.
     public var color: PinesColor {
         switch self {
         case .info: return .blue
