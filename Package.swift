@@ -51,6 +51,7 @@ let package = Package(
                 "Alert/SnapshotFixtures",
                 "Progress/SnapshotFixtures",
                 "Alpine/SnapshotFixtures",
+                "Quote/SnapshotFixtures",
             ],
             swiftSettings: featureFlags
         ),
