@@ -19,6 +19,24 @@ final class AlertTests: XCTestCase {
         )
     }
 
+    func testBasicAlertNoUserIcon() throws {
+        // The basic overload (no variant) does NOT auto-insert an icon —
+        // the user provides the entire content. Verifies the no-SVG
+        // path renders correctly with the [&>svg] selectors still present
+        // (they just match nothing).
+        let expected = try String(
+            contentsOf: fixtureURL("alert-basic-no-user-icon.html"),
+            encoding: .utf8
+        )
+        HTMLAssertEqual(
+            pinesAlert {
+                h5 { "Title" }
+                p { "Body" }
+            },
+            expected
+        )
+    }
+
     func testInfoAlert() throws {
         let expected = try String(
             contentsOf: fixtureURL("alert-info.html"),
