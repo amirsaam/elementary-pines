@@ -28,6 +28,39 @@ final class IconTests: XCTestCase {
         )
     }
 
+    func testIconSizeXs() throws {
+        let expected = try String(
+            contentsOf: fixtureURL("pinesIcon-sizeXs.html"),
+            encoding: .utf8
+        )
+        HTMLAssertEqual(
+            pinesIcon(.check, size: .xs),
+            expected
+        )
+    }
+
+    func testIconSizeSm() throws {
+        let expected = try String(
+            contentsOf: fixtureURL("pinesIcon-sizeSm.html"),
+            encoding: .utf8
+        )
+        HTMLAssertEqual(
+            pinesIcon(.check, size: .sm),
+            expected
+        )
+    }
+
+    func testIconSizeXl() throws {
+        let expected = try String(
+            contentsOf: fixtureURL("pinesIcon-sizeXl.html"),
+            encoding: .utf8
+        )
+        HTMLAssertEqual(
+            pinesIcon(.check, size: .xl),
+            expected
+        )
+    }
+
     func testIconColorGreen() throws {
         let expected = try String(
             contentsOf: fixtureURL("pinesIcon-colorGreen.html"),
