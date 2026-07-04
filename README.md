@@ -87,6 +87,10 @@ span { "New" }.pinesBadgeStyle(.light, color: .amber)
 // 35 icons × 5 sizes, Heroicons paths
 pinesIcon(.check, size: .sm)        // .xs, .sm, .md, .lg, .xl
 pinesIcon(.warning, color: .red)
+
+// extra attributes — pass Alpine directives or extra classes; classes merge
+pinesIcon(.check, attributes: [.class("ml-2")])
+pinesIcon(.check, attributes: [.x.show("isVisible")])
 ```
 
 ```swift
@@ -223,7 +227,7 @@ The package ships 11 free functions. Each wraps the matching Pines UI element wi
 | `.pinesButtonStyle(_:color:)`  | 3 styles × 11 colors = 33 variants                                                              | Modifier on `button`.                                    |
 | `.pinesBadgeStyle(_:color:)`   | 5 styles × 11 colors = 55 variants                                                              | Modifier on `span`.                                      |
 | `pinesCard(_:image:content:)`  | 4 variants: `.basic`, `.image(image:)`, `.horizontal(image:)`, `.stat`                       | `image:` required for `.image` and `.horizontal`.          |
-| `pinesIcon(_:size:color:)`     | 35 kinds × 5 sizes = 175 variants; 11 colors                                                    | Heroicons 2.x paths.                                     |
+| `pinesIcon(_:size:color:attributes:)`     | 35 kinds × 5 sizes = 175 variants; 11 colors; `attributes:` for extra classes / directives | Heroicons 2.x paths. Classes passed via `attributes:` merge with the default size/color class. |
 | `pinesAlert(_:icon:content:)`  | 2 overloads: `pinesAlert { ... }` (basic) and `pinesAlert(.info, icon: .auto, ...) { ... }`    | `.auto` inserts the matching icon; `.none` omits; `.custom(path:)` renders a user-provided SVG file via `<img>`. |
 | `pinesProgress(_:of:color:size:)` | 11 colors × 3 sizes (`.sm`, `.md`, `.lg`)                                                   | Percentage clamped to 0–100.                              |
 | `pinesQuote(_:avatar:content:)` | 2 variants: `.basic`, `.withAvatar(avatar:)`                                                  | `avatar:` required for `.withAvatar`.                     |
