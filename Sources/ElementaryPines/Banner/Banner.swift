@@ -19,15 +19,15 @@ import Elementary
 ///
 /// **Example:**
 /// ```swift
-/// pinesBanner(icon: .info) {
+/// pinesBanner(icon: .kind(.info)) {
 ///     p { "New version available." }
 /// }
 ///
-/// pinesBanner(dismissible: true) {
-///     p { "Cookie notice." }
+/// pinesBanner(icon: .custom("/icons/spinner.svg")) {
+///     p { "Loading..." }
 /// }
 ///
-/// pinesBanner(icon: .warning, dismissible: true) {
+/// pinesBanner(icon: .kind(.warning), dismissible: true) {
 ///     p { "Your session is about to expire." }
 /// }
 /// ```
@@ -39,12 +39,12 @@ import Elementary
 /// behavior to Alpine on the call site (e.g. `x-on:click="banner = false"`).
 ///
 /// - Parameters:
-///   - icon: An optional icon kind rendered to the left of the content.
+///   - icon: An optional icon source (built-in or user-provided SVG).
 ///   - dismissible: When `true`, a close button (`pinesIcon(.x)`) is
 ///     rendered to the right of the content.
 ///   - content: The body of the banner, typically `<p>` text content.
 public func pinesBanner<Content: HTML>(
-    icon: PinesIconKind? = nil,
+    icon: PinesBannerIcon? = nil,
     dismissible: Bool = false,
     @HTMLBuilder content: () -> Content
 ) -> some HTML {
@@ -52,7 +52,12 @@ public func pinesBanner<Content: HTML>(
         div(.class("flex items-center justify-between h-full px-3 mx-auto max-w-7xl")) {
             div(.class("flex items-center gap-2 min-w-0")) {
                 if let icon {
-                    pinesIcon(icon, size: .sm)
+                    switch icon {
+                    case .kind(let kind):
+                        pinesIcon(kind, size: .sm)
+                    case .custom(let path):
+                        img(.src(path), .class("w-4 h-4"))
+                    }
                 }
                 div(.class("text-xs truncate")) {
                     content()

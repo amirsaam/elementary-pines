@@ -23,7 +23,7 @@ final class BannerTests: XCTestCase {
             encoding: .utf8
         )
         HTMLAssertEqual(
-            pinesBanner(icon: .info) {
+            pinesBanner(icon: .kind(.info)) {
                 p { "New version available." }
             },
             expected
@@ -49,8 +49,21 @@ final class BannerTests: XCTestCase {
             encoding: .utf8
         )
         HTMLAssertEqual(
-            pinesBanner(icon: .warning, dismissible: true) {
+            pinesBanner(icon: .kind(.warning), dismissible: true) {
                 p { "Your session is about to expire." }
+            },
+            expected
+        )
+    }
+
+    func testBannerWithCustomIcon() throws {
+        let expected = try String(
+            contentsOf: fixtureURL("banner-custom-icon.html"),
+            encoding: .utf8
+        )
+        HTMLAssertEqual(
+            pinesBanner(icon: .custom(path: "/icons/my.svg")) {
+                p { "New version available." }
             },
             expected
         )
