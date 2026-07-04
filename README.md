@@ -160,6 +160,17 @@ pinesInput(placeholder: "Disabled", disabled: true)
 ```
 
 ```swift
+// textarea — styled multi-line input (placeholder, color, rows, form attrs)
+pinesTextarea(placeholder: "Type your message here.")
+
+pinesTextarea(placeholder: "Bio", color: .blue)
+
+pinesTextarea(placeholder: "Comment", name: "comment", rows: 4)
+
+pinesTextarea(placeholder: "Disabled", disabled: true)
+```
+
+```swift
 // breadcrumb — manual items
 pinesBreadcrumb([
     .link("Home", href: "/"),
@@ -220,6 +231,7 @@ The package ships 11 free functions. Each wraps the matching Pines UI element wi
 | `pinesBreadcrumbItems(for:in:root:)` | —                                                                                         | Derives items from a flat `(path, label)` site map and a current path. |
 | `pinesBanner(icon:dismissible:content:)` | `PinesBannerIcon` with `.kind(PinesIconKind)` or `.custom(path: String)`  | Any of 35 built-in icons or a user-provided SVG file; close button uses `pinesIcon(.x)`. |
 | `pinesInput(type:placeholder:color:name:value:id:disabled:)` | `String` type (e.g. `"text"`, `"email"`, `"password"`); color overrides the 300/400 border + ring pair | Tailwind-only — users add `x-data`/`x-model` on the call site for dynamic behavior. |
+| `pinesTextarea(placeholder:color:name:id:rows:disabled:)` | `String?` placeholder; color overrides the 300/400 border + placeholder + ring pair | Tailwind-only — no built-in auto-resize; users add `x-data`/`x-model` on the call site. |
 
 ## Alpine integration
 
@@ -291,7 +303,7 @@ The full API is documented in source — every public type and function has doc 
 - [`Sources/ElementaryPines/Card/Card.swift`](./Sources/ElementaryPines/Card/Card.swift) — `pinesCard`
 - [`Sources/ElementaryPines/Alert/AlertVariant.swift`](./Sources/ElementaryPines/Alert/AlertVariant.swift) — `pinesAlert`
 
-The full test suite (52 snapshot tests + 6 Alpine directive smoke tests = 58 tests) lives in [`Tests/ElementaryPinesTests/`](./Tests/ElementaryPinesTests/).
+The full test suite (56 snapshot tests + 6 Alpine directive smoke tests = 62 tests) lives in [`Tests/ElementaryPinesTests/`](./Tests/ElementaryPinesTests/).
 
 ## Why this exists
 
@@ -301,7 +313,7 @@ The [Pines UI](https://devdojo.com/pines) library is a collection of pre-built A
 
 11 components are implemented and tested:
 
-- `pinesSetup`, `PinesColor`, `PinesButtonStyle`, `PinesBadgeStyle`, `pinesCard`, `pinesIcon`, `pinesAlert`, `pinesProgress`, `pinesQuote`, `pinesBreadcrumb`, `pinesBanner`, `pinesInput`
+- `pinesSetup`, `PinesColor`, `PinesButtonStyle`, `PinesBadgeStyle`, `pinesCard`, `pinesIcon`, `pinesAlert`, `pinesProgress`, `pinesQuote`, `pinesBreadcrumb`, `pinesBanner`, `pinesInput`, `pinesTextarea`
 
 Alpine directive compatibility is verified by a dedicated 6-test smoke suite covering `x-text`, `x-model`, `x-on:click`, `x-data`, and the modifier variants of `pinesBreadcrumb`.
 
