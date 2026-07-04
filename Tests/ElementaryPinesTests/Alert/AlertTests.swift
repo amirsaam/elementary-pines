@@ -99,7 +99,7 @@ final class AlertTests: XCTestCase {
             encoding: .utf8
         )
         HTMLAssertEqual(
-            pinesAlert(.info, icon: .custom(.warning)) {
+            pinesAlert(.info, icon: .custom(path: "/icons/my.svg")) {
                 h5 { "Title" }
                 p { "Body" }
             },

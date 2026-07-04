@@ -8,7 +8,8 @@ import Elementary
 /// - `.auto` (default): inserts the variant's default icon
 ///   (info→`.info`, success→`.check`, warning→`.warning`, danger→`.x`).
 /// - `.none`: omits the icon entirely.
-/// - `.custom(kind)`: inserts the given icon instead.
+/// - `.custom(path:)`: renders a user-provided SVG file via
+///   `<img src="path" class="w-4 h-4">`.
 ///
 /// The icon (if any) is rendered as the first child of the alert, so the
 /// base `[&>svg]` selectors position it in the top-left corner.
@@ -31,9 +32,9 @@ import Elementary
 ///     div(.class("text-sm opacity-70")) { "This is informational." }
 /// }
 ///
-/// pinesAlert(.danger, icon: .custom(.warning)) {
-///     h5 { "Warning" }
-///     p { "Something went wrong." }
+/// pinesAlert(.danger, icon: .custom("/icons/spinner.svg")) {
+///     h5 { "Loading" }
+///     p { "Please wait." }
 /// }
 ///
 /// pinesAlert(.success, icon: .none) {
@@ -56,8 +57,8 @@ public func pinesAlert<Content: HTML>(
         case .auto:
             pinesIcon(variant.defaultIcon, size: .sm)
             content()
-        case .custom(let kind):
-            pinesIcon(kind, size: .sm)
+        case .custom(let path):
+            img(.src(path), .class("w-4 h-4"))
             content()
         }
     }
