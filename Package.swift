@@ -55,6 +55,7 @@ let package = Package(
                 "Breadcrumb/SnapshotFixtures",
                 "Banner/SnapshotFixtures",
                 "Input/SnapshotFixtures",
+                "Textarea/SnapshotFixtures",
             ],
             swiftSettings: featureFlags
         ),
