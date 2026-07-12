@@ -175,6 +175,20 @@ pinesTextarea(placeholder: "Disabled", disabled: true)
 ```
 
 ```swift
+// select — custom Alpine-driven dropdown (items, placeholder, width)
+// Replaces the native <select>. Requires Alpine.js (call setupAlpine() once
+// in <head>). Items are JSON-encoded into the x-data state and the dropdown
+// uses $refs/$watch/$id for open/close, keyboard nav, and click-away.
+pinesSelect(items: [
+    .init(title: "Milk", value: "milk"),
+    .init(title: "Eggs", value: "eggs"),
+    .init(title: "Cheese", value: "cheese", disabled: true),
+])
+
+pinesSelect(items: fruits, placeholder: "Choose a fruit", width: "w-72")
+```
+
+```swift
 // breadcrumb — manual items
 pinesBreadcrumb([
     .link("Home", href: "/"),
@@ -236,6 +250,7 @@ The package ships 11 free functions. Each wraps the matching Pines UI element wi
 | `pinesBanner(icon:dismissible:content:)` | `PinesBannerIcon` with `.kind(PinesIconKind)` or `.custom(path: String)`  | Any of 35 built-in icons or a user-provided SVG file; close button uses `pinesIcon(.x)`. |
 | `pinesInput(type:placeholder:color:name:value:id:disabled:)` | `String` type (e.g. `"text"`, `"email"`, `"password"`); color overrides the 300/400 border + ring pair | Tailwind-only — users add `x-data`/`x-model` on the call site for dynamic behavior. |
 | `pinesTextarea(placeholder:color:name:id:rows:disabled:)` | `String?` placeholder; color overrides the 300/400 border + placeholder + ring pair | Tailwind-only — no built-in auto-resize; users add `x-data`/`x-model` on the call site. |
+| `pinesSelect(items:placeholder:width:)` | `[PinesSelectItem]` (Codable, with `title`/`value`/`disabled`); any Tailwind width class | Alpine-driven — emits full `x-data` state, `x-init` (`$watch`), 5 `@keydown.*` handlers, `x-transition`, `x-cloak`, `x-for` template. Requires `setupAlpine()` in `<head>`. |
 
 ## Alpine integration
 
@@ -307,7 +322,7 @@ The full API is documented in source — every public type and function has doc 
 - [`Sources/ElementaryPines/Card/Card.swift`](./Sources/ElementaryPines/Card/Card.swift) — `pinesCard`
 - [`Sources/ElementaryPines/Alert/AlertVariant.swift`](./Sources/ElementaryPines/Alert/AlertVariant.swift) — `pinesAlert`
 
-The full test suite (56 snapshot tests + 6 Alpine directive smoke tests = 62 tests) lives in [`Tests/ElementaryPinesTests/`](./Tests/ElementaryPinesTests/).
+The full test suite (60 snapshot tests + 6 Alpine directive smoke tests = 66 tests) lives in [`Tests/ElementaryPinesTests/`](./Tests/ElementaryPinesTests/).
 
 ## Why this exists
 
@@ -317,7 +332,7 @@ The [Pines UI](https://devdojo.com/pines) library is a collection of pre-built A
 
 11 components are implemented and tested:
 
-- `pinesSetup`, `PinesColor`, `PinesButtonStyle`, `PinesBadgeStyle`, `pinesCard`, `pinesIcon`, `pinesAlert`, `pinesProgress`, `pinesQuote`, `pinesBreadcrumb`, `pinesBanner`, `pinesInput`, `pinesTextarea`
+- `pinesSetup`, `PinesColor`, `PinesButtonStyle`, `PinesBadgeStyle`, `pinesCard`, `pinesIcon`, `pinesAlert`, `pinesProgress`, `pinesQuote`, `pinesBreadcrumb`, `pinesBanner`, `pinesInput`, `pinesTextarea`, `pinesSelect`
 
 Alpine directive compatibility is verified by a dedicated 6-test smoke suite covering `x-text`, `x-model`, `x-on:click`, `x-data`, and the modifier variants of `pinesBreadcrumb`.
 
