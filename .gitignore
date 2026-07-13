@@ -66,3 +66,6 @@ fastlane/test_output
 
 # OpenCode
 .opencode/
+graphify-out/
+.agents/
+skills-lock.json
