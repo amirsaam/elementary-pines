@@ -44,9 +44,9 @@ public func pinesSelect(
             encoding: .utf8
         ) ?? "[]"
 
-    let xData = PinesSelectAlpine.xData(itemsLiteral: itemsLiteral)
+    let xData = PinesSelectState.xData(itemsLiteral: itemsLiteral)
 
-    let xInitScript = PinesSelectAlpine.xInit
+    let xInitScript = PinesSelectState.xInit
 
     return div(
         .class("relative \(width)"),
