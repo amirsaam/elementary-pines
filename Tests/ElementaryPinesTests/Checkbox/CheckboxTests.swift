@@ -5,7 +5,12 @@ import XCTest
 
 final class CheckboxTests: XCTestCase {
 
-    private let customLabelClasses = "peer-checked:[&_svg]:scale-100 [&_svg]:scale-0 peer-checked:[&_.custom-checkbox]:border-blue-500 peer-checked:[&_.custom-checkbox]:bg-blue-500 text-sm font-medium text-neutral-600 flex items-center space-x-2"
+    private let customLabelClasses =
+        "peer-checked:[&_svg]:scale-100 [&_svg]:scale-0 "
+        + "peer-checked:[&_.custom-checkbox]:border-blue-500 "
+        + "peer-checked:[&_.custom-checkbox]:bg-blue-500 "
+        + "text-sm font-medium text-neutral-600 "
+        + "flex items-center space-x-2"
 
     func testDefault() throws {
         let expected = try String(
