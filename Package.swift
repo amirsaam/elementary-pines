@@ -19,14 +19,14 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/elementary-swift/elementary.git", from: "0.7.0"),
-        .package(url: "https://github.com/amirsaam/elementary-alpinejs.git", from: "0.3.100"),
+        .package(url: "https://github.com/amirsaam/elementary-alpine.git", from: "0.3.100"),
     ],
     targets: [
         .target(
             name: "ElementaryPines",
             dependencies: [
                 .product(name: "Elementary", package: "elementary"),
-                .product(name: "ElementaryAlpine", package: "elementary-alpinejs"),
+                .product(name: "ElementaryAlpine", package: "elementary-alpine"),
             ],
             path: "Sources/ElementaryPines",
             swiftSettings: featureFlags
