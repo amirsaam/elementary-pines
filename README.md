@@ -276,9 +276,7 @@ The package ships 12 free functions. Each wraps the matching Pines UI element wi
 | `pinesInput(type:placeholder:color:name:value:id:disabled:)` | `String` type (e.g. `"text"`, `"email"`, `"password"`); color overrides the 300/400 border + ring pair | Tailwind-only — users add `x-data`/`x-model` on the call site for dynamic behavior. |
 | `pinesTextarea(placeholder:color:name:id:rows:disabled:)` | `String?` placeholder; color overrides the 300/400 border + placeholder + ring pair | Tailwind-only — no built-in auto-resize; users add `x-data`/`x-model` on the call site. |
 | `pinesSelect(items:placeholder:width:)` | `[PinesSelectItem]` (Codable, with `title`/`value`/`disabled`); any Tailwind width class | Alpine-driven — emits full `x-data` state, `x-init` (`$watch`), 5 `@keydown.*` handlers, `x-transition`, `x-cloak`, `x-for` template. Requires `setupAlpine()` in `<head>`. |
-| `pinesCheckbox(labelText:checked:color:disabled:required:name:id:attributes:)` — `.default` overload | `String` label text; `color` overrides the neutral-900 fill + focus-ring with a 600/300 shade pair | Tailwind-only — visible input in a flex container with sibling label. |
-| `pinesCheckbox(checked:color:disabled:required:name:id:attributes:content:)` — `.card` overload | `color` sets the `peer-checked:border-{color}-600` accent | Hidden peer input + card-styled label wrapping user content. |
-| `pinesCheckbox(checked:color:disabled:required:name:id:labelClasses:attributes:content:)` — `.custom` overload | `labelClasses` supplies `peer-checked:[&_...]` and other Tailwind utilities on the label | Hidden peer input + user-defined label styling and content. |
+| `pinesCheckbox` | 3 overloads: `.default` (visible input + label), `.card` (peer-checked card), `.custom` (user-supplied `labelClasses` for `peer-checked:[&_...]` targeting) | Use `.default` with `labelText:`; `.card`/`.custom` with `content:` trailing closure; all accept `attributes:` for Alpine directives on the `<input>`. |
 
 ## Alpine integration
 
