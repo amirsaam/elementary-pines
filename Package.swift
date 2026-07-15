@@ -60,6 +60,7 @@ let package = Package(
                 "Textarea/SnapshotFixtures",
                 "Select/SnapshotFixtures",
                 "Checkbox/SnapshotFixtures",
+                "RadioGroup/SnapshotFixtures",
             ],
             swiftSettings: featureFlags
         ),
