@@ -6,6 +6,14 @@ import Foundation
 /// Wraps the `<input>` and a sibling `<label>` in
 /// `<div class="flex items-center mb-4">`.
 ///
+/// **Generated HTML:**
+/// ```html
+/// <div class="flex items-center mb-4">
+///     <input type="checkbox" class="w-4 h-4 bg-gray-100 border-gray-300 rounded ..." name="..." id="...">
+///     <label for="..." class="ml-2 text-sm font-medium text-gray-900">Label</label>
+/// </div>
+/// ```
+///
 /// **Examples:**
 /// ```swift
 /// pinesCheckbox(labelText: "Remember me", name: "remember", id: "remember")

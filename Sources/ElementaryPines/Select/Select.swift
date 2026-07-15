@@ -11,10 +11,6 @@ import Foundation
 /// drive keyboard interaction. Pass items as `[PinesSelectItem]`, which
 /// are JSON-encoded into the `selectableItems` array.
 ///
-/// Call `setupAlpine()` once in your document `<head>` to load
-/// Alpine.js core. The `pinesSetup()` helper emits the `[x-cloak]`
-/// rule that hides the dropdown before Alpine hydrates it.
-///
 /// **Example:**
 /// ```swift
 /// pinesSelect(items: [

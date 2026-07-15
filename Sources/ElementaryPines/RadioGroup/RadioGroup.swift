@@ -10,7 +10,20 @@ import Foundation
 /// `radioGroupSelectedValue` to the option's `value`, and the underlying
 /// `<input type="radio">` carries `x-bind:value="option.value"`.
 ///
-/// Call `setupAlpine()` once in your document `<head>` to load Alpine.js core.
+/// **Generated HTML:**
+/// ```html
+/// <div class="space-y-3" x-data="{ radioGroupSelectedValue: null, radioGroupOptions: [...] }">
+///     <template x-for="(option, index) in radioGroupOptions" :key="index">
+///         <label @click="radioGroupSelectedValue=option.value" class="flex items-start p-5 space-x-3 ...">
+///             <input type="radio" name="..." :value="option.value" class="text-gray-900 ...">
+///             <span class="relative flex flex-col text-left space-y-1.5 leading-none">
+///                 <span x-text="option.title" class="font-semibold"></span>
+///                 <span x-text="option.description" class="text-sm opacity-50"></span>
+///             </span>
+///         </label>
+///     </template>
+/// </div>
+/// ```
 ///
 /// **Example:**
 /// ```swift
