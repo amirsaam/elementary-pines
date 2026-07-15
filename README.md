@@ -214,6 +214,18 @@ pinesCheckbox(name: "x", id: "x", labelClasses: "peer-checked:[&_svg]:scale-100 
 ```
 
 ```swift
+// radio group — Alpine-driven, options JSON-encoded into x-data
+pinesRadioGroup(options: [
+    .init(title: "Small", value: "sm"),
+    .init(title: "Medium", value: "md", description: "Recommended"),
+    .init(title: "Large", value: "lg"),
+], name: "size")
+
+// disabled radio group
+pinesRadioGroup(options: options, name: "answer", disabled: true)
+```
+
+```swift
 // breadcrumb — manual items
 pinesBreadcrumb([
     .link("Home", href: "/"),
@@ -257,7 +269,7 @@ pinesQuote(.withAvatar, avatar: "user.jpg") {
 
 ## Components
 
-The package ships 12 free functions. Each wraps the matching Pines UI element with type-safe parameters.
+The package ships 13 free functions. Each wraps the matching Pines UI element with type-safe parameters.
 
 | Function                        | Variants                                                                                       | Notes                                                    |
 | ------------------------------- | ---------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
@@ -277,6 +289,7 @@ The package ships 12 free functions. Each wraps the matching Pines UI element wi
 | `pinesTextarea(placeholder:color:name:id:rows:disabled:)` | `String?` placeholder; color overrides the 300/400 border + placeholder + ring pair | Tailwind-only — no built-in auto-resize; users add `x-data`/`x-model` on the call site. |
 | `pinesSelect(items:placeholder:width:)` | `[PinesSelectItem]` (Codable, with `title`/`value`/`disabled`); any Tailwind width class | Alpine-driven — emits full `x-data` state, `x-init` (`$watch`), 5 `@keydown.*` handlers, `x-transition`, `x-cloak`, `x-for` template. Requires `setupAlpine()` in `<head>`. |
 | `pinesCheckbox` | 3 overloads: `.default` (visible input + label), `.card` (peer-checked card), `.custom` (user-supplied `labelClasses` for `peer-checked:[&_...]` targeting) | Use `.default` with `labelText:`; `.card`/`.custom` with `content:` trailing closure; all accept `attributes:` for Alpine directives on the `<input>`. |
+| `pinesRadioGroup(options:name:disabled:)` | `[PinesRadioGroupOption]` with `title`/`value`/optional `description`; `name` groups radio inputs; `disabled` disables all | Alpine-driven — emits full `x-data` state with `x-for` template loop; options JSON-encoded. Requires `setupAlpine()` in `<head>`. |
 
 ## Alpine integration
 
