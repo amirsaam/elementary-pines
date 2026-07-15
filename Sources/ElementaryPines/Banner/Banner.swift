@@ -32,12 +32,6 @@ import Elementary
 /// }
 /// ```
 ///
-/// The bar is not positioned by default — wrap it (or its parent) with
-/// `class="fixed top-0 left-0 w-full"` (or `bottom-0`) to stick it to a
-/// viewport edge. The `dismissible` button is rendered as
-/// `<button type="button">` with `aria-label="Dismiss"`. Wire the close
-/// behavior to Alpine on the call site (e.g. `x-on:click="banner = false"`).
-///
 /// - Parameters:
 ///   - icon: An optional icon source (built-in or user-provided SVG).
 ///   - dismissible: When `true`, a close button (`pinesIcon(.x)`) is
