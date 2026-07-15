@@ -226,6 +226,13 @@ pinesRadioGroup(options: options, name: "answer", disabled: true)
 ```
 
 ```swift
+// switch — Alpine-driven toggle with hidden checkbox
+pinesSwitch(labelText: "Enable Feature", name: "feature", id: "feature")
+pinesSwitch(labelText: "Wi-Fi", name: "wifi", id: "wifi", color: .green, checked: true)
+pinesSwitch(labelText: "Small", name: "sm", id: "sm", size: .small)
+```
+
+```swift
 // breadcrumb — manual items
 pinesBreadcrumb([
     .link("Home", href: "/"),
@@ -269,7 +276,7 @@ pinesQuote(.withAvatar, avatar: "user.jpg") {
 
 ## Components
 
-The package ships 13 free functions. Each wraps the matching Pines UI element with type-safe parameters.
+The package ships 14 free functions. Each wraps the matching Pines UI element with type-safe parameters.
 
 | Function                        | Variants                                                                                       | Notes                                                    |
 | ------------------------------- | ---------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
@@ -290,6 +297,7 @@ The package ships 13 free functions. Each wraps the matching Pines UI element wi
 | `pinesSelect(items:placeholder:width:)` | `[PinesSelectItem]` (Codable, with `title`/`value`/`disabled`); any Tailwind width class | Alpine-driven — emits full `x-data` state, `x-init` (`$watch`), 5 `@keydown.*` handlers, `x-transition`, `x-cloak`, `x-for` template. Requires `setupAlpine()` in `<head>`. |
 | `pinesCheckbox` | 3 overloads: `.default` (visible input + label), `.card` (peer-checked card), `.custom` (user-supplied `labelClasses` for `peer-checked:[&_...]` targeting) | Use `.default` with `labelText:`; `.card`/`.custom` with `content:` trailing closure; all accept `attributes:` for Alpine directives on the `<input>`. |
 | `pinesRadioGroup(options:name:disabled:)` | `[PinesRadioGroupOption]` with `title`/`value`/optional `description`; `name` groups radio inputs; `disabled` disables all | Alpine-driven — emits full `x-data` state with `x-for` template loop; options JSON-encoded. Requires `setupAlpine()` in `<head>`. |
+| `pinesSwitch(labelText:name:id:color:size:checked:disabled:)` | `PinesSwitchSize`: `.default` (h-6 w-10), `.small` (h-4 w-6); 11 colors; `checked`/`disabled` | Alpine-driven — hidden checkbox, button toggle, label click. Requires `setupAlpine()` in `<head>`. |
 
 ## Alpine integration
 
