@@ -89,4 +89,20 @@ extension PinesColor {
         case .yellow: ("yellow-500", "yellow-600", "yellow-500")
         }
     }
+
+    internal var hexValue: String {
+        switch self {
+        case .amber: return "f59e0b"
+        case .blue: return "4e97ff"
+        case .gray: return "6b7280"
+        case .green: return "22c55e"
+        case .indigo: return "6366f1"
+        case .neutral: return "737373"
+        case .orange: return "f97316"
+        case .pink: return "ec4899"
+        case .purple: return "a855f7"
+        case .red: return "ef4444"
+        case .yellow: return "eab308"
+        }
+    }
 }
