@@ -69,14 +69,14 @@ This package requires Swift 6 with `StrictConcurrency=complete` and targets macO
 ## Quick tour
 
 ```swift
-// call `pinesSetup()` once in your document head — emits the [x-cloak] rule
+// call `setupPines()` once in your document head — emits the [x-cloak] rule
 // that hides elements before Alpine.js hydrates them
 import ElementaryPines
 
 var head: some HTML {
     meta(.charset(.utf8))
     script(.src("https://cdn.tailwindcss.com")) {}
-    pinesSetup()
+    setupPines()
     setupAlpine(plugins: [.collapse, .focus])
 }
 
@@ -289,7 +289,7 @@ The package ships 16 free functions. Each wraps the matching Pines UI element wi
 
 | Function                        | Variants                                                                                       | Notes                                                    |
 | ------------------------------- | ---------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
-| `pinesSetup()`                 | —                                                                                              | Emits the `<style>[x-cloak]…` rule. Call once in `<head>`. |
+| `setupPines()`                 | —                                                                                              | Emits the `<style>[x-cloak]…` rule. Call once in `<head>`. |
 | `PinesColor`                   | 11 cases: `amber, blue, gray, green, indigo, neutral, orange, pink, purple, red, yellow`     | Shared enum used by every color-accepting component.       |
 | `.pinesButtonStyle(_:color:)`  | 3 styles × 11 colors = 33 variants                                                              | Modifier on `button`.                                    |
 | `.pinesBadgeStyle(_:color:)`   | 5 styles × 11 colors = 55 variants                                                              | Modifier on `span`.                                      |
@@ -338,12 +338,12 @@ div(.x.data("{ progress: 0 }")) {
 
 ## Setup
 
-The `pinesSetup()` function emits a single `<style>` block. Call it once in the document `<head>` — every Pines component that supports animation emits `x-cloak` and breaks visibly without this rule in place.
+The `setupPines()` function emits a single `<style>` block. Call it once in the document `<head>` — every Pines component that supports animation emits `x-cloak` and breaks visibly without this rule in place.
 
 ```swift
 var head: some HTML {
     meta(.charset(.utf8))
-    pinesSetup()
+    setupPines()
     script(.src("https://cdn.tailwindcss.com")) {}
     setupAlpine(plugins: [.collapse, .focus])
 }
@@ -374,7 +374,7 @@ The `PinesColor` enum's 11 cases map to Tailwind's default color palette. Each c
 
 The full API is documented in source — every public type and function has doc comments with a code example and a "Generated HTML" snippet showing the rendered output. For example, see:
 
-- [`Sources/ElementaryPines/Pines/Pines.swift`](./Sources/ElementaryPines/Pines/Pines.swift) — `pinesSetup()`
+- [`Sources/ElementaryPines/Pines/Pines.swift`](./Sources/ElementaryPines/Pines/Pines.swift) — `setupPines()`
 - [`Sources/ElementaryPines/Button/ButtonStyle.swift`](./Sources/ElementaryPines/Button/ButtonStyle.swift) — `.pinesButtonStyle`
 - [`Sources/ElementaryPines/Card/Card.swift`](./Sources/ElementaryPines/Card/Card.swift) — `pinesCard`
 - [`Sources/ElementaryPines/Alert/AlertVariant.swift`](./Sources/ElementaryPines/Alert/AlertVariant.swift) — `pinesAlert`
@@ -389,7 +389,7 @@ The [Pines UI](https://devdojo.com/pines) library is a collection of pre-built A
 
 15 components are implemented and tested:
 
-- `pinesSetup`, `PinesColor`, `PinesButtonStyle`, `PinesBadgeStyle`, `pinesCard`, `pinesIcon`, `pinesAlert`, `pinesProgress`, `pinesQuote`, `pinesRangeSlider`, `pinesBreadcrumb`, `pinesBanner`, `pinesInput`, `pinesTextarea`, `pinesSelect`
+- `setupPines`, `PinesColor`, `PinesButtonStyle`, `PinesBadgeStyle`, `pinesCard`, `pinesIcon`, `pinesAlert`, `pinesProgress`, `pinesQuote`, `pinesRangeSlider`, `pinesBreadcrumb`, `pinesBanner`, `pinesInput`, `pinesTextarea`, `pinesSelect`
 
 Alpine directive compatibility is verified by a dedicated 6-test smoke suite covering `x-text`, `x-model`, `x-on:click`, `x-data`, and the modifier variants of `pinesBreadcrumb`.
 

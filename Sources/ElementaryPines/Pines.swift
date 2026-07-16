@@ -18,11 +18,11 @@ import Elementary
 /// ```swift
 /// var head: some HTML {
 ///     meta(.charset(.utf8))
-///     pinesSetup()
+///     setupPines()
 ///     script(.src("https://cdn.tailwindcss.com")) {}
 ///     setupAlpine(plugins: [.collapse, .focus, .anchor])
 /// }
 /// ```
-public func pinesSetup() -> some HTML {
+public func setupPines() -> some HTML {
     style { "[x-cloak] { display: none !important; }" }
 }
