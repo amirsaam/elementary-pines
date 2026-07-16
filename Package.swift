@@ -62,6 +62,7 @@ let package = Package(
                 "Checkbox/SnapshotFixtures",
                 "RadioGroup/SnapshotFixtures",
                 "Switch/SnapshotFixtures",
+                "RangeSlider/SnapshotFixtures",
             ],
             swiftSettings: featureFlags
         ),
