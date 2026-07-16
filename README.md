@@ -226,6 +226,15 @@ pinesRadioGroup(options: options, name: "answer", disabled: true)
 ```
 
 ```swift
+// range slider — styled <input type="range"> with Tailwind pseudo-element classes
+pinesRangeSlider(name: "volume", id: "volume")
+
+pinesRangeSlider(name: "price", id: "price", color: .green, min: 0, max: 200, value: 50, step: "5")
+
+pinesRangeSlider(name: "range", id: "range", disabled: true)
+```
+
+```swift
 // switch — Alpine-driven toggle with hidden checkbox
 pinesSwitch(labelText: "Enable Feature", name: "feature", id: "feature")
 pinesSwitch(labelText: "Wi-Fi", name: "wifi", id: "wifi", color: .green, checked: true)
@@ -276,7 +285,7 @@ pinesQuote(.withAvatar, avatar: "user.jpg") {
 
 ## Components
 
-The package ships 14 free functions. Each wraps the matching Pines UI element with type-safe parameters.
+The package ships 16 free functions. Each wraps the matching Pines UI element with type-safe parameters.
 
 | Function                        | Variants                                                                                       | Notes                                                    |
 | ------------------------------- | ---------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
@@ -297,6 +306,7 @@ The package ships 14 free functions. Each wraps the matching Pines UI element wi
 | `pinesSelect(items:placeholder:width:)` | `[PinesSelectItem]` (Codable, with `title`/`value`/`disabled`); any Tailwind width class | Alpine-driven — emits full `x-data` state, `x-init` (`$watch`), 5 `@keydown.*` handlers, `x-transition`, `x-cloak`, `x-for` template. Requires `setupAlpine()` in `<head>`. |
 | `pinesCheckbox` | 3 overloads: `.default` (visible input + label), `.card` (peer-checked card), `.custom` (user-supplied `labelClasses` for `peer-checked:[&_...]` targeting) | Use `.default` with `labelText:`; `.card`/`.custom` with `content:` trailing closure; all accept `attributes:` for Alpine directives on the `<input>`. |
 | `pinesRadioGroup(options:name:disabled:)` | `[PinesRadioGroupOption]` with `title`/`value`/optional `description`; `name` groups radio inputs; `disabled` disables all | Alpine-driven — emits full `x-data` state with `x-for` template loop; options JSON-encoded. Requires `setupAlpine()` in `<head>`. |
+| `pinesRangeSlider(name:id:color:min:max:value:step:disabled:)` | 11 colors; configurable `min`/`max`/`value`/`step`/`disabled` | Tailwind-only — `[&::-webkit-slider-thumb]`, `[&::-moz-range-track]` etc. for custom thumb/track styling. No Alpine dependency. |
 | `pinesSwitch(labelText:name:id:color:size:checked:disabled:)` | `PinesSwitchSize`: `.default` (h-6 w-10), `.small` (h-4 w-6); 11 colors; `checked`/`disabled` | Alpine-driven — hidden checkbox, button toggle, label click. Requires `setupAlpine()` in `<head>`. |
 
 ## Alpine integration
@@ -377,9 +387,9 @@ The [Pines UI](https://devdojo.com/pines) library is a collection of pre-built A
 
 ## Current state (v0.1.100)
 
-11 components are implemented and tested:
+15 components are implemented and tested:
 
-- `pinesSetup`, `PinesColor`, `PinesButtonStyle`, `PinesBadgeStyle`, `pinesCard`, `pinesIcon`, `pinesAlert`, `pinesProgress`, `pinesQuote`, `pinesBreadcrumb`, `pinesBanner`, `pinesInput`, `pinesTextarea`, `pinesSelect`
+- `pinesSetup`, `PinesColor`, `PinesButtonStyle`, `PinesBadgeStyle`, `pinesCard`, `pinesIcon`, `pinesAlert`, `pinesProgress`, `pinesQuote`, `pinesRangeSlider`, `pinesBreadcrumb`, `pinesBanner`, `pinesInput`, `pinesTextarea`, `pinesSelect`
 
 Alpine directive compatibility is verified by a dedicated 6-test smoke suite covering `x-text`, `x-model`, `x-on:click`, `x-data`, and the modifier variants of `pinesBreadcrumb`.
 
