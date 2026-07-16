@@ -29,7 +29,7 @@ final class CheckboxTests: XCTestCase {
             encoding: .utf8
         )
         HTMLAssertEqual(
-            pinesCheckbox(labelText: "Active", checked: true, color: .blue, name: "active", id: "active"),
+            pinesCheckbox(labelText: "Active", color: .blue, checked: true, name: "active", id: "active"),
             expected
         )
     }
@@ -93,7 +93,7 @@ final class CheckboxTests: XCTestCase {
             encoding: .utf8
         )
         HTMLAssertEqual(
-            pinesCheckbox(checked: true, color: .green, name: "card-checked", id: "card-checked") {
+            pinesCheckbox(color: .green, checked: true, name: "card-checked", id: "card-checked") {
                 div(.class("flex items-center space-x-5")) {
                     div(.class("flex flex-col justify-start")) {
                         div(.class("w-full text-lg font-semibold")) { "AlpineJS" }
@@ -176,7 +176,7 @@ final class CheckboxTests: XCTestCase {
             encoding: .utf8
         )
         HTMLAssertEqual(
-            pinesCheckbox(checked: true, color: .red, name: "custom-checked", id: "custom-checked", labelClasses: customLabelClasses) {
+            pinesCheckbox(color: .red, checked: true, name: "custom-checked", id: "custom-checked", labelClasses: customLabelClasses) {
                 span(.class("flex items-center justify-center w-5 h-5 border-2 rounded custom-checkbox text-neutral-900")) {
                     svg(
                         attributes: [

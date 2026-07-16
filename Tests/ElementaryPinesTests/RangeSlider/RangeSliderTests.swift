@@ -21,7 +21,7 @@ final class RangeSliderTests: XCTestCase {
             encoding: .utf8
         )
         HTMLAssertEqual(
-            pinesRangeSlider(name: "price", id: "price", color: .green),
+            pinesRangeSlider(color: .green, name: "price", id: "price"),
             expected
         )
     }
@@ -55,9 +55,9 @@ final class RangeSliderTests: XCTestCase {
         )
         HTMLAssertEqual(
             pinesRangeSlider(
+                color: .purple,
                 name: "rating",
                 id: "rating",
-                color: .purple,
                 min: 10,
                 max: 200,
                 value: 50,

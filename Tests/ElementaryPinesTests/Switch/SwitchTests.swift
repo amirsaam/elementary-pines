@@ -21,7 +21,7 @@ final class SwitchTests: XCTestCase {
             encoding: .utf8
         )
         HTMLAssertEqual(
-            pinesSwitch(labelText: "Wi-Fi", name: "wifi", id: "wifi", color: .green),
+            pinesSwitch(labelText: "Wi-Fi", color: .green, name: "wifi", id: "wifi"),
             expected
         )
     }
@@ -32,7 +32,7 @@ final class SwitchTests: XCTestCase {
             encoding: .utf8
         )
         HTMLAssertEqual(
-            pinesSwitch(labelText: "Small", name: "small", id: "small", size: .small),
+            pinesSwitch(labelText: "Small", size: .small, name: "small", id: "small"),
             expected
         )
     }

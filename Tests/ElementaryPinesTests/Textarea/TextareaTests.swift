@@ -21,7 +21,7 @@ final class TextareaTests: XCTestCase {
             encoding: .utf8
         )
         HTMLAssertEqual(
-            pinesTextarea(placeholder: "Bio", color: .blue),
+            pinesTextarea(color: .blue, placeholder: "Bio"),
             expected
         )
     }

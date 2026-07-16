@@ -31,9 +31,9 @@ import Elementary
 /// - Parameters:
 ///   - type: The HTML input type (`"text"`, `"email"`, `"password"`, etc.).
 ///     Defaults to `"text"`.
-///   - placeholder: Optional placeholder text.
 ///   - color: Optional color for border and focus ring (300/400 shades).
 ///     When `nil`, uses neutral-300/400 (the original Pines default).
+///   - placeholder: Optional placeholder text.
 ///   - name: Optional `name` attribute for form submission.
 ///   - value: Optional initial value.
 ///   - id: Optional `id` attribute (for label association via `for=`).
@@ -41,8 +41,8 @@ import Elementary
 ///   - attributes: Extra HTML attributes merged into the input element.
 public func pinesInput(
     type: String = "text",
-    placeholder: String? = nil,
     color: PinesColor? = nil,
+    placeholder: String? = nil,
     name: String? = nil,
     value: String? = nil,
     id: String? = nil,

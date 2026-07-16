@@ -34,19 +34,19 @@ import ElementaryAlpine
 ///
 /// - Parameters:
 ///   - labelText: The text displayed next to the switch.
-///   - name: The name of the checkbox input.
-///   - id: The id of the checkbox input.
 ///   - color: The accent color of the switch when on. Defaults to blue.
 ///   - size: The size of the switch. Defaults to `.default`.
+///   - name: The name of the checkbox input.
+///   - id: The id of the checkbox input.
 ///   - checked: Whether the switch is initially on. Defaults to `false`.
 ///   - disabled: Whether the switch is disabled. Defaults to `false`.
 ///   - attributes: Extra HTML attributes merged into the hidden checkbox input.
 public func pinesSwitch(
     labelText: String,
-    name: String,
-    id: String,
     color: PinesColor? = nil,
     size: PinesSwitchSize = .default,
+    name: String,
+    id: String,
     checked: Bool = false,
     disabled: Bool = false,
     attributes: [HTMLAttribute<HTMLTag.input>] = []

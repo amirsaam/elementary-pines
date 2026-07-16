@@ -20,9 +20,9 @@ import Elementary
 /// ```
 ///
 /// - Parameters:
+///   - color: The accent color for the thumb and progress. Defaults to blue.
 ///   - name: The name attribute for the input.
 ///   - id: The id attribute for the input.
-///   - color: The accent color for the thumb and progress. Defaults to blue.
 ///   - min: The minimum value. Defaults to 0.
 ///   - max: The maximum value. Defaults to 100.
 ///   - value: The initial value. Defaults to 50.
@@ -30,9 +30,9 @@ import Elementary
 ///   - disabled: Whether the input is disabled. Defaults to `false`.
 ///   - attributes: Extra HTML attributes merged into the input element. Defaults to an empty array.
 public func pinesRangeSlider(
+    color: PinesColor? = nil,
     name: String,
     id: String,
-    color: PinesColor? = nil,
     min: Int = 0,
     max: Int = 100,
     value: Int = 50,

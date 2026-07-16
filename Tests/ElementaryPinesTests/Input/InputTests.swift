@@ -21,7 +21,7 @@ final class InputTests: XCTestCase {
             encoding: .utf8
         )
         HTMLAssertEqual(
-            pinesInput(type: "email", placeholder: "Email", color: .blue),
+            pinesInput(type: "email", color: .blue, placeholder: "Email"),
             expected
         )
     }

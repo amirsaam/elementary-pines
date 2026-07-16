@@ -30,8 +30,8 @@ import Foundation
 /// ```
 public func pinesCheckbox(
     labelText: String,
-    checked: Bool = false,
     color: PinesColor? = nil,
+    checked: Bool = false,
     disabled: Bool = false,
     required: Bool = false,
     name: String? = nil,
@@ -87,8 +87,8 @@ public func pinesCheckbox(
 /// }
 /// ```
 public func pinesCheckbox(
-    checked: Bool = false,
     color: PinesColor? = nil,
+    checked: Bool = false,
     disabled: Bool = false,
     required: Bool = false,
     name: String? = nil,
@@ -150,8 +150,8 @@ public func pinesCheckbox(
 /// }
 /// ```
 public func pinesCheckbox(
-    checked: Bool = false,
     color: PinesColor? = nil,
+    checked: Bool = false,
     disabled: Bool = false,
     required: Bool = false,
     name: String? = nil,

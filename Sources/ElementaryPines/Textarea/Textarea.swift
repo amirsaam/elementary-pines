@@ -28,18 +28,18 @@ import Elementary
 /// ```
 ///
 /// - Parameters:
-///   - placeholder: Optional placeholder text.
 ///   - color: Optional color for border, placeholder, and focus ring
 ///     (300/400 shade pair). When `nil`, uses neutral-300/400 (the
 ///     original Pines default).
+///   - placeholder: Optional placeholder text.
 ///   - name: Optional `name` attribute for form submission.
 ///   - id: Optional `id` attribute (for label association via `for=`).
 ///   - rows: Optional `rows` attribute (visible row count).
 ///   - disabled: When `true`, renders the `disabled` attribute.
 ///   - attributes: Extra HTML attributes merged into the textarea element.
 public func pinesTextarea(
-    placeholder: String? = nil,
     color: PinesColor? = nil,
+    placeholder: String? = nil,
     name: String? = nil,
     id: String? = nil,
     rows: Int? = nil,
