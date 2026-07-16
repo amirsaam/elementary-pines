@@ -81,43 +81,41 @@ public func pinesRating(
     }
 }
 
-// MARK: - Private helpers
-
 private func ratingXData(
     disabled: Bool,
     maxStars: Int,
     value: Int
 ) -> String {
     """
-        { \
-        disabled: \(disabled), \
-        max_stars: \(maxStars), \
-        stars: \(value), \
-        value: \(value), \
-        hoverStar(star){ \
-        if (this.disabled) { return; } \
-        this.stars = star; \
-        }, \
-        mouseLeftStar(){ \
-        if (this.disabled) { return; } \
-        this.stars = this.value; \
-        }, \
-        rate(star){ \
-        if (this.disabled) { return; } \
-        this.stars = star; \
-        this.value = star; \
-        $refs.rated.classList.remove('opacity-0'); \
-        setTimeout(function(){ \
-        $refs.rated.classList.add('opacity-0'); \
-        }, 2000); \
-        }, \
-        reset(){ \
-        if (this.disabled) { return; } \
-        this.value = 0; \
-        this.stars = 0; \
-        } \
-        }
-        """
+    { \
+    disabled: \(disabled), \
+    max_stars: \(maxStars), \
+    stars: \(value), \
+    value: \(value), \
+    hoverStar(star){ \
+    if (this.disabled) { return; } \
+    this.stars = star; \
+    }, \
+    mouseLeftStar(){ \
+    if (this.disabled) { return; } \
+    this.stars = this.value; \
+    }, \
+    rate(star){ \
+    if (this.disabled) { return; } \
+    this.stars = star; \
+    this.value = star; \
+    $refs.rated.classList.remove('opacity-0'); \
+    setTimeout(function(){ \
+    $refs.rated.classList.add('opacity-0'); \
+    }, 2000); \
+    }, \
+    reset(){ \
+    if (this.disabled) { return; } \
+    this.value = 0; \
+    this.stars = 0; \
+    } \
+    }
+    """
 }
 
 private struct RatingClasses {
@@ -152,23 +150,28 @@ private func ratingClasses(
         }
     }()
 
-    let filledColor = color == .yellow
+    let filledColor =
+        color == .yellow
         ? "text-yellow-400 fill-current"
         : "text-\(color.rawValue)-600 fill-current"
 
-    let container = compactReset
+    let container =
+        compactReset
         ? "relative flex items-center w-auto mx-auto jusitfy-center pt-4"
         : "relative flex flex-col items-center max-w-6xl mx-auto jusitfy-center"
 
-    let ratedTextColor = color == .yellow
+    let ratedTextColor =
+        color == .yellow
         ? "text-gray-900"
         : "text-\(color.rawValue)-500"
 
-    let ratedTextFallback = color == .yellow
+    let ratedTextFallback =
+        color == .yellow
         ? "text-gray-900"
         : "text-gray-400"
 
-    let ratedText = compactReset
+    let ratedText =
+        compactReset
         ? "absolute top-0 left-0 pl-1 -mt-1 text-sm \(ratedTextColor)"
             + " duration-300 ease-out -translate-y-full opacity-0"
         : "absolute -mt-6 text-xs font-medium \(ratedTextFallback)"
@@ -205,11 +208,19 @@ private func ratingStars(
     emptySvg: String,
     filledColor: String
 ) -> some HTML {
-    let xmlns: HTMLAttribute<HTMLTag.svg> = HTMLAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg")
-    let viewBox: HTMLAttribute<HTMLTag.svg> = HTMLAttribute(name: "viewBox", value: "0 0 256 256")
-    let emptySvgRaw = #"<rect width="256" height="256" fill="none""#
+    let xmlns: HTMLAttribute<HTMLTag.svg> = HTMLAttribute(
+        name: "xmlns",
+        value: "http://www.w3.org/2000/svg"
+    )
+    let viewBox: HTMLAttribute<HTMLTag.svg> = HTMLAttribute(
+        name: "viewBox",
+        value: "0 0 256 256"
+    )
+    let emptySvgRaw =
+        #"<rect width="256" height="256" fill="none""#
         + #" <path d="\#(iconPath)" \#(emptySvg)/>"#
-    let filledSvgRaw = #"<rect width="256" height="256" fill="none""#
+    let filledSvgRaw =
+        #"<rect width="256" height="256" fill="none""#
         + #" <path d="\#(iconPath)"/>"#
 
     template(.x.loop("star in max_stars"), .x.bind("key", "star")) {
@@ -244,7 +255,8 @@ private func ratingStars(
 
 @HTMLBuilder
 private func compactResetButton(color: PinesColor) -> some HTML {
-    let bgClass = color == .yellow
+    let bgClass =
+        color == .yellow
         ? "text-yellow-600 bg-yellow-100 hover:bg-yellow-400 hover:text-white"
         : "text-\(color.rawValue)-600 bg-\(color.rawValue)-100"
             + " hover:bg-\(color.rawValue)-400 hover:text-white"
