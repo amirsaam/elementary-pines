@@ -161,6 +161,8 @@ pinesInput(type: "email", placeholder: "Email", color: .blue)
 pinesInput(type: "text", placeholder: "Search...", name: "q", value: "pine", id: "search")
 
 pinesInput(placeholder: "Disabled", disabled: true)
+
+pinesInput(placeholder: "Email", attributes: [.x.model("email")])
 ```
 
 ```swift
@@ -172,6 +174,8 @@ pinesTextarea(placeholder: "Bio", color: .blue)
 pinesTextarea(placeholder: "Comment", name: "comment", rows: 4)
 
 pinesTextarea(placeholder: "Disabled", disabled: true)
+
+pinesTextarea(placeholder: "Message", attributes: [.x.model("message")])
 ```
 
 ```swift
@@ -239,6 +243,8 @@ pinesRangeSlider(name: "range", id: "range", disabled: true)
 pinesSwitch(labelText: "Enable Feature", name: "feature", id: "feature")
 pinesSwitch(labelText: "Wi-Fi", name: "wifi", id: "wifi", color: .green, checked: true)
 pinesSwitch(labelText: "Small", name: "sm", id: "sm", size: .small)
+
+pinesSwitch(labelText: "Airplane Mode", name: "airplane", id: "airplane", attributes: [.x.model("airplane")])
 ```
 
 ```swift
@@ -301,13 +307,13 @@ The package ships 16 free functions. Each wraps the matching Pines UI element wi
 | `pinesBreadcrumb(_:separator:)` | 3 separators: `.slash`, `.chevron` (default), `.arrow`                                       | See also `pinesBreadcrumbItems(for:in:root:)` for data-driven derivation. |
 | `pinesBreadcrumbItems(for:in:root:)` | —                                                                                         | Derives items from a flat `(path, label)` site map and a current path. |
 | `pinesBanner(icon:dismissible:content:)` | `PinesBannerIcon` with `.kind(PinesIconKind)` or `.custom(path: String)`  | Any of 35 built-in icons or a user-provided SVG file; close button uses `pinesIcon(.x)`. |
-| `pinesInput(type:placeholder:color:name:value:id:disabled:)` | `String` type (e.g. `"text"`, `"email"`, `"password"`); color overrides the 300/400 border + ring pair | Tailwind-only — users add `x-data`/`x-model` on the call site for dynamic behavior. |
-| `pinesTextarea(placeholder:color:name:id:rows:disabled:)` | `String?` placeholder; color overrides the 300/400 border + placeholder + ring pair | Tailwind-only — no built-in auto-resize; users add `x-data`/`x-model` on the call site. |
+| `pinesInput(type:placeholder:color:name:value:id:disabled:attributes:)` | `String` type (e.g. `"text"`, `"email"`, `"password"`); color overrides the 300/400 border + ring pair | Tailwind-only — users add `x-data`/`x-model` on the call site for dynamic behavior. |
+| `pinesTextarea(placeholder:color:name:id:rows:disabled:attributes:)` | `String?` placeholder; color overrides the 300/400 border + placeholder + ring pair | Tailwind-only — no built-in auto-resize; users add `x-data`/`x-model` on the call site. |
 | `pinesSelect(items:placeholder:width:)` | `[PinesSelectItem]` (Codable, with `title`/`value`/`disabled`); any Tailwind width class | Alpine-driven — emits full `x-data` state, `x-init` (`$watch`), 5 `@keydown.*` handlers, `x-transition`, `x-cloak`, `x-for` template. Requires `setupAlpine()` in `<head>`. |
 | `pinesCheckbox` | 3 overloads: `.default` (visible input + label), `.card` (peer-checked card), `.custom` (user-supplied `labelClasses` for `peer-checked:[&_...]` targeting) | Use `.default` with `labelText:`; `.card`/`.custom` with `content:` trailing closure; all accept `attributes:` for Alpine directives on the `<input>`. |
 | `pinesRadioGroup(options:name:disabled:)` | `[PinesRadioGroupOption]` with `title`/`value`/optional `description`; `name` groups radio inputs; `disabled` disables all | Alpine-driven — emits full `x-data` state with `x-for` template loop; options JSON-encoded. Requires `setupAlpine()` in `<head>`. |
 | `pinesRangeSlider(name:id:color:min:max:value:step:disabled:)` | 11 colors; configurable `min`/`max`/`value`/`step`/`disabled` | Tailwind-only — `[&::-webkit-slider-thumb]`, `[&::-moz-range-track]` etc. for custom thumb/track styling. No Alpine dependency. |
-| `pinesSwitch(labelText:name:id:color:size:checked:disabled:)` | `PinesSwitchSize`: `.default` (h-6 w-10), `.small` (h-4 w-6); 11 colors; `checked`/`disabled` | Alpine-driven — hidden checkbox, button toggle, label click. Requires `setupAlpine()` in `<head>`. |
+| `pinesSwitch(labelText:name:id:color:size:checked:disabled:attributes:)` | `PinesSwitchSize`: `.default` (h-6 w-10), `.small` (h-4 w-6); 11 colors; `checked`/`disabled` | Alpine-driven — hidden checkbox, button toggle, label click. Requires `setupAlpine()` in `<head>`. |
 
 ## Alpine integration
 
