@@ -80,6 +80,7 @@ public func pinesRating(
     let filledColorClass = color == .yellow
         ? "text-yellow-400 fill-current"
         : "text-\(color.rawValue)-600 fill-current"
+
     let emptyColorClass: String = {
         switch emptyStyle {
         case .outlined: return "text-gray-900"
