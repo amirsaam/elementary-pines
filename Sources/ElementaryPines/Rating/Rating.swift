@@ -45,38 +45,40 @@ public func pinesRating(
     attributes: [HTMLAttribute<HTMLTag.input>] = []
 ) -> some HTML {
     let xData = """
-    { \
-    disabled: \(disabled), \
-    max_stars: \(maxStars), \
-    stars: \(value), \
-    value: \(value), \
-    hoverStar(star){ \
-    if (this.disabled) { return; } \
-    this.stars = star; \
-    }, \
-    mouseLeftStar(){ \
-    if (this.disabled) { return; } \
-    this.stars = this.value; \
-    }, \
-    rate(star){ \
-    if (this.disabled) { return; } \
-    this.stars = star; \
-    this.value = star; \
-    $refs.rated.classList.remove('opacity-0'); \
-    setTimeout(function(){ \
-    $refs.rated.classList.add('opacity-0'); \
-    }, 2000); \
-    }, \
-    reset(){ \
-    if (this.disabled) { return; } \
-    this.value = 0; \
-    this.stars = 0; \
-    } \
-    }
-    """
+        { \
+        disabled: \(disabled), \
+        max_stars: \(maxStars), \
+        stars: \(value), \
+        value: \(value), \
+        hoverStar(star){ \
+        if (this.disabled) { return; } \
+        this.stars = star; \
+        }, \
+        mouseLeftStar(){ \
+        if (this.disabled) { return; } \
+        this.stars = this.value; \
+        }, \
+        rate(star){ \
+        if (this.disabled) { return; } \
+        this.stars = star; \
+        this.value = star; \
+        $refs.rated.classList.remove('opacity-0'); \
+        setTimeout(function(){ \
+        $refs.rated.classList.add('opacity-0'); \
+        }, 2000); \
+        }, \
+        reset(){ \
+        if (this.disabled) { return; } \
+        this.value = 0; \
+        this.stars = 0; \
+        } \
+        }
+        """
 
     let iconPath = icon.kind.path
-    let filledColorClass = color == .yellow ? "text-yellow-400 fill-current" : "text-\(color.rawValue)-600 fill-current"
+    let filledColorClass = color == .yellow
+        ? "text-yellow-400 fill-current"
+        : "text-\(color.rawValue)-600 fill-current"
     let emptyColorClass: String = {
         switch emptyStyle {
         case .outlined: return "text-gray-900"
@@ -85,16 +87,19 @@ public func pinesRating(
     }()
     let emptySvgAttributes: String = {
         switch emptyStyle {
-        case .outlined: return #"fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16""#
+        case .outlined:
+            return #"fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16""#
         case .filled: return ""
         }
     }()
 
-    let containerClass = compactReset
+    let containerClass =
+        compactReset
         ? "relative flex items-center w-auto mx-auto jusitfy-center pt-4"
         : "relative flex flex-col items-center max-w-6xl mx-auto jusitfy-center"
 
-    let ratedTextClass = compactReset
+    let ratedTextClass =
+        compactReset
         ? "absolute top-0 left-0 pl-1 -mt-1 text-sm \(color == .yellow ? "text-gray-900" : "text-\(color.rawValue)-500") duration-300 ease-out -translate-y-full opacity-0"
         : "absolute -mt-6 text-xs font-medium \(color == .yellow ? "text-gray-900" : "text-gray-400") duration-300 ease-out -translate-y-full opacity-0"
 
@@ -125,7 +130,9 @@ public func pinesRating(
                         HTMLAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg"),
                         HTMLAttribute(name: "viewBox", value: "0 0 256 256")
                     ) {
-                        HTMLRaw(#"<rect width="256" height="256" fill="none"/><path d="\#(iconPath)" \#(emptySvgAttributes)/>"#)
+                        HTMLRaw(
+                            #"<rect width="256" height="256" fill="none"/><path d="\#(iconPath)" \#(emptySvgAttributes)/>"#
+                        )
                     }
                     svg(
                         .x.show("star <= stars"),
@@ -142,8 +149,14 @@ public func pinesRating(
                 button(
                     .x.show("value"),
                     .x.on("click", "reset"),
-                    .class("ml-1 inline-flex items-center justify-center w-5 h-5 text-xs rounded-full transition-colors"),
-                    .class(color == .yellow ? "text-yellow-600 bg-yellow-100 hover:bg-yellow-400 hover:text-white" : "text-\(color.rawValue)-600 bg-\(color.rawValue)-100 hover:bg-\(color.rawValue)-400 hover:text-white"),
+                    .class(
+                        "ml-1 inline-flex items-center justify-center w-5 h-5 text-xs rounded-full transition-colors"
+                    ),
+                    .class(
+                        color == .yellow
+                            ? "text-yellow-600 bg-yellow-100 hover:bg-yellow-400 hover:text-white"
+                            : "text-\(color.rawValue)-600 bg-\(color.rawValue)-100 hover:bg-\(color.rawValue)-400 hover:text-white"
+                    ),
                     .x.bindClass("{ 'opacity-50 cursor-not-allowed': disabled }")
                 ) {
                     pinesIcon(.x, size: .xs)
@@ -154,7 +167,9 @@ public func pinesRating(
         if !compactReset {
             button(
                 .x.on("click", "reset"),
-                .class("inline-flex items-center px-2 py-1 mt-3 text-xs text-gray-600 bg-gray-200 rounded-full hover:bg-black hover:text-white"),
+                .class(
+                    "inline-flex items-center px-2 py-1 mt-3 text-xs text-gray-600 bg-gray-200 rounded-full hover:bg-black hover:text-white"
+                ),
                 .x.bindClass("{ 'opacity-50 cursor-not-allowed': disabled }")
             ) {
                 svg(
@@ -162,7 +177,11 @@ public func pinesRating(
                     HTMLAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg"),
                     HTMLAttribute(name: "viewBox", value: "0 0 256 256")
                 ) {
-                    HTMLRaw(#"<rect width="256" height="256" fill="none"/><polyline points="24 56 24 104 72 104" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="24"/><path d="M67.59,192A88,88,0,1,0,65.77,65.77L24,104" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="24"/>"#)
+                    HTMLRaw(
+                        #"<rect width="256" height="256" fill="none"/><polyline points="24 56 24 104 72 104" fill="none" stroke="currentColor""#
+                            + #" stroke-linecap="round" stroke-linejoin="round" stroke-width="24"/><path d="M67.59,192A88,88,0,1,0,65.77,65.77L24,104""#
+                            + #" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="24"/>"#
+                    )
                 }
                 span { "Reset" }
             }
