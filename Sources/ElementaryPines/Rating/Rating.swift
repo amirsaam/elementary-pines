@@ -76,6 +76,7 @@ public func pinesRating(
         """
 
     let iconPath = icon.kind.path
+
     let filledColorClass = color == .yellow
         ? "text-yellow-400 fill-current"
         : "text-\(color.rawValue)-600 fill-current"
