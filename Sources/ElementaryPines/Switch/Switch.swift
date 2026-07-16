@@ -40,6 +40,7 @@ import ElementaryAlpine
 ///   - size: The size of the switch. Defaults to `.default`.
 ///   - checked: Whether the switch is initially on. Defaults to `false`.
 ///   - disabled: Whether the switch is disabled. Defaults to `false`.
+///   - attributes: Extra HTML attributes merged into the hidden checkbox input.
 public func pinesSwitch(
     labelText: String,
     name: String,
@@ -47,7 +48,8 @@ public func pinesSwitch(
     color: PinesColor? = nil,
     size: PinesSwitchSize = .default,
     checked: Bool = false,
-    disabled: Bool = false
+    disabled: Bool = false,
+    attributes: [HTMLAttribute<HTMLTag.input>] = []
 ) -> some HTML {
     let accentColor = color?.rawValue ?? "blue"
     let xData = "{ switchOn: \(checked) }"
@@ -103,7 +105,7 @@ public func pinesSwitch(
                 .name(name),
                 .class("hidden"),
                 .x.bind("checked", "switchOn"),
-            ] + inputCheckedAttr + inputDisabledAttr
+            ] + inputCheckedAttr + inputDisabledAttr + attributes
         )
 
         button(

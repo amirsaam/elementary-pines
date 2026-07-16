@@ -47,4 +47,15 @@ final class TextareaTests: XCTestCase {
             expected
         )
     }
+
+    func testTextareaWithAttributes() throws {
+        let expected = try String(
+            contentsOf: fixtureURL("textarea-attributes.html"),
+            encoding: .utf8
+        )
+        HTMLAssertEqual(
+            pinesTextarea(placeholder: "Type your message here.", attributes: [.class("custom-class")]),
+            expected
+        )
+    }
 }

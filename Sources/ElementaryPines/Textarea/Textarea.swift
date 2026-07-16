@@ -36,13 +36,15 @@ import Elementary
 ///   - id: Optional `id` attribute (for label association via `for=`).
 ///   - rows: Optional `rows` attribute (visible row count).
 ///   - disabled: When `true`, renders the `disabled` attribute.
+///   - attributes: Extra HTML attributes merged into the textarea element.
 public func pinesTextarea(
     placeholder: String? = nil,
     color: PinesColor? = nil,
     name: String? = nil,
     id: String? = nil,
     rows: Int? = nil,
-    disabled: Bool = false
+    disabled: Bool = false,
+    attributes: [HTMLAttribute<HTMLTag.textarea>] = []
 ) -> some HTML {
     let borderClass = color.map { "border-\($0.rawValue)-300" } ?? "border-neutral-300"
     let placeholderClass = color.map { "placeholder:text-\($0.rawValue)-400" } ?? "placeholder:text-neutral-400"
@@ -60,14 +62,14 @@ public func pinesTextarea(
         + ringClass
         + " disabled:cursor-not-allowed disabled:opacity-50"
 
-    var attributes: [HTMLAttribute<HTMLTag.textarea>] = [
+    var textareaAttributes: [HTMLAttribute<HTMLTag.textarea>] = [
         .class(classes)
     ]
-    if let placeholder { attributes.append(.placeholder(placeholder)) }
-    if let name { attributes.append(.name(name)) }
-    if let id { attributes.append(.id(id)) }
-    if let rows { attributes.append(HTMLAttribute(name: "rows", value: String(rows))) }
-    if disabled { attributes.append(.disabled) }
+    if let placeholder { textareaAttributes.append(.placeholder(placeholder)) }
+    if let name { textareaAttributes.append(.name(name)) }
+    if let id { textareaAttributes.append(.id(id)) }
+    if let rows { textareaAttributes.append(HTMLAttribute(name: "rows", value: String(rows))) }
+    if disabled { textareaAttributes.append(.disabled) }
 
-    return textarea(attributes: attributes) {}
+    return textarea(attributes: textareaAttributes + attributes) {}
 }

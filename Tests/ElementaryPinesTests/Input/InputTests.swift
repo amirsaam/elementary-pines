@@ -53,4 +53,15 @@ final class InputTests: XCTestCase {
             expected
         )
     }
+
+    func testInputWithAttributes() throws {
+        let expected = try String(
+            contentsOf: fixtureURL("input-attributes.html"),
+            encoding: .utf8
+        )
+        HTMLAssertEqual(
+            pinesInput(placeholder: "Name", attributes: [.class("custom-class")]),
+            expected
+        )
+    }
 }

@@ -58,4 +58,20 @@ final class SwitchTests: XCTestCase {
             expected
         )
     }
+
+    func testSwitchWithAttributes() throws {
+        let expected = try String(
+            contentsOf: fixtureURL("pinesSwitch-attributes.html"),
+            encoding: .utf8
+        )
+        HTMLAssertEqual(
+            pinesSwitch(
+                labelText: "Enable Feature",
+                name: "feature",
+                id: "feature",
+                attributes: [.class("custom-class")]
+            ),
+            expected
+        )
+    }
 }

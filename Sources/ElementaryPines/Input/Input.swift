@@ -38,6 +38,7 @@ import Elementary
 ///   - value: Optional initial value.
 ///   - id: Optional `id` attribute (for label association via `for=`).
 ///   - disabled: When `true`, renders the `disabled` attribute.
+///   - attributes: Extra HTML attributes merged into the input element.
 public func pinesInput(
     type: String = "text",
     placeholder: String? = nil,
@@ -45,7 +46,8 @@ public func pinesInput(
     name: String? = nil,
     value: String? = nil,
     id: String? = nil,
-    disabled: Bool = false
+    disabled: Bool = false,
+    attributes: [HTMLAttribute<HTMLTag.input>] = []
 ) -> some HTML {
     let borderClass = color.map { "border-\($0.rawValue)-300" } ?? "border-neutral-300"
     let focusBorderClass = color.map { "focus:border-\($0.rawValue)-300" } ?? "focus:border-neutral-300"
@@ -60,15 +62,15 @@ public func pinesInput(
         + ringClass
         + " disabled:cursor-not-allowed disabled:opacity-50"
 
-    var attributes: [HTMLAttribute<HTMLTag.input>] = [
+    var inputAttributes: [HTMLAttribute<HTMLTag.input>] = [
         HTMLAttribute(name: "type", value: type),
         .class(classes),
     ]
-    if let placeholder { attributes.append(.placeholder(placeholder)) }
-    if let name { attributes.append(.name(name)) }
-    if let value { attributes.append(.value(value)) }
-    if let id { attributes.append(.id(id)) }
-    if disabled { attributes.append(.disabled) }
+    if let placeholder { inputAttributes.append(.placeholder(placeholder)) }
+    if let name { inputAttributes.append(.name(name)) }
+    if let value { inputAttributes.append(.value(value)) }
+    if let id { inputAttributes.append(.id(id)) }
+    if disabled { inputAttributes.append(.disabled) }
 
-    return input(attributes: attributes)
+    return input(attributes: inputAttributes + attributes)
 }
