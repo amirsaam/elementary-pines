@@ -22,7 +22,7 @@ public func pinesIcon(
     _ icon: PinesIconKind,
     size: PinesIconSize = .md,
     color: PinesColor? = nil,
-    attributes: [HTMLAttribute<HTMLTag.svg>] = []
+    attributes: [SVGAttribute<SVGTag.svg>] = []
 ) -> some HTML {
     let path = icon.path
     let sizeClass = size.classes
@@ -35,21 +35,21 @@ public func pinesIcon(
     }()
     let className = [sizeClass, colorClass].filter { !$0.isEmpty }.joined(separator: " ")
 
-    let allAttributes: [HTMLAttribute<HTMLTag.svg>] =
+    let allAttributes: [SVGAttribute<SVGTag.svg>] =
         [
-            HTMLAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg"),
-            HTMLAttribute(name: "fill", value: "none"),
-            HTMLAttribute(name: "viewBox", value: "0 0 24 24"),
-            HTMLAttribute(name: "stroke-width", value: "1.5"),
-            HTMLAttribute(name: "stroke", value: "currentColor"),
-            HTMLAttribute<HTMLTag.svg>(
+            SVGAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg"),
+            SVGAttribute(name: "fill", value: "none"),
+            SVGAttribute(name: "viewBox", value: "0 0 24 24"),
+            SVGAttribute(name: "stroke-width", value: "1.5"),
+            SVGAttribute(name: "stroke", value: "currentColor"),
+            SVGAttribute<SVGTag.svg>(
                 name: "class",
                 value: className,
                 mergedBy: .appending(separatedBy: " ")
             ),
         ] + attributes
 
-    return svg(attributes: allAttributes) {
+    return SVG.svg(attributes: allAttributes) {
         HTMLRaw(#"<path stroke-linecap="round" stroke-linejoin="round" d="\#(path)" />"#)
     }
 }

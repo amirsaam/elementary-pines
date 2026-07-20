@@ -105,7 +105,7 @@ public func pinesSelect(
                         .check,
                         size: .sm,
                         attributes: [
-                            .x.show("selectedItem.value==item.value"),
+                            SVGAttribute(name: "x-show", value: "selectedItem.value==item.value"),
                             .class("absolute left-0 ml-2 text-neutral-400"),
                         ]
                     )

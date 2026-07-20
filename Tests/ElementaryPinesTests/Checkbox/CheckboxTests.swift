@@ -151,14 +151,14 @@ final class CheckboxTests: XCTestCase {
         HTMLAssertEqual(
             pinesCheckbox(name: "x", id: "x", labelClasses: customLabelClasses) {
                 span(.class("flex items-center justify-center w-5 h-5 border-2 rounded custom-checkbox text-neutral-900")) {
-                    svg(
+                    SVG.svg(
                         attributes: [
-                            HTMLAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg"),
-                            HTMLAttribute(name: "fill", value: "none"),
-                            HTMLAttribute(name: "viewBox", value: "0 0 24 24"),
-                            HTMLAttribute(name: "stroke-width", value: "3"),
-                            HTMLAttribute(name: "stroke", value: "currentColor"),
-                            HTMLAttribute(name: "class", value: "w-3 h-3 text-white duration-300 ease-out"),
+                            SVGAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg"),
+                            SVGAttribute(name: "fill", value: "none"),
+                            SVGAttribute(name: "viewBox", value: "0 0 24 24"),
+                            SVGAttribute(name: "stroke-width", value: "3"),
+                            SVGAttribute(name: "stroke", value: "currentColor"),
+                            SVGAttribute(name: "class", value: "w-3 h-3 text-white duration-300 ease-out"),
                         ]
                     ) {
                         HTMLRaw(#"<path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />"#)
@@ -178,14 +178,14 @@ final class CheckboxTests: XCTestCase {
         HTMLAssertEqual(
             pinesCheckbox(color: .red, checked: true, name: "custom-checked", id: "custom-checked", labelClasses: customLabelClasses) {
                 span(.class("flex items-center justify-center w-5 h-5 border-2 rounded custom-checkbox text-neutral-900")) {
-                    svg(
+                    SVG.svg(
                         attributes: [
-                            HTMLAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg"),
-                            HTMLAttribute(name: "fill", value: "none"),
-                            HTMLAttribute(name: "viewBox", value: "0 0 24 24"),
-                            HTMLAttribute(name: "stroke-width", value: "3"),
-                            HTMLAttribute(name: "stroke", value: "currentColor"),
-                            HTMLAttribute(name: "class", value: "w-3 h-3 text-white duration-300 ease-out"),
+                            SVGAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg"),
+                            SVGAttribute(name: "fill", value: "none"),
+                            SVGAttribute(name: "viewBox", value: "0 0 24 24"),
+                            SVGAttribute(name: "stroke-width", value: "3"),
+                            SVGAttribute(name: "stroke", value: "currentColor"),
+                            SVGAttribute(name: "class", value: "w-3 h-3 text-white duration-300 ease-out"),
                         ]
                     ) {
                         HTMLRaw(#"<path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />"#)
@@ -205,14 +205,14 @@ final class CheckboxTests: XCTestCase {
         HTMLAssertEqual(
             pinesCheckbox(disabled: true, name: "custom-disabled", id: "custom-disabled", labelClasses: customLabelClasses) {
                 span(.class("flex items-center justify-center w-5 h-5 border-2 rounded custom-checkbox text-neutral-900")) {
-                    svg(
+                    SVG.svg(
                         attributes: [
-                            HTMLAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg"),
-                            HTMLAttribute(name: "fill", value: "none"),
-                            HTMLAttribute(name: "viewBox", value: "0 0 24 24"),
-                            HTMLAttribute(name: "stroke-width", value: "3"),
-                            HTMLAttribute(name: "stroke", value: "currentColor"),
-                            HTMLAttribute(name: "class", value: "w-3 h-3 text-white duration-300 ease-out"),
+                            SVGAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg"),
+                            SVGAttribute(name: "fill", value: "none"),
+                            SVGAttribute(name: "viewBox", value: "0 0 24 24"),
+                            SVGAttribute(name: "stroke-width", value: "3"),
+                            SVGAttribute(name: "stroke", value: "currentColor"),
+                            SVGAttribute(name: "class", value: "w-3 h-3 text-white duration-300 ease-out"),
                         ]
                     ) {
                         HTMLRaw(#"<path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />"#)
@@ -234,14 +234,14 @@ final class CheckboxTests: XCTestCase {
                 [.x.model("custom")]
             } content: {
                 span(.class("flex items-center justify-center w-5 h-5 border-2 rounded custom-checkbox text-neutral-900")) {
-                    svg(
+                    SVG.svg(
                         attributes: [
-                            HTMLAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg"),
-                            HTMLAttribute(name: "fill", value: "none"),
-                            HTMLAttribute(name: "viewBox", value: "0 0 24 24"),
-                            HTMLAttribute(name: "stroke-width", value: "3"),
-                            HTMLAttribute(name: "stroke", value: "currentColor"),
-                            HTMLAttribute(name: "class", value: "w-3 h-3 text-white duration-300 ease-out"),
+                            SVGAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg"),
+                            SVGAttribute(name: "fill", value: "none"),
+                            SVGAttribute(name: "viewBox", value: "0 0 24 24"),
+                            SVGAttribute(name: "stroke-width", value: "3"),
+                            SVGAttribute(name: "stroke", value: "currentColor"),
+                            SVGAttribute(name: "class", value: "w-3 h-3 text-white duration-300 ease-out"),
                         ]
                     ) {
                         HTMLRaw(#"<path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />"#)
