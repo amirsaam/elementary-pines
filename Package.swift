@@ -18,7 +18,7 @@ let package = Package(
         .library(name: "ElementaryPines", targets: ["ElementaryPines"])
     ],
     dependencies: [
-        .package(url: "https://github.com/amirsaam/elementary-alpine.git", from: "0.4.000"),
+        .package(url: "https://github.com/amirsaam/elementary-alpine.git", from: "0.4.000")
     ],
     targets: [
         .target(
