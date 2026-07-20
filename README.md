@@ -260,12 +260,22 @@ pinesSwitch(labelText: "Airplane Mode", name: "airplane", id: "airplane", attrib
 ```
 
 ```swift
-// breadcrumb — manual items
+// breadcrumb — manual items (official bordered style; first crumb renders a home icon)
 pinesBreadcrumb([
     .link("Home", href: "/"),
     .link("Docs", href: "/docs"),
     .current("Installation"),
-], separator: .chevron)
+])
+
+// text separators
+pinesBreadcrumb(items, separator: .slash)
+pinesBreadcrumb(items, separator: .arrow)
+
+// no home icon
+pinesBreadcrumb(items, homeIcon: .none)
+
+// custom home icon image
+pinesBreadcrumb(items, homeIcon: .custom(path: "/icons/home.svg"))
 
 // breadcrumb — data-driven from a site map (Vapor, Hummingbird)
 // The site map is declared once at app startup and shared across routes.
@@ -324,7 +334,7 @@ The package ships 17 free functions. Each wraps the matching Pines UI element wi
 | `pinesAlert(_:icon:content:)`  | 2 overloads: `pinesAlert { ... }` (basic) and `pinesAlert(.info, icon: .auto, ...) { ... }`    | `.auto` inserts the matching icon; `.none` omits; `.custom(path:)` renders a user-provided SVG file via `<img>`. |
 | `pinesProgress(_:of:color:size:)` | Default is the official Alpine-animated bar; pass a value for a static bar. `color:` defaults to `.neutral`, `size:` to `.md` (`h-3`). | Percentage clamped to 0–100.                              |
 | `pinesQuote(quote:author:role:avatar:)` | Quote text, author name, role, optional avatar image URL.                                     | `avatar:` omitted to render the quote without an avatar.  |
-| `pinesBreadcrumb(_:separator:)` | 3 separators: `.slash`, `.chevron` (default), `.arrow`                                       | See also `pinesBreadcrumbItems(for:in:root:)` for data-driven derivation. |
+| `pinesBreadcrumb(_:separator:homeIcon:)` | `separator:` `.chevron` (official, default), `.slash`, `.arrow`; `homeIcon:` `.icon(PinesIconKind)` (default `.home`), `.custom(path:)`, `.none` | See also `pinesBreadcrumbItems(for:in:root:)` for data-driven derivation. |
 | `pinesBreadcrumbItems(for:in:root:)` | —                                                                                         | Derives items from a flat `(path, label)` site map and a current path. |
 | `pinesBanner(label:message:href:icon:dismissible:position:)` | `PinesBannerPosition` `.top` (white) / `.bottom` (black). `icon:` defaults to `.wand`; pass `nil` to omit. | Alpine-driven fixed banner with show/hide transitions and a dismiss button. |
 | `pinesInput(type:color:placeholder:name:value:id:disabled:attributes:)` | `String` type (e.g. `"text"`, `"email"`, `"password"`); color overrides the 300/400 border + ring pair | Tailwind-only — users add `x-data`/`x-model` on the call site for dynamic behavior. |
