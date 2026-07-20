@@ -139,18 +139,20 @@ pinesProgress(75, color: .green, size: .lg)    // static 75%, green, h-4
 ```
 
 ```swift
-// banner with optional icon and dismiss button
-pinesBanner(icon: .kind(.info)) {
-    p { "New version available." }
-}
+// official fixed Alpine banner (top by default)
+pinesBanner(
+    label: "New Feature",
+    message: "Click here to learn about our latest feature",
+    href: "#"
+)
 
-pinesBanner(icon: .kind(.warning), dismissible: true) {
-    p { "Your session is about to expire." }
-}
-
-pinesBanner(icon: .custom(path: "/icons/spinner.svg")) {
-    p { "Loading…" }
-}
+// black banner fixed to the bottom
+pinesBanner(
+    label: "New Feature",
+    message: "Click here to learn about our latest feature",
+    href: "#",
+    position: .bottom
+)
 ```
 
 ```swift
@@ -324,7 +326,7 @@ The package ships 17 free functions. Each wraps the matching Pines UI element wi
 | `pinesQuote(quote:author:role:avatar:)` | Quote text, author name, role, optional avatar image URL.                                     | `avatar:` omitted to render the quote without an avatar.  |
 | `pinesBreadcrumb(_:separator:)` | 3 separators: `.slash`, `.chevron` (default), `.arrow`                                       | See also `pinesBreadcrumbItems(for:in:root:)` for data-driven derivation. |
 | `pinesBreadcrumbItems(for:in:root:)` | —                                                                                         | Derives items from a flat `(path, label)` site map and a current path. |
-| `pinesBanner(icon:dismissible:content:)` | `PinesBannerIcon` with `.kind(PinesIconKind)` or `.custom(path: String)`  | Any of 35 built-in icons or a user-provided SVG file; close button uses `pinesIcon(.x)`. |
+| `pinesBanner(label:message:href:icon:dismissible:position:)` | `PinesBannerPosition` `.top` (white) / `.bottom` (black). `icon:` defaults to `.wand`; pass `nil` to omit. | Alpine-driven fixed banner with show/hide transitions and a dismiss button. |
 | `pinesInput(type:color:placeholder:name:value:id:disabled:attributes:)` | `String` type (e.g. `"text"`, `"email"`, `"password"`); color overrides the 300/400 border + ring pair | Tailwind-only — users add `x-data`/`x-model` on the call site for dynamic behavior. |
 | `pinesTextarea(color:placeholder:name:id:rows:disabled:attributes:)` | `String?` placeholder; color overrides the 300/400 border + placeholder + ring pair | Tailwind-only — no built-in auto-resize; users add `x-data`/`x-model` on the call site. |
 | `pinesSelect(items:placeholder:width:)` | `[PinesSelectItem]` (Codable, with `title`/`value`/`disabled`); any Tailwind width class | Alpine-driven — emits full `x-data` state, `x-init` (`$watch`), 5 `@keydown.*` handlers, `x-transition`, `x-cloak`, `x-for` template. Requires `setupAlpine()` in `<head>`. |
