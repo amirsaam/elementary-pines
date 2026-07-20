@@ -24,7 +24,7 @@ let package = Package(
         .target(
             name: "ElementaryPines",
             dependencies: [
-                .product(name: "ElementaryAlpine", package: "elementary-alpine"),
+                .product(name: "ElementaryAlpine", package: "elementary-alpine")
             ],
             path: "Sources/ElementaryPines",
             swiftSettings: featureFlags
