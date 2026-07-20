@@ -1,7 +1,9 @@
-/// A single item in a `pinesBreadcrumb(_:separator:)` list.
+/// A single item in a `pinesBreadcrumb(_:)` list.
 ///
 /// Use `.link` for navigable crumbs and `.current` for the current page
-/// (rendered as non-clickable text with `aria-current="page"`).
+/// (rendered as a non-clickable anchor with the `active-breadcrumb` class
+/// and `aria-current="page"`). The first `.link` in the list renders as a
+/// home icon, so its text is only used as a fallback label.
 ///
 /// ```swift
 /// pinesBreadcrumb([

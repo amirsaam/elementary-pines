@@ -8,7 +8,7 @@
 ///    matches the exact current path, the last URL segment is used as
 ///    the label for the `.current` item.
 /// 3. Returns the chain — root, ancestors in order, then the current
-///    page last — ready to pass to `pinesBreadcrumb(_:separator:)`.
+///    page last — ready to pass to `pinesBreadcrumb(_:separator:homeIcon:)`.
 ///
 /// **Example:**
 /// ```swift
