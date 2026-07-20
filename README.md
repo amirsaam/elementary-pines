@@ -32,7 +32,7 @@ struct ProductPage: HTMLDocument {
         <div class="p-7">
             <h2>Featured product</h2>
             <p>A short description of the product.</p>
-            <button class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium tracking-wide text-white transition-colors duration-200 rounded-md bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-700">Add to cart</button>
+            <button class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium tracking-wide text-white transition-colors duration-200 rounded-md bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-offset-2 focus:ring-blue-700 focus:shadow-outline focus:outline-none">Add to cart</button>
         </div>
     </div>
 </main>
@@ -411,30 +411,32 @@ The `PinesColor` enum's 11 cases map to Tailwind's default color palette. Each c
 
 The full API is documented in source — every public type and function has doc comments with a code example and a "Generated HTML" snippet showing the rendered output. For example, see:
 
-- [`Sources/ElementaryPines/Pines/Pines.swift`](./Sources/ElementaryPines/Pines/Pines.swift) — `setupPines()`
-- [`Sources/ElementaryPines/Button/ButtonStyle.swift`](./Sources/ElementaryPines/Button/ButtonStyle.swift) — `.pinesButtonStyle`
+- [`Sources/ElementaryPines/Pines.swift`](./Sources/ElementaryPines/Pines.swift) — `setupPines()`
+- [`Sources/ElementaryPines/Button/Button+Style.swift`](./Sources/ElementaryPines/Button/Button+Style.swift) — `.pinesButtonStyle`
 - [`Sources/ElementaryPines/Card/Card.swift`](./Sources/ElementaryPines/Card/Card.swift) — `pinesCard`
-- [`Sources/ElementaryPines/Alert/AlertVariant.swift`](./Sources/ElementaryPines/Alert/AlertVariant.swift) — `pinesAlert`
+- [`Sources/ElementaryPines/Alert/Alert+Variant.swift`](./Sources/ElementaryPines/Alert/Alert+Variant.swift) — `pinesAlert`
 
-The full test suite (60 snapshot tests + 6 Alpine directive smoke tests = 66 tests) lives in [`Tests/ElementaryPinesTests/`](./Tests/ElementaryPinesTests/).
+The full test suite (115 snapshot and integration tests, including Alpine directive smoke tests) lives in [`Tests/ElementaryPinesTests/`](./Tests/ElementaryPinesTests/).
 
 ## Why this exists
 
 The [Pines UI](https://devdojo.com/pines) library is a collection of pre-built Alpine.js and Tailwind CSS UI components — alerts, badges, banners, breadcrumbs, buttons, cards, modals, and more. We use it on the web and wanted the same components available in our server-side Swift applications. This package is that: the same components, rendered type-safely via [Elementary](https://github.com/elementary-swift/elementary) with full snapshot test coverage.
 
-## Current state (v0.1.100)
+## Current state (v0.1.100+)
 
-16 components are implemented and tested:
+17 component functions are implemented and tested:
 
-- `setupPines`, `PinesColor`, `PinesButtonStyle`, `PinesBadgeStyle`, `pinesCard`, `pinesIcon`, `pinesAlert`, `pinesProgress`, `pinesQuote`, `pinesRating`, `pinesRangeSlider`, `pinesBreadcrumb`, `pinesBanner`, `pinesInput`, `pinesTextarea`, `pinesSelect`
+- `setupPines`, `PinesColor`, `.pinesButtonStyle`, `.pinesBadgeStyle`, `pinesCard`, `pinesIcon`, `pinesAlert`, `pinesProgress`, `pinesQuote`, `pinesRating`, `pinesRangeSlider`, `pinesBreadcrumb`, `pinesBanner`, `pinesInput`, `pinesTextarea`, `pinesSelect`, `pinesCheckbox`, `pinesRadioGroup`, `pinesSwitch`
 
-Alpine directive compatibility is verified by a dedicated 6-test smoke suite covering `x-text`, `x-model`, `x-on:click`, `x-data`, and the modifier variants of `pinesBreadcrumb`.
+Alpine directive compatibility is verified by a dedicated smoke suite covering `x-text`, `x-model`, `x-on:click`, `x-data`, `x-show`, and modifiers.
 
 ## Future directions
 
-- Form components: input, select, textarea, checkbox, radio, switch, etc.
-- Overlay and navigation: modal, drawer, popover, dropdown, tabs, accordion, etc.
-- Example apps showing real integration in Vapor and Hummingbird
+- v0.1.200 form components are done (Date Picker, Textarea auto-resize, Copy to Clipboard remaining).
+- v0.1.300 overlay and navigation: modal, slide-over, popover, dropdown, tabs, accordion, toast, tooltip, command, context-menu, hover-card, navigation-menu, image-gallery.
+- v0.1.400+ data and media: table, pagination, menu bar, video.
+- v0.1.500+ effects: marquee, retro grid, text animation, typing effect.
+- Example apps showing real integration in Vapor and Hummingbird.
 
 PRs welcome.
 
