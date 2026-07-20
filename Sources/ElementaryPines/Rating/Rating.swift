@@ -54,6 +54,7 @@ public func pinesRating(
         emptyStyle: emptyStyle,
         compactReset: compactReset
     )
+    let paths = ratingPaths(icon: icon, emptyStyle: emptyStyle)
 
     return div(
         .class(classes.container),
@@ -64,7 +65,8 @@ public func pinesRating(
 
         ul(.class("flex items-center")) {
             ratingStars(
-                iconPath: icon.kind.path,
+                emptyPath: paths.empty,
+                filledPath: paths.filled,
                 emptyColor: classes.emptyColor,
                 emptySvg: classes.emptySvg,
                 filledColor: classes.filledColor
@@ -201,27 +203,81 @@ private func ratedTextView(text: String, suffix: String) -> some HTML {
     }
 }
 
+/// 256-grid Phosphor paths for the rating icons, matching the official Pines
+/// rating element (`pines/elements/rating.html`). Distinct from the 24-grid
+/// Heroicons paths in ``PinesIconKind`` — the rating SVGs use
+/// `viewBox="0 0 256 256"`.
+private enum RatingIconPaths {
+    /// Phosphor "star" outline path.
+    static let starOutline =
+        "M128,189.09l54.72,33.65a8.4,8.4,0,0,0,12.52-9.17l-14.88-62.79,48.7-42"
+        + "A8.46,8.46,0,0,0,224.27,94L160.36,88.8,135.74,29.2a8.36,8.36,0,0,0-15.48,0"
+        + "L95.64,88.8,31.73,94a8.46,8.46,0,0,0-4.79,14.83l48.7,42L60.76,213.57"
+        + "a8.4,8.4,0,0,0,12.52,9.17Z"
+    /// Phosphor "star" fill path.
+    static let starFill =
+        "M234.29,114.85l-45,38.83L203,211.75a16.4,16.4,0,0,1-24.5,17.82L128,198.49"
+        + ",77.47,229.57A16.4,16.4,0,0,1,53,211.75l13.76-58.07-45-38.83A16.46,16.46,0,0,1"
+        + ",31.08,86l59-4.76,22.76-55.08a16.36,16.36,0,0,1,30.27,0l22.75,55.08,59,4.76"
+        + "a16.46,16.46,0,0,1,9.37,28.86Z"
+    /// Phosphor "heart" path (used for both outline and fill).
+    static let heart =
+        "M128,224S24,168,24,102A54,54,0,0,1,78,48c22.59,0,41.94,12.31,50,32"
+        + ",8.06-19.69,27.41-32,50-32a54,54,0,0,1,54,54C232,168,128,224,128,224Z"
+}
+
+private struct RatingPaths {
+    let empty: String
+    let filled: String
+}
+
+private func ratingPaths(
+    icon: PinesRatingIcon,
+    emptyStyle: PinesRatingEmptyStyle
+) -> RatingPaths {
+    switch (icon, emptyStyle) {
+    case (.star, .outlined):
+        return RatingPaths(
+            empty: RatingIconPaths.starOutline,
+            filled: RatingIconPaths.starFill
+        )
+    case (.star, .filled):
+        return RatingPaths(
+            empty: RatingIconPaths.starFill,
+            filled: RatingIconPaths.starFill
+        )
+    case (.heart, .outlined), (.heart, .filled):
+        return RatingPaths(
+            empty: RatingIconPaths.heart,
+            filled: RatingIconPaths.heart
+        )
+    }
+}
+
 @HTMLBuilder
 private func ratingStars(
-    iconPath: String,
+    emptyPath: String,
+    filledPath: String,
     emptyColor: String,
     emptySvg: String,
     filledColor: String
 ) -> some HTML {
-    let xmlns: HTMLAttribute<HTMLTag.svg> = HTMLAttribute(
+    let xmlns: SVGAttribute<SVGTag.svg> = SVGAttribute(
         name: "xmlns",
         value: "http://www.w3.org/2000/svg"
     )
-    let viewBox: HTMLAttribute<HTMLTag.svg> = HTMLAttribute(
+    let viewBox: SVGAttribute<SVGTag.svg> = SVGAttribute(
         name: "viewBox",
         value: "0 0 256 256"
     )
     let emptySvgRaw =
-        #"<rect width="256" height="256" fill="none""#
-        + #" <path d="\#(iconPath)" \#(emptySvg)/>"#
+        #"<rect width="256" height="256" fill="none"/>"#
+        + (emptySvg.isEmpty
+            ? #"<path d="\#(emptyPath)"/>"#
+            : #"<path d="\#(emptyPath)" \#(emptySvg)/>"#)
     let filledSvgRaw =
-        #"<rect width="256" height="256" fill="none""#
-        + #" <path d="\#(iconPath)"/>"#
+        #"<rect width="256" height="256" fill="none"/>"#
+        + #"<path d="\#(filledPath)"/>"#
 
     template(.x.loop("star in max_stars"), .x.bind("key", "star")) {
         li(
@@ -233,16 +289,16 @@ private func ratingStars(
                 "{ 'text-gray-400 cursor-not-allowed': disabled }"
             )
         ) {
-            svg(
-                .x.show("star > stars"),
+            SVG.svg(
+                SVGAttribute(name: "x-show", value: "star > stars"),
                 .class("w-6 h-6 \(emptyColor)"),
                 xmlns,
                 viewBox
             ) {
                 HTMLRaw(emptySvgRaw)
             }
-            svg(
-                .x.show("star <= stars"),
+            SVG.svg(
+                SVGAttribute(name: "x-show", value: "star <= stars"),
                 .class("w-6 h-6 \(filledColor)"),
                 xmlns,
                 viewBox
@@ -290,10 +346,10 @@ private func fullResetButton() -> some HTML {
             "{ 'opacity-50 cursor-not-allowed': disabled }"
         )
     ) {
-        svg(
+        SVG.svg(
             .class("w-3 h-3 mr-0.5"),
-            HTMLAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg"),
-            HTMLAttribute(name: "viewBox", value: "0 0 256 256")
+            SVGAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg"),
+            SVGAttribute(name: "viewBox", value: "0 0 256 256")
         ) {
             HTMLRaw(
                 #"<rect width="256" height="256" fill="none"/>"#
