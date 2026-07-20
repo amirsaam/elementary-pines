@@ -13,46 +13,79 @@ final class BreadcrumbTests: XCTestCase {
     ]
 
     func testBasicBreadcrumbs() throws {
+        // Mirrors the official Pines example: home icon crumb, two link
+        // crumbs with SVG chevron separators, and an active current crumb.
         let expected = try String(
             contentsOf: fixtureURL("breadcrumb-basic.html"),
             encoding: .utf8
         )
         HTMLAssertEqual(
             pinesBreadcrumb([
-                .link("Home", href: "/"),
-                .link("Docs", href: "/docs"),
-                .current("Current Page"),
+                .link("Cart", href: "/cart"),
+                .link("Checkout", href: "/checkout"),
+                .link("Payment", href: "/payment"),
+                .current("Delivery Address"),
             ]),
             expected
         )
     }
 
-    func testBreadcrumbsWithSlashSeparator() throws {
-        let expected = try String(
-            contentsOf: fixtureURL("breadcrumb-slash.html"),
-            encoding: .utf8
-        )
-        HTMLAssertEqual(
-            pinesBreadcrumb(
-                [
-                    .link("Home", href: "/"),
-                    .link("Docs", href: "/docs"),
-                    .current("Current Page"),
-                ],
-                separator: .slash
-            ),
-            expected
-        )
-    }
-
     func testSingleItemBreadcrumb() throws {
-        // Single item: one item li plus one first-hidden separator li.
+        // Single current item: no home icon, no separators.
         let expected = try String(
             contentsOf: fixtureURL("breadcrumb-single.html"),
             encoding: .utf8
         )
         HTMLAssertEqual(
             pinesBreadcrumb([.current("Home")]),
+            expected
+        )
+    }
+
+    func testSlashSeparators() throws {
+        let expected = try String(
+            contentsOf: fixtureURL("breadcrumb-slash.html"),
+            encoding: .utf8
+        )
+        HTMLAssertEqual(
+            pinesBreadcrumb([
+                .link("Cart", href: "/cart"),
+                .link("Checkout", href: "/checkout"),
+                .link("Payment", href: "/payment"),
+                .current("Delivery Address"),
+            ], separator: .slash),
+            expected
+        )
+    }
+
+    func testNoHomeIcon() throws {
+        let expected = try String(
+            contentsOf: fixtureURL("breadcrumb-no-home-icon.html"),
+            encoding: .utf8
+        )
+        HTMLAssertEqual(
+            pinesBreadcrumb([
+                .link("Cart", href: "/cart"),
+                .link("Checkout", href: "/checkout"),
+                .link("Payment", href: "/payment"),
+                .current("Delivery Address"),
+            ], homeIcon: .none),
+            expected
+        )
+    }
+
+    func testArrowSeparators() throws {
+        let expected = try String(
+            contentsOf: fixtureURL("breadcrumb-arrow.html"),
+            encoding: .utf8
+        )
+        HTMLAssertEqual(
+            pinesBreadcrumb([
+                .link("Cart", href: "/cart"),
+                .link("Checkout", href: "/checkout"),
+                .link("Payment", href: "/payment"),
+                .current("Delivery Address"),
+            ], separator: .arrow),
             expected
         )
     }
