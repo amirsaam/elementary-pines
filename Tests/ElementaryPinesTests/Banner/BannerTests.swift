@@ -4,15 +4,34 @@ import TestUtilities
 import XCTest
 
 final class BannerTests: XCTestCase {
+    /// The official primary top-of-page example, with all defaults.
     func testBasicBanner() throws {
         let expected = try String(
             contentsOf: fixtureURL("banner-basic.html"),
             encoding: .utf8
         )
         HTMLAssertEqual(
-            pinesBanner {
-                p { "Cookie notice." }
-            },
+            pinesBanner(
+                label: "New Feature",
+                message: "Click here to learn about our latest feature",
+                href: "#"
+            ),
+            expected
+        )
+    }
+
+    func testBannerWithoutIcon() throws {
+        let expected = try String(
+            contentsOf: fixtureURL("banner-no-icon.html"),
+            encoding: .utf8
+        )
+        HTMLAssertEqual(
+            pinesBanner(
+                label: "New Feature",
+                message: "Click here to learn about our latest feature",
+                href: "#",
+                icon: nil
+            ),
             expected
         )
     }
@@ -23,35 +42,12 @@ final class BannerTests: XCTestCase {
             encoding: .utf8
         )
         HTMLAssertEqual(
-            pinesBanner(icon: .kind(.info)) {
-                p { "New version available." }
-            },
-            expected
-        )
-    }
-
-    func testDismissibleBanner() throws {
-        let expected = try String(
-            contentsOf: fixtureURL("banner-dismissible.html"),
-            encoding: .utf8
-        )
-        HTMLAssertEqual(
-            pinesBanner(dismissible: true) {
-                p { "Cookie notice." }
-            },
-            expected
-        )
-    }
-
-    func testFullBanner() throws {
-        let expected = try String(
-            contentsOf: fixtureURL("banner-full.html"),
-            encoding: .utf8
-        )
-        HTMLAssertEqual(
-            pinesBanner(icon: .kind(.warning), dismissible: true) {
-                p { "Your session is about to expire." }
-            },
+            pinesBanner(
+                label: "New Feature",
+                message: "Click here to learn about our latest feature",
+                href: "#",
+                icon: .kind(.info)
+            ),
             expected
         )
     }
@@ -62,9 +58,45 @@ final class BannerTests: XCTestCase {
             encoding: .utf8
         )
         HTMLAssertEqual(
-            pinesBanner(icon: .custom(path: "/icons/my.svg")) {
-                p { "New version available." }
-            },
+            pinesBanner(
+                label: "New Feature",
+                message: "Click here to learn about our latest feature",
+                href: "#",
+                icon: .custom(path: "/icons/my.svg")
+            ),
+            expected
+        )
+    }
+
+    func testNonDismissibleBanner() throws {
+        let expected = try String(
+            contentsOf: fixtureURL("banner-not-dismissible.html"),
+            encoding: .utf8
+        )
+        HTMLAssertEqual(
+            pinesBanner(
+                label: "New Feature",
+                message: "Click here to learn about our latest feature",
+                href: "#",
+                dismissible: false
+            ),
+            expected
+        )
+    }
+
+    /// The official bottom-of-page example (black banner).
+    func testBottomBanner() throws {
+        let expected = try String(
+            contentsOf: fixtureURL("banner-bottom.html"),
+            encoding: .utf8
+        )
+        HTMLAssertEqual(
+            pinesBanner(
+                label: "New Feature",
+                message: "Click here to learn about our latest feature",
+                href: "#",
+                position: .bottom
+            ),
             expected
         )
     }
