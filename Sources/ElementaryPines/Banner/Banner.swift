@@ -96,7 +96,10 @@ public func pinesBanner(
         div(.class("flex items-center justify-between w-full h-full px-3 mx-auto max-w-7xl")) {
             a(
                 .href(href),
-                .class("flex flex-col w-full h-full text-xs leading-6 \(styles.text) duration-150 ease-out sm:flex-row sm:items-center opacity-80 hover:opacity-100")
+                .class(
+                    "flex flex-col w-full h-full text-xs leading-6 \(styles.text) "
+                    + "duration-150 ease-out sm:flex-row sm:items-center opacity-80 hover:opacity-100"
+                )
             ) {
                 span(.class("flex items-center")) {
                     if let icon {
@@ -123,7 +126,10 @@ public func pinesBanner(
             if dismissible {
                 button(
                     .x.on("click", "bannerVisible=false; setTimeout(()=>{ bannerVisible = true }, 1000);"),
-                    .class("flex items-center flex-shrink-0 translate-x-1 ease-out duration-150 justify-center w-6 h-6 p-1.5 \(styles.text) rounded-full \(styles.buttonHover)")
+                    .class(
+                        "flex items-center flex-shrink-0 translate-x-1 ease-out duration-150 "
+                        + "justify-center w-6 h-6 p-1.5 \(styles.text) rounded-full \(styles.buttonHover)"
+                    )
                 ) {
                     pinesBannerDismissIcon()
                 }

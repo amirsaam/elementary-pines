@@ -48,12 +48,15 @@ final class BreadcrumbTests: XCTestCase {
             encoding: .utf8
         )
         HTMLAssertEqual(
-            pinesBreadcrumb([
-                .link("Cart", href: "/cart"),
-                .link("Checkout", href: "/checkout"),
-                .link("Payment", href: "/payment"),
-                .current("Delivery Address"),
-            ], separator: .slash),
+            pinesBreadcrumb(
+                [
+                    .link("Cart", href: "/cart"),
+                    .link("Checkout", href: "/checkout"),
+                    .link("Payment", href: "/payment"),
+                    .current("Delivery Address"),
+                ],
+                separator: .slash
+            ),
             expected
         )
     }
@@ -64,12 +67,15 @@ final class BreadcrumbTests: XCTestCase {
             encoding: .utf8
         )
         HTMLAssertEqual(
-            pinesBreadcrumb([
-                .link("Cart", href: "/cart"),
-                .link("Checkout", href: "/checkout"),
-                .link("Payment", href: "/payment"),
-                .current("Delivery Address"),
-            ], homeIcon: .none),
+            pinesBreadcrumb(
+                [
+                    .link("Cart", href: "/cart"),
+                    .link("Checkout", href: "/checkout"),
+                    .link("Payment", href: "/payment"),
+                    .current("Delivery Address"),
+                ],
+                homeIcon: .none
+            ),
             expected
         )
     }
@@ -80,12 +86,15 @@ final class BreadcrumbTests: XCTestCase {
             encoding: .utf8
         )
         HTMLAssertEqual(
-            pinesBreadcrumb([
-                .link("Cart", href: "/cart"),
-                .link("Checkout", href: "/checkout"),
-                .link("Payment", href: "/payment"),
-                .current("Delivery Address"),
-            ], separator: .arrow),
+            pinesBreadcrumb(
+                [
+                    .link("Cart", href: "/cart"),
+                    .link("Checkout", href: "/checkout"),
+                    .link("Payment", href: "/payment"),
+                    .current("Delivery Address"),
+                ],
+                separator: .arrow
+            ),
             expected
         )
     }

@@ -34,7 +34,10 @@ public func pinesBreadcrumb(
         .class("flex justify-between px-3.5 py-1 border border-neutral-200/60 rounded-md"),
         HTMLAttribute(name: "aria-label", value: "Breadcrumb")
     ) {
-        ol(.class("inline-flex items-center mb-3 space-x-1 text-xs text-neutral-500 [&_.active-breadcrumb]:text-neutral-600 [&_.active-breadcrumb]:font-medium sm:mb-0")) {
+        let breadcrumbListClass =
+            "inline-flex items-center mb-3 space-x-1 text-xs text-neutral-500 "
+            + "[&_.active-breadcrumb]:text-neutral-600 [&_.active-breadcrumb]:font-medium sm:mb-0"
+        ol(.class(breadcrumbListClass)) {
             for (index, item) in items.enumerated() {
                 if index > 0 {
                     breadcrumbSeparatorItem(separator)
