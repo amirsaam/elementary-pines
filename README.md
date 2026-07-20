@@ -292,10 +292,18 @@ router.get("/docs/{path=}") { request, context -> Response in
 
 ```swift
 // quote with optional avatar
-pinesQuote(.withAvatar, avatar: "user.jpg") {
-    p { "This is a great quote." }
-    cite { "— Author Name" }
-}
+pinesQuote(
+    quote: "This is a great quote.",
+    author: "Author Name",
+    role: "Role"
+)
+
+pinesQuote(
+    quote: "This is a great quote.",
+    author: "Author Name",
+    role: "Role",
+    avatar: "user.jpg"
+)
 ```
 
 ## Components
@@ -312,7 +320,7 @@ The package ships 17 free functions. Each wraps the matching Pines UI element wi
 | `pinesIcon(_:size:color:attributes:)`     | 35 kinds × 5 sizes = 175 variants; 11 colors; `attributes:` for extra classes / directives | Heroicons 2.x paths. Classes passed via `attributes:` merge with the default size/color class. |
 | `pinesAlert(_:icon:content:)`  | 2 overloads: `pinesAlert { ... }` (basic) and `pinesAlert(.info, icon: .auto, ...) { ... }`    | `.auto` inserts the matching icon; `.none` omits; `.custom(path:)` renders a user-provided SVG file via `<img>`. |
 | `pinesProgress(_:of:color:size:)` | 11 colors × 3 sizes (`.sm`, `.md`, `.lg`)                                                   | Percentage clamped to 0–100.                              |
-| `pinesQuote(_:avatar:content:)` | 2 variants: `.basic`, `.withAvatar(avatar:)`                                                  | `avatar:` required for `.withAvatar`.                     |
+| `pinesQuote(quote:author:role:avatar:)` | Quote text, author name, role, optional avatar image URL.                                     | `avatar:` omitted to render the quote without an avatar.  |
 | `pinesBreadcrumb(_:separator:)` | 3 separators: `.slash`, `.chevron` (default), `.arrow`                                       | See also `pinesBreadcrumbItems(for:in:root:)` for data-driven derivation. |
 | `pinesBreadcrumbItems(for:in:root:)` | —                                                                                         | Derives items from a flat `(path, label)` site map and a current path. |
 | `pinesBanner(icon:dismissible:content:)` | `PinesBannerIcon` with `.kind(PinesIconKind)` or `.custom(path: String)`  | Any of 35 built-in icons or a user-provided SVG file; close button uses `pinesIcon(.x)`. |
