@@ -131,10 +131,11 @@ pinesAlert(.danger, icon: .custom(path: "/icons/spinner.svg")) {
 ```
 
 ```swift
-// 3 progress sizes, 11 colors; percentage is clamped to 0–100
-pinesProgress(75, color: .green)              // default .md (h-2.5)
-pinesProgress(30, color: .red, size: .lg)     // h-4
-pinesProgress(9, of: 20)                     // 9 out of 20 = 45%
+// official Alpine-animated progress bar; pass a value for a static bar
+pinesProgress()                                // auto-animated 0→100, neutral, h-3
+pinesProgress(45)                              // static 45%, neutral, h-3
+pinesProgress(9, of: 20)                       // static 45%, neutral, h-3
+pinesProgress(75, color: .green, size: .lg)    // static 75%, green, h-4
 ```
 
 ```swift
@@ -319,7 +320,7 @@ The package ships 17 free functions. Each wraps the matching Pines UI element wi
 | `pinesCard(_:image:content:)`  | 4 variants: `.basic`, `.image(image:)`, `.horizontal(image:)`, `.stat`                       | `image:` required for `.image` and `.horizontal`.          |
 | `pinesIcon(_:size:color:attributes:)`     | 35 kinds × 5 sizes = 175 variants; 11 colors; `attributes:` for extra classes / directives | Heroicons 2.x paths. Classes passed via `attributes:` merge with the default size/color class. |
 | `pinesAlert(_:icon:content:)`  | 2 overloads: `pinesAlert { ... }` (basic) and `pinesAlert(.info, icon: .auto, ...) { ... }`    | `.auto` inserts the matching icon; `.none` omits; `.custom(path:)` renders a user-provided SVG file via `<img>`. |
-| `pinesProgress(_:of:color:size:)` | 11 colors × 3 sizes (`.sm`, `.md`, `.lg`)                                                   | Percentage clamped to 0–100.                              |
+| `pinesProgress(_:of:color:size:)` | Default is the official Alpine-animated bar; pass a value for a static bar. `color:` defaults to `.neutral`, `size:` to `.md` (`h-3`). | Percentage clamped to 0–100.                              |
 | `pinesQuote(quote:author:role:avatar:)` | Quote text, author name, role, optional avatar image URL.                                     | `avatar:` omitted to render the quote without an avatar.  |
 | `pinesBreadcrumb(_:separator:)` | 3 separators: `.slash`, `.chevron` (default), `.arrow`                                       | See also `pinesBreadcrumbItems(for:in:root:)` for data-driven derivation. |
 | `pinesBreadcrumbItems(for:in:root:)` | —                                                                                         | Derives items from a flat `(path, label)` site map and a current path. |
