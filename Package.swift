@@ -1,4 +1,4 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 6.1
 import PackageDescription
 
 let featureFlags: [SwiftSetting] = [
@@ -18,14 +18,12 @@ let package = Package(
         .library(name: "ElementaryPines", targets: ["ElementaryPines"])
     ],
     dependencies: [
-        .package(url: "https://github.com/elementary-swift/elementary.git", from: "0.7.0"),
-        .package(url: "https://github.com/amirsaam/elementary-alpine.git", from: "0.3.100"),
+        .package(url: "https://github.com/amirsaam/elementary-alpine.git", from: "0.4.000"),
     ],
     targets: [
         .target(
             name: "ElementaryPines",
             dependencies: [
-                .product(name: "Elementary", package: "elementary"),
                 .product(name: "ElementaryAlpine", package: "elementary-alpine"),
             ],
             path: "Sources/ElementaryPines",
@@ -34,7 +32,7 @@ let package = Package(
         .target(
             name: "TestUtilities",
             dependencies: [
-                .product(name: "Elementary", package: "elementary")
+                .product(name: "ElementaryAlpine", package: "elementary-alpine")
             ],
             path: "Tests/TestUtilities",
             swiftSettings: featureFlags
