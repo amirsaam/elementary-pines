@@ -50,6 +50,10 @@ public func pinesIcon(
         ] + attributes
 
     return SVG.svg(attributes: allAttributes) {
-        HTMLRaw(#"<path stroke-linecap="round" stroke-linejoin="round" d="\#(path)" />"#)
+        SVG.path(
+            .d(path),
+            .strokeLinecap(.round),
+            .strokeLinejoin(.round)
+        )
     }
 }
