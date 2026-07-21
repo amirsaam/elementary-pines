@@ -43,20 +43,18 @@ struct ProductPage: HTMLDocument {
 Add `ElementaryPines` to your `Package.swift` dependencies:
 
 ```swift
-// swift-tools-version: 6.0
+// swift-tools-version: 6.1
 import PackageDescription
 
 let package = Package(
     name: "MyApp",
     dependencies: [
         .package(url: "https://github.com/amirsaam/elementary-pines.git", from: "0.1.100"),
-        .package(url: "https://github.com/elementary-swift/elementary.git", from: "0.7.0"),
     ],
     targets: [
         .target(
             name: "App",
             dependencies: [
-                .product(name: "Elementary", package: "elementary"),
                 .product(name: "ElementaryPines", package: "elementary-pines"),
             ]
         ),
@@ -64,7 +62,9 @@ let package = Package(
 )
 ```
 
-This package requires Swift 6 with `StrictConcurrency=complete` and targets macOS v14, iOS v15, tvOS v17, watchOS v10.
+`ElementaryPines` depends on `ElementaryAlpine`, which depends on `Elementary`. Swift Package Manager resolves these transitively — no need to declare them as direct dependencies.
+
+This package requires Swift 6.1 with `StrictConcurrency=complete` and targets macOS v14, iOS v15, tvOS v17, watchOS v10.
 
 ## Quick tour
 
@@ -131,7 +131,7 @@ pinesAlert(.danger, icon: .custom(path: "/icons/spinner.svg")) {
 ```
 
 ```swift
-// official Alpine-animated progress bar; pass a value for a static bar
+// Alpine-animated progress bar; pass a value for a static bar
 pinesProgress()                                // auto-animated 0→100, neutral, h-3
 pinesProgress(45)                              // static 45%, neutral, h-3
 pinesProgress(9, of: 20)                       // static 45%, neutral, h-3
@@ -139,7 +139,7 @@ pinesProgress(75, color: .green, size: .lg)    // static 75%, green, h-4
 ```
 
 ```swift
-// official fixed Alpine banner (top by default)
+// fixed Alpine banner (top by default)
 pinesBanner(
     label: "New Feature",
     message: "Click here to learn about our latest feature",
@@ -260,7 +260,7 @@ pinesSwitch(labelText: "Airplane Mode", name: "airplane", id: "airplane", attrib
 ```
 
 ```swift
-// breadcrumb — manual items (official bordered style; first crumb renders a home icon)
+// breadcrumb — manual items (bordered style; first crumb renders a home icon)
 pinesBreadcrumb([
     .link("Home", href: "/"),
     .link("Docs", href: "/docs"),
@@ -332,9 +332,9 @@ The package ships 17 free functions. Each wraps the matching Pines UI element wi
 | `pinesCard(_:image:content:)`  | 4 variants: `.basic`, `.image(image:)`, `.horizontal(image:)`, `.stat`                       | `image:` required for `.image` and `.horizontal`.          |
 | `pinesIcon(_:size:color:attributes:)`     | 35 kinds × 5 sizes = 175 variants; 11 colors; `attributes:` for extra classes / directives | Heroicons 2.x paths. Classes passed via `attributes:` merge with the default size/color class. |
 | `pinesAlert(_:icon:content:)`  | 2 overloads: `pinesAlert { ... }` (basic) and `pinesAlert(.info, icon: .auto, ...) { ... }`    | `.auto` inserts the matching icon; `.none` omits; `.custom(path:)` renders a user-provided SVG file via `<img>`. |
-| `pinesProgress(_:of:color:size:)` | Default is the official Alpine-animated bar; pass a value for a static bar. `color:` defaults to `.neutral`, `size:` to `.md` (`h-3`). | Percentage clamped to 0–100.                              |
+| `pinesProgress(_:of:color:size:)` | Default is the Alpine-animated bar; pass a value for a static bar. `color:` defaults to `.neutral`, `size:` to `.md` (`h-3`). | Percentage clamped to 0–100.                              |
 | `pinesQuote(quote:author:role:avatar:)` | Quote text, author name, role, optional avatar image URL.                                     | `avatar:` omitted to render the quote without an avatar.  |
-| `pinesBreadcrumb(_:separator:homeIcon:)` | `separator:` `.chevron` (official, default), `.slash`, `.arrow`; `homeIcon:` `.icon(PinesIconKind)` (default `.home`), `.custom(path:)`, `.none` | See also `pinesBreadcrumbItems(for:in:root:)` for data-driven derivation. |
+| `pinesBreadcrumb(_:separator:homeIcon:)` | `separator:` `.chevron` (default), `.slash`, `.arrow`; `homeIcon:` `.icon(PinesIconKind)` (default `.home`), `.custom(path:)`, `.none` | See also `pinesBreadcrumbItems(for:in:root:)` for data-driven derivation. |
 | `pinesBreadcrumbItems(for:in:root:)` | —                                                                                         | Derives items from a flat `(path, label)` site map and a current path. |
 | `pinesBanner(label:message:href:icon:dismissible:position:)` | `PinesBannerPosition` `.top` (white) / `.bottom` (black). `icon:` defaults to `.wand`; pass `nil` to omit. | Alpine-driven fixed banner with show/hide transitions and a dismiss button. |
 | `pinesInput(type:color:placeholder:name:value:id:disabled:attributes:)` | `String` type (e.g. `"text"`, `"email"`, `"password"`); color overrides the 300/400 border + ring pair | Tailwind-only — users add `x-data`/`x-model` on the call site for dynamic behavior. |
@@ -348,7 +348,7 @@ The package ships 17 free functions. Each wraps the matching Pines UI element wi
 
 ## Alpine integration
 
-Pines UI was designed for [Alpine.js](https://alpinejs.dev/). The standard way to add Alpine directives to Elementary HTML is with the typed `.x.*` attribute helpers from [`elementary-alpinejs`](https://github.com/amirsaam/elementary-alpinejs) — they compile to the same HTML attributes and are verified by snapshot tests.
+Pines UI was designed for [Alpine.js](https://alpinejs.dev/). The standard way to add Alpine directives to Elementary HTML is with the typed `.x.*` attribute helpers from [`ElementaryAlpine`](https://github.com/amirsaam/elementary-alpine) — they compile to the same HTML attributes and are verified by snapshot tests.
 
 ```swift
 import Elementary
@@ -371,7 +371,7 @@ div(.x.data("{ progress: 0 }")) {
 }
 ```
 
-`elementary-alpinejs` also provides `setupAlpine(plugins:)` which emits the CDN `<script>` tags for Alpine.js core + plugins. Every Pines component preserves Alpine directives passed as attributes — `x-text`, `x-model`, `x-on:click`, `x-data`, `x-show`, and the rest all survive Elementary's renderer.
+`ElementaryAlpine` also provides `setupAlpine(plugins:)` which emits the CDN `<script>` tags for Alpine.js core + plugins. Every Pines component preserves Alpine directives passed as attributes — `x-text`, `x-model`, `x-on:click`, `x-data`, `x-show`, and the rest all survive Elementary's renderer.
 
 ## Setup
 
