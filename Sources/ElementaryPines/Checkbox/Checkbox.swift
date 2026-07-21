@@ -94,7 +94,7 @@ public func pinesCheckbox(
     name: String? = nil,
     id: String,
     attributes: () -> [HTMLAttribute<HTMLTag.input>] = { [] },
-    @HTMLBuilder content: () -> some HTML
+    @ContentBuilder content: () -> some HTML
 ) -> some HTML {
     let accentColor = color?.rawValue ?? "blue"
 
@@ -158,7 +158,7 @@ public func pinesCheckbox(
     id: String,
     labelClasses: String,
     attributes: () -> [HTMLAttribute<HTMLTag.input>] = { [] },
-    @HTMLBuilder content: () -> some HTML
+    @ContentBuilder content: () -> some HTML
 ) -> some HTML {
     let accentColor = color?.rawValue ?? "blue"
 

@@ -161,7 +161,11 @@ final class CheckboxTests: XCTestCase {
                             SVGAttribute(name: "class", value: "w-3 h-3 text-white duration-300 ease-out"),
                         ]
                     ) {
-                        HTMLRaw(#"<path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />"#)
+                        SVG.path(
+                            .d("M4.5 12.75l6 6 9-13.5"),
+                            .strokeLinecap(.round),
+                            .strokeLinejoin(.round)
+                        )
                     }
                 }
                 span { "Custom Checkbox" }
@@ -188,7 +192,11 @@ final class CheckboxTests: XCTestCase {
                             SVGAttribute(name: "class", value: "w-3 h-3 text-white duration-300 ease-out"),
                         ]
                     ) {
-                        HTMLRaw(#"<path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />"#)
+                        SVG.path(
+                            .d("M4.5 12.75l6 6 9-13.5"),
+                            .strokeLinecap(.round),
+                            .strokeLinejoin(.round)
+                        )
                     }
                 }
                 span { "Custom Checkbox" }
@@ -215,7 +223,11 @@ final class CheckboxTests: XCTestCase {
                             SVGAttribute(name: "class", value: "w-3 h-3 text-white duration-300 ease-out"),
                         ]
                     ) {
-                        HTMLRaw(#"<path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />"#)
+                        SVG.path(
+                            .d("M4.5 12.75l6 6 9-13.5"),
+                            .strokeLinecap(.round),
+                            .strokeLinejoin(.round)
+                        )
                     }
                 }
                 span { "Custom Checkbox" }
@@ -244,7 +256,11 @@ final class CheckboxTests: XCTestCase {
                             SVGAttribute(name: "class", value: "w-3 h-3 text-white duration-300 ease-out"),
                         ]
                     ) {
-                        HTMLRaw(#"<path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />"#)
+                        SVG.path(
+                            .d("M4.5 12.75l6 6 9-13.5"),
+                            .strokeLinecap(.round),
+                            .strokeLinejoin(.round)
+                        )
                     }
                 }
                 span { "Custom Checkbox" }
