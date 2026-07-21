@@ -1,6 +1,6 @@
 /// Vertical placement for `pinesBanner(label:message:href:icon:dismissible:position:)`.
 ///
-/// Matches the two official Pines banner examples: a white banner fixed to
+/// Two variants: a white banner fixed to
 /// the top of the page that slides down on enter, or a black banner fixed to
 /// the bottom that slides up on enter.
 public enum PinesBannerPosition: Sendable {
