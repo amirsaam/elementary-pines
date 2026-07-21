@@ -45,7 +45,7 @@ import Elementary
 public func pinesAlert<Content: HTML>(
     _ variant: PinesAlertVariant,
     icon: PinesAlertIcon = .auto,
-    @HTMLBuilder content: () -> Content
+    @ContentBuilder content: () -> Content
 ) -> some HTML {
     let baseClasses =
         "relative w-full rounded-lg border bg-white p-4 [&>svg]:absolute [&>svg]:text-foreground [&>svg]:left-4 [&>svg]:top-4 [&>svg+div]:translate-y-[-3px] [&:has(svg)]:pl-11 text-neutral-900"

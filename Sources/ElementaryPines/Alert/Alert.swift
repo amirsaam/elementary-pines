@@ -29,7 +29,7 @@ import Elementary
 /// }
 /// ```
 public func pinesAlert<Content: HTML>(
-    @HTMLBuilder content: () -> Content
+    @ContentBuilder content: () -> Content
 ) -> some HTML {
     div(
         .class(

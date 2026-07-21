@@ -43,12 +43,12 @@ import Elementary
 public func pinesCard<Content: HTML>(
     _ variant: PinesCardVariant = .basic,
     image: String? = nil,
-    @HTMLBuilder content: () -> Content
+    @ContentBuilder content: () -> Content
 ) -> some HTML {
     let base = "rounded-lg overflow-hidden border border-neutral-200/60 bg-white text-neutral-700 shadow-sm"
     let outer = base + variant.outerSuffix
 
-    // Resolve the image URL outside the HTMLBuilder so the guard can run
+    // Resolve the image URL outside the ContentBuilder so the guard can run
     // before the builder closure starts.
     let imageURL: String? = {
         switch variant {
