@@ -70,9 +70,16 @@ final class BadgeStyleModifierTests: XCTestCase {
         )
         HTMLAssertEqual(
             span {
-                HTMLRaw(
-                    #"<svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 22h20L12 2z"/></svg>"#
-                )
+                SVG.svg(
+                    attributes: [
+                        .class("w-3.5 h-3.5"),
+                        SVGAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg"),
+                        SVGAttribute(name: "viewBox", value: "0 0 24 24"),
+                        SVGAttribute(name: "fill", value: "currentColor"),
+                    ]
+                ) {
+                    SVG.path(.d("M12 2L2 22h20L12 2z"))
+                }
                 span { "Active" }
             }
             .pinesBadgeStyle(.icon, color: .neutral),
