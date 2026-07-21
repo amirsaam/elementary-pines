@@ -1,6 +1,6 @@
 /// Height variants for `pinesProgress(_:of:color:size:)`.
 ///
-/// - `.md` (default) matches the official Pines progress bar height (`h-3`).
+/// - `.md` (default) is the base progress bar height (`h-3`).
 /// - `.sm` and `.lg` are package extensions.
 ///
 /// ```swift
@@ -11,7 +11,7 @@
 public enum PinesProgressSize: Sendable {
     /// 6px tall. h-1.5
     case sm
-    /// 12px tall. h-3 (official default)
+    /// 12px tall. h-3
     case md
     /// 16px tall. h-4
     case lg

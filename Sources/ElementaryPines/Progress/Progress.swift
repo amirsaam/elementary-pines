@@ -4,7 +4,7 @@ import ElementaryAlpine
 /// Renders the Pines UI progress bar.
 ///
 /// With no `value` (the default), the bar is Alpine-driven and animates from
-/// 0 to 100 on page load — exactly matching the official Pines example: an
+/// 0 to 100 on page load: an
 /// `x-data` scope holding `progress` and `progressInterval`, an `x-init`
 /// that increments `progress` by 1 every 100 ms until it reaches 100, and a
 /// fill bar whose width is bound reactively via `:style`.
@@ -31,9 +31,9 @@ import ElementaryAlpine
 ///
 /// - Parameters:
 ///   - value: A fixed progress value. When `nil` (the default), renders the
-///     Alpine-animated bar from the official example.
+///     Alpine-animated bar.
 ///   - max: The value that represents 100%. Defaults to 100.
-///   - color: The track/fill color. Defaults to neutral (the official design).
+///   - color: The track/fill color. Defaults to neutral.
 ///   - size: The bar height. Defaults to `.md` (`h-3`).
 public func pinesProgress(
     _ value: Int? = nil,

@@ -2,7 +2,7 @@ import Elementary
 
 /// Separator style for `pinesBreadcrumb(_:separator:homeIcon:)`.
 public enum PinesBreadcrumbSeparator: Sendable {
-    /// Right chevron (`pinesIcon(.chevronRight)`) — the official Pines style.
+    /// Right chevron (`pinesIcon(.chevronRight)`).
     case chevron
     /// Forward slash character.
     case slash

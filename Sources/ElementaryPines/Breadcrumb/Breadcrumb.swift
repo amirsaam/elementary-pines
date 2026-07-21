@@ -2,7 +2,7 @@ import Elementary
 
 /// Renders a Pines-styled breadcrumb navigation.
 ///
-/// Defaults match the official Pines breadcrumbs example: a bordered `<nav>`,
+/// Defaults: a bordered `<nav>`,
 /// a chevron separator between items, and a home icon for the first crumb.
 ///
 /// - Parameters:
