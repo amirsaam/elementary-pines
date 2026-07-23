@@ -62,6 +62,7 @@ let package = Package(
                 "Switch/SnapshotFixtures",
                 "RangeSlider/SnapshotFixtures",
                 "Rating/SnapshotFixtures",
+                "DatePicker/SnapshotFixtures",
             ],
             swiftSettings: featureFlags
         ),
