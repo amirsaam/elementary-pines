@@ -260,6 +260,14 @@ pinesSwitch(labelText: "Airplane Mode", name: "airplane", id: "airplane", attrib
 ```
 
 ```swift
+// date picker — calendar dropdown with month/year navigation
+pinesDatePicker()
+pinesDatePicker(labelText: "Birthday", format: .mmDdYyyy)
+pinesDatePicker(labelText: "Start Date", placeholder: "Pick a date", width: "w-72")
+pinesDatePicker(disabled: true)
+```
+
+```swift
 // breadcrumb — manual items (bordered style; first crumb renders a home icon)
 pinesBreadcrumb([
     .link("Home", href: "/"),
@@ -345,6 +353,7 @@ The package ships 17 free functions. Each wraps the matching Pines UI element wi
 | `pinesRating(icon:color:emptyStyle:maxStars:value:disabled:compactReset:)` | 2 icons (`PinesRatingIcon`) × 2 empty styles (`PinesRatingEmptyStyle`) × 11 colors; `maxStars`/`value`/`disabled`/`compactReset` | Alpine-driven — hover preview, click-to-rate, reset button (compact inline or below). Requires `setupAlpine()` in `<head>`. |
 | `pinesRangeSlider(color:name:id:min:max:value:step:disabled:)` | 11 colors; configurable `min`/`max`/`value`/`step`/`disabled` | Tailwind-only — `[&::-webkit-slider-thumb]`, `[&::-moz-range-track]` etc. for custom thumb/track styling. No Alpine dependency. |
 | `pinesSwitch(labelText:color:size:name:id:checked:disabled:attributes:)` | `PinesSwitchSize`: `.default` (h-6 w-10), `.small` (h-4 w-6); 11 colors; `checked`/`disabled` | Alpine-driven — hidden checkbox, button toggle, label click. Requires `setupAlpine()` in `<head>`. |
+| `pinesDatePicker(labelText:placeholder:format:width:disabled:)` | `PinesDatePickerFormat`: `.monthDayYear` (default), `.mmDdYyyy`, `.ddMmYyyy`, `.yyyMmDd`, `.dayMonthShortYear`; any Tailwind width class | Alpine-driven — full calendar dropdown with month/year navigation, day-of-week headers, day grid, and `x-transition`. Requires `setupPines()` in `<head>`. |
 
 ## Alpine integration
 
@@ -416,7 +425,7 @@ The full API is documented in source — every public type and function has doc 
 - [`Sources/ElementaryPines/Card/Card.swift`](./Sources/ElementaryPines/Card/Card.swift) — `pinesCard`
 - [`Sources/ElementaryPines/Alert/Alert+Variant.swift`](./Sources/ElementaryPines/Alert/Alert+Variant.swift) — `pinesAlert`
 
-The full test suite (115 snapshot and integration tests, including Alpine directive smoke tests) lives in [`Tests/ElementaryPinesTests/`](./Tests/ElementaryPinesTests/).
+The full test suite (119 snapshot and integration tests, including Alpine directive smoke tests) lives in [`Tests/ElementaryPinesTests/`](./Tests/ElementaryPinesTests/).
 
 ## Why this exists
 
@@ -424,15 +433,15 @@ The [Pines UI](https://devdojo.com/pines) library is a collection of pre-built A
 
 ## Current state (v0.1.100+)
 
-17 component functions are implemented and tested:
+18 component functions are implemented and tested:
 
-- `setupPines`, `PinesColor`, `.pinesButtonStyle`, `.pinesBadgeStyle`, `pinesCard`, `pinesIcon`, `pinesAlert`, `pinesProgress`, `pinesQuote`, `pinesRating`, `pinesRangeSlider`, `pinesBreadcrumb`, `pinesBanner`, `pinesInput`, `pinesTextarea`, `pinesSelect`, `pinesCheckbox`, `pinesRadioGroup`, `pinesSwitch`
+- `setupPines`, `PinesColor`, `.pinesButtonStyle`, `.pinesBadgeStyle`, `pinesCard`, `pinesIcon`, `pinesAlert`, `pinesProgress`, `pinesQuote`, `pinesRating`, `pinesRangeSlider`, `pinesBreadcrumb`, `pinesBanner`, `pinesInput`, `pinesTextarea`, `pinesSelect`, `pinesCheckbox`, `pinesRadioGroup`, `pinesSwitch`, `pinesDatePicker`
 
 Alpine directive compatibility is verified by a dedicated smoke suite covering `x-text`, `x-model`, `x-on:click`, `x-data`, `x-show`, and modifiers.
 
 ## Future directions
 
-- v0.1.200 form components are done (Date Picker, Textarea auto-resize, Copy to Clipboard remaining).
+- v0.1.200 form components are done (Textarea auto-resize, Copy to Clipboard remaining).
 - v0.1.300 overlay and navigation: modal, slide-over, popover, dropdown, tabs, accordion, toast, tooltip, command, context-menu, hover-card, navigation-menu, image-gallery.
 - v0.1.400+ data and media: table, pagination, menu bar, video.
 - v0.1.500+ effects: marquee, retro grid, text animation, typing effect.

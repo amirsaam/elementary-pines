@@ -18,7 +18,7 @@ Do not declare elementary or elementary-alpine as direct dependencies in consume
 ## Commands
 
 ```bash
-swift test                                         # 115 tests
+swift test                                         # 119 tests
 swift test --filter AlertTests                     # single test class
 swift test --parallel                              # parallel execution
 swift build --build-tests                          # CI build
@@ -93,7 +93,7 @@ Modifier enums co-locate in the same file as their component (e.g. `PinesButtonS
 - Tests are snapshot-based. Each component has `SnapshotFixtures/*.html` files containing expected HTML output.
 - To add a snapshot: write the expected HTML file first, then write the test that reads it.
 - `swift test` auto-updates fixtures when output changes. Review the diff before committing.
-- Run `swift test` before any commit. All 115 tests must pass.
+- Run `swift test` before any commit. All 119 tests must pass.
 - After adding or modifying a component, add corresponding snapshot tests in `Tests/ElementaryPinesTests/<Component>/`.
 
 ## Conventions
