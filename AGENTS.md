@@ -6,19 +6,19 @@ AI contribution guidelines for `elementary-pines`.
 
 `elementary-pines` is a server-side Swift wrapper for [Pines UI](https://devdojo.com/pines) — a collection of pre-built Alpine.js + Tailwind CSS components. It renders those same components type-safely via [Elementary](https://github.com/elementary-swift/elementary), with full snapshot test coverage.
 
-- `ElementaryPines` — 17 UI components (Alert, Badge, Banner, Breadcrumb, Button, Card, Checkbox, Icons, Input, Progress, Quote, RadioGroup, RangeSlider, Rating, Select, Switch, Textarea) + `PinesColor` color system
+- `ElementaryPines` — 18 UI components (Alert, Badge, Banner, Breadcrumb, Button, Card, Checkbox, DatePicker, Icons, Input, Progress, Quote, RadioGroup, RangeSlider, Rating, Select, Switch, Textarea) + `PinesColor` color system
 - `Pines.swift` — `setupPines()` entry point (emits `[x-cloak]` style for Alpine.js animations)
 
 ## Dependency chain
 
-elementary-pines → elementary-alpine → elementary. SPM resolves transitively.
+elementary-pines → elementary-alpine + elementary-tailwind → elementary. SPM resolves transitively.
 
-Do not declare elementary or elementary-alpine as direct dependencies in consumer Package.swift files.
+Do not declare elementary, elementary-alpine, or elementary-tailwind as direct dependencies in consumer Package.swift files.
 
 ## Commands
 
 ```bash
-swift test                                         # 119 tests
+ swift test                                         # 122 tests
 swift test --filter AlertTests                     # single test class
 swift test --parallel                              # parallel execution
 swift build --build-tests                          # CI build
@@ -56,11 +56,13 @@ Use `fix(scope):` for bug fixes and `chore(scope):` for maintenance tasks (depen
 
 ### Source (`Sources/ElementaryPines/`)
 
-- One directory per component: Alert, Badge, Banner, Breadcrumb, Button, Card, Checkbox, Icons, Input, Progress, Quote, RadioGroup, RangeSlider, Rating, Select, Switch, Textarea
+- One directory per component: Alert, Badge, Banner, Breadcrumb, Button, Card, Checkbox, DatePicker, Icons, Input, Progress, Quote, RadioGroup, RangeSlider, Rating, Select, Switch, Textarea
 - `Pines.swift` — `setupPines()` entry point (emits `[x-cloak]` style)
 - `Icons/Icons.swift` — `pinesIcon()` with 35 Heroicon kinds
 - `Icons/Icon+Special.swift` — `PinesSpecialIcon` enum + `pinesSpecialIcon()` for multi-path SVGs (wand, quoteMark)
 - `Helpers/Color.swift` — `PinesColor` enum (shared color palette)
+- `Helpers/Alpine.swift` — internal Alpine `x-bind:class` builder
+- `Helpers/Field.swift` — shared text-field Tailwind attributes
 
 ### Tests (`Tests/`)
 
@@ -86,14 +88,14 @@ Modifier enums co-locate in the same file as their component (e.g. `PinesButtonS
 - `PinesColor` provides 11 colors with three scales per color (solid, tonal, outline) used across all components
 - Alpine.js directives use typed `.x.*` helpers from ElementaryAlpine (`.x.data()`, `.x.on()`, `.x.text()`, `.x.show()`)
 - SVG elements don't conform to `HTMLTrait.Attributes.Global` — use raw `SVGAttribute(name:value:)` for Alpine directives on SVGs
-- Snapshot fixtures are single-line HTML files. `swift test` auto-updates them — review the diff before committing
+- Snapshot fixtures are single-line HTML files. `HTMLAssertEqual` compares rendered output byte-for-byte against the fixture and prints a diff on failure — fixtures are **not** auto-updated by `swift test`; update the fixture file when output intentionally changes
 
 ## Testing
 
 - Tests are snapshot-based. Each component has `SnapshotFixtures/*.html` files containing expected HTML output.
 - To add a snapshot: write the expected HTML file first, then write the test that reads it.
-- `swift test` auto-updates fixtures when output changes. Review the diff before committing.
-- Run `swift test` before any commit. All 119 tests must pass.
+- `swift test` compares rendered output against fixtures and fails with a diff on mismatch. Review the diff before updating a fixture file.
+- Run `swift test` before any commit. All 122 tests must pass.
 - After adding or modifying a component, add corresponding snapshot tests in `Tests/ElementaryPinesTests/<Component>/`.
 
 ## Conventions
@@ -105,7 +107,7 @@ Modifier enums co-locate in the same file as their component (e.g. `PinesButtonS
 
 ## Coding standards
 
-- Follow latest APIs from elementary and elementary-alpine — check upstream docs before implementing
+- Follow latest APIs from elementary, elementary-alpine, and elementary-tailwind — check upstream docs before implementing
 - Use `@ContentBuilder` (not deprecated `@HTMLBuilder`)
 - Use typed SVG API (`SVG.svg`, `SVG.path`, etc.) — no `HTMLRaw` for SVG rendering
 
@@ -126,7 +128,7 @@ Modifier enums co-locate in the same file as their component (e.g. `PinesButtonS
 
 ## Do not
 
-- Do not start implementing, refactoring, or changing code without first reading the relevant docs in the upstream packages (elementary, elementary-alpine, Pines UI).
+- Do not start implementing, refactoring, or changing code without first reading the relevant docs in the upstream packages (elementary, elementary-alpine, elementary-tailwind, Pines UI).
 - Do not commit without user review and title approval.
 - Do not use `HTMLRaw` for SVG rendering — use typed SVG API.
 - Do not use deprecated APIs from Elementary.
@@ -141,6 +143,7 @@ Modifier enums co-locate in the same file as their component (e.g. `PinesButtonS
 ## Dependencies
 
 - `elementary-alpine` ≥ 0.4.000 (Alpine.js directives for Elementary)
+- `elementary-tailwind` ≥ 0.3.000 (Tailwind CSS typed attribute helpers for Elementary)
 - `elementary` ≥ 0.8.0 (underlying HTML rendering library, resolved transitively)
 
 ## Upstream docs
@@ -148,3 +151,4 @@ Modifier enums co-locate in the same file as their component (e.g. `PinesButtonS
 - [Pines UI](https://devdojo.com/pines) — the web components this package wraps
 - [elementary](https://github.com/elementary-swift/elementary) — the Swift HTML rendering framework
 - [elementary-alpine](https://github.com/amirsaam/elementary-alpine) — Alpine.js directives for Elementary
+- [elementary-tailwind](https://github.com/amirsaam/elementary-tailwind) — Tailwind CSS typed attribute helpers for Elementary

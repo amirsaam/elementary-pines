@@ -58,7 +58,7 @@ final class SelectTests: XCTestCase {
                 items: [
                     .init(title: "One", value: "1")
                 ],
-                width: "w-96"
+                width: .size(96)
             ),
             expected
         )

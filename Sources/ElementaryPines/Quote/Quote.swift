@@ -1,4 +1,5 @@
 import Elementary
+import ElementaryTailwind
 
 /// Renders a Pines-styled blockquote with an oversized decorative quote mark,
 /// the quote text, and a footer with the author's avatar, name, and role.
@@ -14,13 +15,13 @@ import Elementary
 /// **Generated HTML:**
 /// ```html
 /// <blockquote class="relative w-full max-w-2xl mx-auto">
-///     <svg class="absolute top-0 left-0 w-16 h-16 text-gray-100 transform -translate-x-6 -translate-y-8" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="…" fill="currentColor"/></svg>
+///     <svg class="w-16 h-16 text-gray-100 -translate-x-6 -translate-y-8 absolute top-0 left-0" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="…" fill="currentColor"/></svg>
 ///     <div class="relative z-10">
 ///         <p class="text-gray-800 sm:text-xl"><em>Quote text</em></p>
 ///     </div>
 ///     <footer class="mt-6">
 ///         <div class="flex items-center">
-///             <div class="flex-shrink-0">
+///             <div class="shrink-0">
 ///                 <img class="w-10 h-10 rounded-full" src="avatar.jpg" alt="Author Name">
 ///             </div>
 ///             <div class="ml-4">
@@ -47,28 +48,56 @@ public func pinesQuote(
     role: String,
     avatar: String? = nil
 ) -> some HTML {
-    blockquote(.class("relative w-full max-w-2xl mx-auto")) {
+    blockquote(
+        .position(.relative),
+        .width(.full),
+        .maxWidth(.xxl),
+        .marginX(.auto)
+    ) {
         pinesSpecialIcon(
             .quoteMark,
             attributes: [
-                .class("absolute top-0 left-0")
+                .position(.absolute),
+                .insetTop(.zero),
+                .insetLeft(.zero),
             ]
         )
-        div(.class("relative z-10")) {
-            p(.class("text-gray-800 sm:text-xl")) {
+        div(.position(.relative), .zIndex(.number(10))) {
+            p(
+                .textColor(PinesColor.gray.shade(.deep)),
+                .fontSize(.xl, variants: [.sm])
+            ) {
                 em { quote }
             }
         }
-        footer(.class("mt-6")) {
-            div(.class("flex items-center")) {
+        footer(
+            .marginTop(.size(6))
+        ) {
+            div(
+                .display(.flex),
+                .items(.center)
+            ) {
                 if let avatar {
-                    div(.class("flex-shrink-0")) {
-                        img(.class("w-10 h-10 rounded-full"), .src(avatar), .alt(author))
+                    div(.flexShrink(.shrink0)) {
+                        img(
+                            .width(.size(10)),
+                            .height(.size(10)),
+                            .borderRadius(.full),
+                            .src(avatar),
+                            .alt(author)
+                        )
                     }
                 }
-                div(.class("ml-4")) {
-                    div(.class("text-base font-semibold text-gray-800")) { author }
-                    div(.class("text-xs text-gray-500")) { role }
+                div(.marginLeft(.size(4))) {
+                    div(
+                        .fontSize(.base),
+                        .fontWeight(.semibold),
+                        .textColor(PinesColor.gray.shade(.deep))
+                    ) { author }
+                    div(
+                        .fontSize(.xs),
+                        .textColor(PinesColor.gray.shade(.base))
+                    ) { role }
                 }
             }
         }

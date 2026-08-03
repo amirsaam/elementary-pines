@@ -91,4 +91,17 @@ final class RatingTests: XCTestCase {
             expected
         )
     }
+
+    func testRatingAppliesRootAttributes() throws {
+        let expected = try String(
+            contentsOf: fixtureURL("pinesRating-attributes.html"),
+            encoding: .utf8
+        )
+        HTMLAssertEqual(
+            pinesRating(
+                attributes: [HTMLAttribute<HTMLTag.div>(name: "data-testid", value: "rating")]
+            ),
+            expected
+        )
+    }
 }

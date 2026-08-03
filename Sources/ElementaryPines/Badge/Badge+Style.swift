@@ -1,3 +1,6 @@
+import Elementary
+import ElementaryTailwind
+
 /// Visual styles for a Pines-styled badge. Combine with `PinesColor` to get
 /// the full set of variants from the original Pines library.
 ///
@@ -23,53 +26,72 @@ public enum PinesBadgeStyle: String, Sendable, CaseIterable {
 }
 
 extension PinesBadgeStyle {
-    /// The Tailwind utility classes for this style + color combination.
-    public func classes(_ color: PinesColor) -> String {
-        let shared = "text-xs font-semibold rounded-full"
-        switch self {
-        case .solid: return Self.solidClasses(shared: shared, color: color)
-        case .light: return Self.lightClasses(shared: shared, color: color)
-        case .outline: return Self.outlineClasses(shared: shared, color: color)
-        case .dot: return Self.dotClasses(shared: shared, color: color)
-        case .icon: return Self.iconClasses(shared: shared, color: color)
+    /// Typed HTML attributes for this style + color combination.
+    public func attributes(_ color: PinesColor) -> [HTMLAttribute<HTMLTag.span>] {
+        var attrs: [HTMLAttribute<HTMLTag.span>] = [
+            .fontSize(.xs), .fontWeight(.semibold), .borderRadius(.full),
+        ]
+        if self != .icon {
+            attrs.append(.paddingX(.size(2.5)))
+            attrs.append(.paddingY(.size(0.5)))
         }
+        switch self {
+        case .solid: attrs.append(contentsOf: solidAttributes(color: color))
+        case .light: attrs.append(contentsOf: lightAttributes(color: color))
+        case .outline: attrs.append(contentsOf: outlineAttributes(color: color))
+        case .dot: attrs.append(contentsOf: dotAttributes(color: color))
+        case .icon: attrs.append(contentsOf: iconAttributes(color: color))
+        }
+        return attrs
     }
 
     // MARK: - Per-style helpers
 
-    private static func solidClasses(shared: String, color: PinesColor) -> String {
-        let bg: String
+    private func solidAttributes(color: PinesColor) -> [HTMLAttribute<HTMLTag.span>] {
+        let bg: HTMLAttribute<HTMLTag.span>
         switch color {
-        case .neutral: bg = "bg-black"
-        default: bg = "bg-\(color.rawValue)-600"
+        case .neutral: bg = .backgroundColor(.black)
+        default: bg = .backgroundColor(color.shade(.strong))
         }
-        return "\(shared) px-2.5 py-0.5 \(bg) text-white"
+        return [bg, .textColor(.white)]
     }
 
-    private static func lightClasses(shared: String, color: PinesColor) -> String {
-        let c = color.rawValue
-        return "\(shared) px-2.5 py-0.5 bg-\(c)-100 text-\(c)-800"
+    private func lightAttributes(color: PinesColor) -> [HTMLAttribute<HTMLTag.span>] {
+        [
+            .backgroundColor(color.shade(.tint2)),
+            .textColor(color.shade(.deep)),
+        ]
     }
 
-    private static func outlineClasses(shared: String, color: PinesColor) -> String {
-        let c = color.rawValue
-        return "\(shared) px-2.5 py-0.5 bg-transparent text-\(c)-500 border border-\(c)-500"
+    private func outlineAttributes(color: PinesColor) -> [HTMLAttribute<HTMLTag.span>] {
+        [
+            .backgroundColor(.transparent),
+            .textColor(color.shade(.base)),
+            .borderWidth(.bare),
+            .borderColor(color.shade(.base)),
+        ]
     }
 
-    private static func dotClasses(shared: String, color: PinesColor) -> String {
-        let c = color.rawValue
-        return """
-            \(shared) px-2.5 py-0.5 bg-transparent text-\(c)-500 \
-            border border-neutral-300 flex items-center
-            """
+    private func dotAttributes(color: PinesColor) -> [HTMLAttribute<HTMLTag.span>] {
+        [
+            .backgroundColor(.transparent),
+            .textColor(color.shade(.base)),
+            .borderWidth(.bare),
+            .borderColor(PinesColor.neutral.shade(.light)),
+            .display(.flex), .items(.center),
+        ]
     }
 
-    private static func iconClasses(shared: String, color: PinesColor) -> String {
-        let bg: String
+    private func iconAttributes(color: PinesColor) -> [HTMLAttribute<HTMLTag.span>] {
+        let bg: HTMLAttribute<HTMLTag.span>
         switch color {
-        case .neutral: bg = "bg-black"
-        default: bg = "bg-\(color.rawValue)-600"
+        case .neutral: bg = .backgroundColor(.black)
+        default: bg = .backgroundColor(color.shade(.strong))
         }
-        return "\(shared) pl-2 pr-2.5 py-1 \(bg) text-white relative flex items-center"
+        return [
+            bg, .textColor(.white),
+            .paddingLeft(.size(2)), .paddingRight(.size(2.5)), .paddingY(.size(1)),
+            .position(.relative), .display(.flex), .items(.center),
+        ]
     }
 }

@@ -1,4 +1,5 @@
 import Elementary
+import ElementaryTailwind
 
 /// Renders a styled `<textarea>` element matching the Pines UI textarea design.
 ///
@@ -6,16 +7,16 @@ import Elementary
 /// layout. The `color` parameter swaps the neutral border/placeholder/ring
 /// classes for the color's 300/400 shade pair. The element itself holds
 /// no Alpine.js state — pass `x-data`/`x-model` on the call site (e.g. via
-/// `elementary-alpinejs`) for dynamic behavior.
+/// `elementary-alpine`) for dynamic behavior.
 ///
 /// Layout:
 /// ```html
 /// <textarea placeholder="Type your message here."
 ///          class="flex w-full h-auto min-h-[80px] px-3 py-2 text-sm bg-white
 ///                 border rounded-md border-neutral-300 placeholder:text-neutral-400
-///                 focus:border-neutral-300 focus:outline-none focus:ring-2
+///                 focus:border-neutral-300 focus:outline-hidden focus:ring-2
 ///                 focus:ring-offset-2 focus:ring-neutral-400
-///                 disabled:cursor-not-allowed disabled:opacity-50"></textarea>
+///                 disabled:opacity-50 disabled:cursor-not-allowed"></textarea>
 /// ```
 ///
 /// **Example:**
@@ -46,25 +47,30 @@ public func pinesTextarea(
     disabled: Bool = false,
     attributes: [HTMLAttribute<HTMLTag.textarea>] = []
 ) -> some HTML {
-    let borderClass = color.map { "border-\($0.rawValue)-300" } ?? "border-neutral-300"
-    let placeholderClass = color.map { "placeholder:text-\($0.rawValue)-400" } ?? "placeholder:text-neutral-400"
-    let focusBorderClass = color.map { "focus:border-\($0.rawValue)-300" } ?? "focus:border-neutral-300"
-    let ringClass = color.map { "focus:ring-\($0.rawValue)-400" } ?? "focus:ring-neutral-400"
+    let resolvedColor = color ?? .neutral
+    let borderColor = resolvedColor.shade(.light)
+    let placeholderColor = resolvedColor.shade(.accent)
+    let focusRingColor = resolvedColor.shade(.accent)
 
-    let classes =
-        "flex w-full h-auto min-h-[80px] px-3 py-2 text-sm bg-white border rounded-md "
-        + borderClass
-        + " "
-        + placeholderClass
-        + " "
-        + focusBorderClass
-        + " focus:outline-none focus:ring-2 focus:ring-offset-2 "
-        + ringClass
-        + " disabled:cursor-not-allowed disabled:opacity-50"
-
-    var textareaAttributes: [HTMLAttribute<HTMLTag.textarea>] = [
-        .class(classes)
-    ]
+    var textareaAttributes: [HTMLAttribute<HTMLTag.textarea>] =
+        [
+            .display(.flex),
+            .width(.full),
+            .height(.auto),
+            .minHeight(.arbitrary("80px")),
+            .paddingX(.size(3)),
+            .paddingY(.size(2)),
+            .fontSize(.sm),
+            .backgroundColor(.white),
+            .borderWidth(.bare),
+            .borderRadius(.md),
+        ]
+        + pinesTextFieldAttributes(
+            borderColor: borderColor,
+            placeholderColor: placeholderColor,
+            focusRingColor: focusRingColor,
+            includeRingOffset: false
+        )
     if let placeholder { textareaAttributes.append(.placeholder(placeholder)) }
     if let name { textareaAttributes.append(.name(name)) }
     if let id { textareaAttributes.append(.id(id)) }

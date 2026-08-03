@@ -1,5 +1,6 @@
 import Elementary
 import ElementaryAlpine
+import ElementaryTailwind
 
 /// Renders the Pines UI progress bar.
 ///
@@ -7,7 +8,7 @@ import ElementaryAlpine
 /// 0 to 100 on page load: an
 /// `x-data` scope holding `progress` and `progressInterval`, an `x-init`
 /// that increments `progress` by 1 every 100 ms until it reaches 100, and a
-/// fill bar whose width is bound reactively via `:style`.
+/// fill bar whose width is bound reactively via `x-bind:style`.
 ///
 /// Passing a `value` renders a static bar at that percentage (clamped to
 /// 0–100, computed against `of`) with no Alpine logic.
@@ -16,8 +17,8 @@ import ElementaryAlpine
 /// ```html
 /// <div x-data="{ progress: 0, progressInterval: null }" x-init="..."
 ///      class="relative w-full h-3 overflow-hidden rounded-full bg-neutral-100">
-///     <span :style="'width:' + progress + '%'"
-///           class="absolute w-24 h-full duration-300 ease-linear bg-neutral-900" x-cloak></span>
+///     <span x-bind:style="'width:' + progress + '%'"
+///           class="absolute w-24 h-3 duration-300 ease-linear bg-neutral-900" x-cloak></span>
 /// </div>
 /// ```
 ///
@@ -41,14 +42,29 @@ public func pinesProgress(
     color: PinesColor = .neutral,
     size: PinesProgressSize = .md
 ) -> some HTML {
-    let heightClass = size.heightClass
-    let containerClass = "relative w-full \(heightClass) overflow-hidden rounded-full bg-\(color.rawValue)-100"
-    let barClass = "absolute w-24 \(heightClass) duration-300 ease-linear bg-\(color.rawValue)-900"
+    let bgColor = color.shade(.tint2)
+    let fillColor = color.shade(.dark)
+    let heightToken = size.heightToken
 
     if let value {
         let percent = max > 0 ? Swift.max(0, Swift.min(100, value * 100 / max)) : 0
-        let html = div(.class(containerClass)) {
-            span(.class(barClass), .style("width: \(percent)%")) {}
+        let html = div(
+            .position(.relative),
+            .width(.full),
+            .height(heightToken),
+            .overflow(.hidden),
+            .borderRadius(.full),
+            .backgroundColor(bgColor)
+        ) {
+            span(
+                .position(.absolute),
+                .width(.size(24)),
+                .height(.full),
+                .transitionDuration(.ms(300)),
+                .transitionTimingFunction(.linear),
+                .backgroundColor(fillColor),
+                .style("width: \(percent)%")
+            ) {}
         }
         return HTMLRaw(html.render())
     }
@@ -71,11 +87,21 @@ public func pinesProgress(
     let html = div(
         .x.data(xData),
         .x.setup(xInit),
-        .class(containerClass)
+        .position(.relative),
+        .width(.full),
+        .height(heightToken),
+        .overflow(.hidden),
+        .borderRadius(.full),
+        .backgroundColor(bgColor)
     ) {
         span(
-            HTMLAttribute(name: ":style", value: "'width:' + progress + '%'"),
-            .class(barClass),
+            .x.bindStyle("'width:' + progress + '%'"),
+            .position(.absolute),
+            .width(.size(24)),
+            .height(.full),
+            .transitionDuration(.ms(300)),
+            .transitionTimingFunction(.linear),
+            .backgroundColor(fillColor),
             .x.cloak
         ) {}
     }

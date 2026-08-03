@@ -1,11 +1,12 @@
 import Elementary
+import ElementaryTailwind
 
 /// Special SVG icons that are not part of the standard Heroicons set.
 ///
 /// Some Pines elements use custom multi-path or custom-viewBox SVGs
 /// that do not fit the single-path `pinesIcon` model. This enum groups them
 /// under a single `pinesSpecialIcon(_:attributes:)` entry point.
-public enum PinesSpecialIcon {
+public enum PinesSpecialIcon: Sendable {
     /// The magic-wand illustration used by the Pines banner.
     case wand
     /// The oversized decorative quote mark used by the Pines blockquote.
@@ -87,7 +88,13 @@ private func pinesSpecialWandIcon(
 private func pinesSpecialQuoteMarkIcon(
     attributes: [SVGAttribute<SVGTag.svg>]
 ) -> some HTML {
-    let defaultClass = "w-16 h-16 text-gray-100 transform -translate-x-6 -translate-y-8"
+    let defaultClass = twValue(
+        .width(.size(16)),
+        .height(.size(16)),
+        .textColor(PinesColor.gray.shade(.tint2)),
+        .translate(.x("6"), negative: true),
+        .translate(.y("8"), negative: true)
+    )
 
     let allAttributes: [SVGAttribute<SVGTag.svg>] =
         [

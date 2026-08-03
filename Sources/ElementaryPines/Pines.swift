@@ -19,7 +19,7 @@ import Elementary
 /// var head: some HTML {
 ///     meta(.charset(.utf8))
 ///     setupPines()
-///     script(.src("https://cdn.tailwindcss.com")) {}
+///     script(.src("https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4")) {}
 ///     setupAlpine(plugins: [.collapse, .focus, .anchor])
 /// }
 /// ```

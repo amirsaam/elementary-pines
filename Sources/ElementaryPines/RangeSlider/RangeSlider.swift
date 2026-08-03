@@ -1,4 +1,5 @@
 import Elementary
+import ElementaryTailwind
 
 /// Renders a styled range slider matching the Pines UI range slider design.
 ///
@@ -9,7 +10,7 @@ import Elementary
 /// ```html
 /// <input type="range" min="0" max="100" value="50" step="any" name="..." id="..."
 ///        class="w-full h-full appearance-none flex items-center cursor-pointer bg-transparent z-30
-///               [&::-webkit-slider-thumb]:bg-blue-600 [&::-webkit-slider-thumb]:rounded-full ...">
+///               [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-0 ...">
 /// ```
 ///
 /// **Examples:**
@@ -40,47 +41,15 @@ public func pinesRangeSlider(
     disabled: Bool = false,
     attributes: [HTMLAttribute<HTMLTag.input>] = []
 ) -> some HTML {
-    let accentColor = color?.rawValue ?? "blue"
-    let thumbColor =
-        "[&::-webkit-slider-thumb]:bg-\(accentColor)-600 "
-        + "[&::-moz-range-thumb]:bg-\(accentColor)-600 "
-        + "[&::-ms-thumb]:bg-\(accentColor)-600"
-    let progressColor =
-        "[&::-moz-range-progress]:bg-\(accentColor)-400 "
-        + "[&::-ms-fill-lower]:bg-\(accentColor)-400"
-    let webkitProgress =
-        "[&::-webkit-slider-thumb]:shadow-[-999px_0px_0px_990px_#\(color?.hexValue ?? PinesColor.blue.hexValue)]"
-
-    let baseClasses = "w-full h-full appearance-none flex items-center cursor-pointer bg-transparent z-30"
-    let thumbClasses =
-        "[&::-webkit-slider-thumb]:rounded-full "
-        + "[&::-webkit-slider-thumb]:border-0 "
-        + "[&::-webkit-slider-thumb]:w-5 "
-        + "[&::-webkit-slider-thumb]:h-5 "
-        + "[&::-webkit-slider-thumb]:appearance-none "
-        + "[&::-moz-range-thumb]:rounded-full "
-        + "[&::-moz-range-thumb]:border-0 "
-        + "[&::-moz-range-thumb]:w-2.5 "
-        + "[&::-moz-range-thumb]:h-2.5 "
-        + "[&::-moz-range-thumb]:appearance-none "
-        + "[&::-ms-thumb]:rounded-full "
-        + "[&::-ms-thumb]:border-0 "
-        + "[&::-ms-thumb]:w-2.5 "
-        + "[&::-ms-thumb]:h-2.5 "
-        + "[&::-ms-thumb]:appearance-none"
-    let trackClasses =
-        "[&::-webkit-slider-runnable-track]:bg-neutral-200 "
-        + "[&::-webkit-slider-runnable-track]:rounded-full "
-        + "[&::-webkit-slider-runnable-track]:overflow-hidden "
-        + "[&::-moz-range-track]:bg-neutral-200 "
-        + "[&::-moz-range-track]:rounded-full "
-        + "[&::-ms-track]:bg-neutral-200 "
-        + "[&::-ms-track]:rounded-full"
-
-    var allClasses = "\(baseClasses) \(thumbClasses) \(trackClasses) \(thumbColor) \(progressColor) \(webkitProgress)"
-    if disabled {
-        allClasses += " disabled:opacity-50 disabled:cursor-not-allowed"
-    }
+    let resolvedColor = color ?? .blue
+    let webkitThumb: [TWVariant] = [.arbitrary("[&::-webkit-slider-thumb]")]
+    let webkitTrack: [TWVariant] = [.arbitrary("[&::-webkit-slider-runnable-track]")]
+    let mozThumb: [TWVariant] = [.arbitrary("[&::-moz-range-thumb]")]
+    let mozTrack: [TWVariant] = [.arbitrary("[&::-moz-range-track]")]
+    let mozProgress: [TWVariant] = [.arbitrary("[&::-moz-range-progress]")]
+    let msThumb: [TWVariant] = [.arbitrary("[&::-ms-thumb]")]
+    let msTrack: [TWVariant] = [.arbitrary("[&::-ms-track]")]
+    let msFill: [TWVariant] = [.arbitrary("[&::-ms-fill-lower]")]
 
     var inputAttributes: [HTMLAttribute<HTMLTag.input>] = [
         HTMLAttribute(name: "type", value: "range"),
@@ -90,10 +59,52 @@ public func pinesRangeSlider(
         HTMLAttribute(name: "step", value: step),
         .name(name),
         .id(id),
-        .class(allClasses),
+        .width(.full),
+        .height(.full),
+        .appearance(.none),
+        .display(.flex),
+        .items(.center),
+        .cursor(.pointer),
+        .backgroundColor(.transparent),
+        .zIndex(.number(30)),
+        // Thumb styles
+        .borderRadius(.full, variants: webkitThumb),
+        .borderWidth(.size(0), variants: webkitThumb),
+        .width(.size(5), variants: webkitThumb),
+        .height(.size(5), variants: webkitThumb),
+        .appearance(.none, variants: webkitThumb),
+        .borderRadius(.full, variants: mozThumb),
+        .borderWidth(.size(0), variants: mozThumb),
+        .width(.size(2.5), variants: mozThumb),
+        .height(.size(2.5), variants: mozThumb),
+        .appearance(.none, variants: mozThumb),
+        .borderRadius(.full, variants: msThumb),
+        .borderWidth(.size(0), variants: msThumb),
+        .width(.size(2.5), variants: msThumb),
+        .height(.size(2.5), variants: msThumb),
+        .appearance(.none, variants: msThumb),
+        // Track styles
+        .backgroundColor(PinesColor.neutral.shade(.subtle), variants: webkitTrack),
+        .borderRadius(.full, variants: webkitTrack),
+        .overflow(.hidden, variants: webkitTrack),
+        .backgroundColor(PinesColor.neutral.shade(.subtle), variants: mozTrack),
+        .borderRadius(.full, variants: mozTrack),
+        .backgroundColor(PinesColor.neutral.shade(.subtle), variants: msTrack),
+        .borderRadius(.full, variants: msTrack),
+        // Color-based styles
+        .backgroundColor(resolvedColor.shade(.strong), variants: webkitThumb),
+        .backgroundColor(resolvedColor.shade(.strong), variants: mozThumb),
+        .backgroundColor(resolvedColor.shade(.strong), variants: msThumb),
+        .backgroundColor(resolvedColor.shade(.accent), variants: mozProgress),
+        .borderRadius(.full, variants: mozProgress),
+        .backgroundColor(resolvedColor.shade(.accent), variants: msFill),
+        .borderRadius(.full, variants: msFill),
+        .boxShadow(.arbitrary("-999px_0px_0px_990px_#" + resolvedColor.cssHex), variants: webkitThumb),
     ]
     if disabled {
         inputAttributes.append(.disabled)
+        inputAttributes.append(.opacity(.value(50), variants: [.disabled]))
+        inputAttributes.append(.cursor(.notAllowed, variants: [.disabled]))
     }
 
     return input(attributes: inputAttributes + attributes)

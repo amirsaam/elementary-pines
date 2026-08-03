@@ -26,11 +26,6 @@ public extension HTMLElement where Tag == HTMLTag.span {
     /// span { "Active" }.pinesBadgeStyle(.icon, color: .green)  // user adds the icon
     /// ```
     func pinesBadgeStyle(_ style: PinesBadgeStyle, color: PinesColor = .neutral) -> Self {
-        let attr = HTMLAttribute<Tag>(
-            name: "class",
-            value: style.classes(color),
-            mergedBy: .appending(separatedBy: " ")
-        )
-        return self.attributes(attr)
+        self.attributes(contentsOf: style.attributes(color))
     }
 }

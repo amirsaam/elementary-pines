@@ -1,4 +1,5 @@
 import Elementary
+import ElementaryTailwind
 
 /// Renders a styled text input element matching the Pines UI input design.
 ///
@@ -6,7 +7,7 @@ import Elementary
 /// layout. The `color` parameter swaps the neutral border/ring classes for
 /// the color's 300/400 shade pair. The element itself holds no Alpine.js
 /// state — pass `x-data`/`x-model` on the call site (e.g. via
-/// `elementary-alpinejs`) for dynamic behavior.
+/// `elementary-alpine`) for dynamic behavior.
 ///
 /// Layout:
 /// ```html
@@ -14,9 +15,9 @@ import Elementary
 ///        class="flex w-full h-10 px-3 py-2 text-sm bg-white border rounded-md
 ///               border-neutral-300 ring-offset-background
 ///               placeholder:text-neutral-500
-///               focus:border-neutral-300 focus:outline-none focus:ring-2
+///               focus:border-neutral-300 focus:outline-hidden focus:ring-2
 ///               focus:ring-offset-2 focus:ring-neutral-400
-///               disabled:cursor-not-allowed disabled:opacity-50" />
+///               disabled:opacity-50 disabled:cursor-not-allowed" />
 /// ```
 ///
 /// **Example:**
@@ -49,23 +50,28 @@ public func pinesInput(
     disabled: Bool = false,
     attributes: [HTMLAttribute<HTMLTag.input>] = []
 ) -> some HTML {
-    let borderClass = color.map { "border-\($0.rawValue)-300" } ?? "border-neutral-300"
-    let focusBorderClass = color.map { "focus:border-\($0.rawValue)-300" } ?? "focus:border-neutral-300"
-    let ringClass = color.map { "focus:ring-\($0.rawValue)-400" } ?? "focus:ring-neutral-400"
+    let resolvedColor = color ?? .neutral
+    let borderColor = resolvedColor.shade(.light)
+    let focusRingColor = resolvedColor.shade(.accent)
 
-    let classes =
-        "flex w-full h-10 px-3 py-2 text-sm bg-white border rounded-md "
-        + borderClass
-        + " ring-offset-background placeholder:text-neutral-500 "
-        + focusBorderClass
-        + " focus:outline-none focus:ring-2 focus:ring-offset-2 "
-        + ringClass
-        + " disabled:cursor-not-allowed disabled:opacity-50"
-
-    var inputAttributes: [HTMLAttribute<HTMLTag.input>] = [
-        HTMLAttribute(name: "type", value: type),
-        .class(classes),
-    ]
+    var inputAttributes: [HTMLAttribute<HTMLTag.input>] =
+        [
+            HTMLAttribute(name: "type", value: type),
+            .display(.flex),
+            .width(.full),
+            .height(.size(10)),
+            .paddingX(.size(3)),
+            .paddingY(.size(2)),
+            .fontSize(.sm),
+            .backgroundColor(.white),
+            .borderWidth(.bare),
+            .borderRadius(.md),
+        ]
+        + pinesTextFieldAttributes(
+            borderColor: borderColor,
+            placeholderColor: PinesColor.neutral.shade(.base),
+            focusRingColor: focusRingColor
+        )
     if let placeholder { inputAttributes.append(.placeholder(placeholder)) }
     if let name { inputAttributes.append(.name(name)) }
     if let value { inputAttributes.append(.value(value)) }

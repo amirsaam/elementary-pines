@@ -7,7 +7,7 @@
 ///
 /// `PinesSelectItem` is `Codable` so `pinesSelect` can JSON-encode the
 /// items array into the `x-data` attribute.
-public struct PinesSelectItem: Equatable, Codable {
+public struct PinesSelectItem: Equatable, Codable, Sendable {
     public let title: String
     public let value: String
     public let disabled: Bool

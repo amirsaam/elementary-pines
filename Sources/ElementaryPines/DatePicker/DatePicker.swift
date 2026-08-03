@@ -1,5 +1,6 @@
 import Elementary
 import ElementaryAlpine
+import ElementaryTailwind
 
 /// Renders a styled date picker matching the Pines UI date picker design.
 ///
@@ -14,7 +15,7 @@ import ElementaryAlpine
 ///
 /// pinesDatePicker(labelText: "Birthday", format: .mmDdYyyy)
 ///
-/// pinesDatePicker(labelText: "Start Date", placeholder: "Pick a date", width: "w-72")
+/// pinesDatePicker(labelText: "Start Date", placeholder: "Pick a date", width: .size(72))
 /// ```
 ///
 /// - Parameters:
@@ -22,7 +23,7 @@ import ElementaryAlpine
 ///   - placeholder: Placeholder text shown when no date is selected.
 ///     Defaults to `"Select date"`.
 ///   - format: Date display format. Defaults to `.monthDayYear` (`"M d, Y"`).
-///   - width: Tailwind width class. Defaults to `"w-[17rem]"`.
+///   - width: Tailwind width token. Defaults to `.arbitrary("17rem")`.
 ///   - disabled: Whether the input is disabled. Defaults to `false`.
 ///   - attributes: Extra HTML attributes (e.g. Alpine directives) applied
 ///     to the outer `<div>`.
@@ -30,40 +31,67 @@ public func pinesDatePicker(
     labelText: String = "Select Date",
     placeholder: String = "Select date",
     format: PinesDatePickerFormat = .monthDayYear,
-    width: String = "w-[17rem]",
+    width: TWTWidth = .arbitrary("17rem"),
     disabled: Bool = false,
     attributes: [HTMLAttribute<HTMLTag.div>] = []
 ) -> some HTML {
     let xData = PinesDatePickerState.xData(format: format.rawValue)
     let xInit = PinesDatePickerState.xInit
 
-    var inputAttributes: [HTMLAttribute<HTMLTag.input>] = [
-        .x.ref("datePickerInput"),
-        .type(.text),
-        .x.on("click", "datePickerOpen=!datePickerOpen"),
-        .x.model("datePickerValue"),
-        .x.on("keydown", "datePickerOpen=false", modifiers: [.escape]),
-        .class(
-            "flex px-3 py-2 w-full h-10 text-sm bg-white rounded-md border text-neutral-600 border-neutral-300 ring-offset-background placeholder:text-neutral-400 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-400 disabled:cursor-not-allowed disabled:opacity-50"
-        ),
-        .placeholder(placeholder),
-        HTMLAttribute(name: "readonly", value: ""),
-    ]
+    var inputAttributes: [HTMLAttribute<HTMLTag.input>] =
+        [
+            .x.ref("datePickerInput"),
+            .x.bind("id", "$id('datepicker')"),
+            .type(.text),
+            .x.on("click", "datePickerOpen=!datePickerOpen"),
+            .x.model("datePickerValue"),
+            .x.on("keydown", "datePickerOpen=false", modifiers: [.escape]),
+            .display(.flex),
+            .paddingX(.size(3)),
+            .paddingY(.size(2)),
+            .width(.full),
+            .height(.size(10)),
+            .fontSize(.sm),
+            .backgroundColor(.white),
+            .borderRadius(.md),
+            .borderWidth(.bare),
+            .textColor(PinesColor.neutral.shade(.strong)),
+        ]
+        + pinesTextFieldAttributes(
+            borderColor: PinesColor.neutral.shade(.light),
+            placeholderColor: PinesColor.neutral.shade(.accent),
+            focusRingColor: PinesColor.neutral.shade(.accent)
+        ) + [
+            .placeholder(placeholder),
+            HTMLAttribute(name: "readonly", value: ""),
+        ]
     if disabled { inputAttributes.append(.disabled) }
 
-    return div(
-        .class("mb-5 w-full"),
-        .x.data(xData),
-        .x.setup(xInit),
-        .x.cloak
-    ) {
+    let rootAttributes: [HTMLAttribute<HTMLTag.div>] =
+        [
+            .marginBottom(.size(5)),
+            .width(.full),
+            .x.data(xData),
+            .x.setup(xInit),
+            .x.id("['datepicker']"),
+            .x.cloak,
+        ] + attributes
+
+    return div(attributes: rootAttributes) {
         // Label
-        label(.for("datepicker"), .class("block mb-1 text-sm font-medium text-neutral-500")) {
+        label(
+            .x.bind("for", "$id('datepicker')"),
+            .marginBottom(.size(1)),
+            .display(.block),
+            .fontSize(.sm),
+            .fontWeight(.medium),
+            .textColor(PinesColor.neutral.shade(.base))
+        ) {
             labelText
         }
 
         // Input + calendar icon + calendar dropdown
-        div(.class("relative \(width)")) {
+        div(.position(.relative), .width(width)) {
             input(attributes: inputAttributes)
 
             div(
@@ -71,9 +99,16 @@ public func pinesDatePicker(
                     "click",
                     "datePickerOpen=!datePickerOpen; if(datePickerOpen){ $refs.datePickerInput.focus() }"
                 ),
-                .class("absolute top-0 right-0 px-3 py-2 cursor-pointer text-neutral-400 hover:text-neutral-500")
+                .position(.absolute),
+                .insetTop(.zero),
+                .insetRight(.zero),
+                .paddingX(.size(3)),
+                .paddingY(.size(2)),
+                .cursor(.pointer),
+                .textColor(PinesColor.neutral.shade(.accent)),
+                .textColor(PinesColor.neutral.shade(.base), variants: [.hover])
             ) {
-                pinesIcon(.calendar, size: .md)
+                pinesIcon(.calendar, size: .lg)
             }
 
             // Calendar dropdown
@@ -81,17 +116,43 @@ public func pinesDatePicker(
                 .x.show("datePickerOpen"),
                 .x.transition(),
                 .x.on("click", "datePickerOpen = false", modifiers: [.outside]),
-                .class(
-                    "absolute top-0 left-0 max-w-lg p-4 mt-12 antialiased bg-white border rounded-lg shadow w-[17rem] border-neutral-200/70"
-                )
+                .position(.absolute),
+                .insetTop(.zero),
+                .insetLeft(.zero),
+                .maxWidth(.lg),
+                .padding(.size(4)),
+                .marginTop(.size(12)),
+                .fontSmoothing(.antialiased),
+                .backgroundColor(.white),
+                .borderWidth(.bare),
+                .borderRadius(.lg),
+                .boxShadow(.sm),
+                .width(.arbitrary("17rem")),
+                .borderColor(PinesColor.neutral.shade(.subtle), opacity: 70)
             ) {
                 // Month/year header with navigation
-                div(.class("flex justify-between items-center mb-2")) {
+                div(
+                    .display(.flex),
+                    .justify(.between),
+                    .items(.center),
+                    .marginBottom(.size(2))
+                ) {
                     div {
-                        span(.x.text("datePickerMonthNames[datePickerMonth]"), .class("text-lg font-bold text-gray-800")) {
+                        span(
+                            .x.text("datePickerMonthNames[datePickerMonth]"),
+                            .fontSize(.lg),
+                            .fontWeight(.bold),
+                            .textColor(PinesColor.gray.shade(.deep))
+                        ) {
                             ""
                         }
-                        span(.x.text("datePickerYear"), .class("ml-1 text-lg font-normal text-gray-600")) {
+                        span(
+                            .x.text("datePickerYear"),
+                            .marginLeft(.size(1)),
+                            .fontSize(.lg),
+                            .fontWeight(.normal),
+                            .textColor(PinesColor.gray.shade(.strong))
+                        ) {
                             ""
                         }
                     }
@@ -99,8 +160,18 @@ public func pinesDatePicker(
                         button(
                             .type(.button),
                             .x.on("click", "datePickerPreviousMonth()"),
-                            .class(
-                                "inline-flex p-1 rounded-full transition duration-100 ease-in-out cursor-pointer focus:outline-none focus:shadow-outline hover:bg-gray-100"
+                            .display(.inlineFlex),
+                            .padding(.size(1)),
+                            .borderRadius(.full),
+                            .transition(.all),
+                            .transitionDuration(.ms(100)),
+                            .transitionTimingFunction(.easeInOut),
+                            .cursor(.pointer),
+                            .outlineStyle(.hidden, variants: [.focus]),
+                            .class("shadow-outline", variants: [.focus]),
+                            .backgroundColor(
+                                PinesColor.gray.shade(.tint2),
+                                variants: [.hover]
                             )
                         ) {
                             pinesIcon(.chevronLeft, size: .md)
@@ -108,8 +179,18 @@ public func pinesDatePicker(
                         button(
                             .type(.button),
                             .x.on("click", "datePickerNextMonth()"),
-                            .class(
-                                "inline-flex p-1 rounded-full transition duration-100 ease-in-out cursor-pointer focus:outline-none focus:shadow-outline hover:bg-gray-100"
+                            .display(.inlineFlex),
+                            .padding(.size(1)),
+                            .borderRadius(.full),
+                            .transition(.all),
+                            .transitionDuration(.ms(100)),
+                            .transitionTimingFunction(.easeInOut),
+                            .cursor(.pointer),
+                            .outlineStyle(.hidden, variants: [.focus]),
+                            .class("shadow-outline", variants: [.focus]),
+                            .backgroundColor(
+                                PinesColor.gray.shade(.tint2),
+                                variants: [.hover]
                             )
                         ) {
                             pinesIcon(.chevronRight, size: .md)
@@ -118,10 +199,24 @@ public func pinesDatePicker(
                 }
 
                 // Day-of-week headers
-                div(.class("grid grid-cols-7 mb-3")) {
-                    template(.x.loop("(day, index) in datePickerDays"), .x.bind("key", "index")) {
-                        div(.class("px-0.5")) {
-                            div(.x.text("day"), .class("text-xs font-medium text-center text-gray-800")) {
+                div(
+                    .display(.grid),
+                    .gridTemplateColumns(.value(7)),
+                    .marginBottom(.size(3))
+                ) {
+                    template(
+                        .x.loop("(day, index) in datePickerDays"),
+                        .x.bind("key", "index")
+                    ) {
+                        div(.paddingX(.size(0.5))) {
+                            div(
+                                .x.text("day"),
+                                .paddingX(.size(0.5)),
+                                .fontSize(.xs),
+                                .fontWeight(.medium),
+                                .textAlign(.center),
+                                .textColor(PinesColor.gray.shade(.deep))
+                            ) {
                                 ""
                             }
                         }
@@ -129,29 +224,65 @@ public func pinesDatePicker(
                 }
 
                 // Day grid
-                div(.class("grid grid-cols-7")) {
-                    template(.x.loop("blankDay in datePickerBlankDaysInMonth")) {
-                        div(.class("p-1 text-sm text-center border border-transparent")) {
+                div(.display(.grid), .gridTemplateColumns(.value(7))) {
+                    template(
+                        .x.loop("blankDay in datePickerBlankDaysInMonth")
+                    ) {
+                        div(
+                            .padding(.size(1)),
+                            .fontSize(.sm),
+                            .textAlign(.center),
+                            .borderWidth(.bare),
+                            .borderColor(.transparent)
+                        ) {
                             ""
                         }
                     }
-                    template(.x.loop("(day, dayIndex) in datePickerDaysInMonth"), .x.bind("key", "dayIndex")) {
-                        div(.class("px-0.5 mb-1 aspect-square")) {
+                    template(
+                        .x.loop("(day, dayIndex) in datePickerDaysInMonth"),
+                        .x.bind("key", "dayIndex")
+                    ) {
+                        div(
+                            .paddingX(.size(0.5)),
+                            .marginBottom(.size(1)),
+                            .aspect(.square)
+                        ) {
                             div(
                                 .x.text("day"),
                                 .x.on("click", "datePickerDayClicked(day)"),
                                 .x.bindClass(
-                                    """
-                                    { \
-                                    'bg-neutral-200': datePickerIsToday(day) == true, \
-                                    'text-gray-600 hover:bg-neutral-200': datePickerIsToday(day) == false && datePickerIsSelectedDate(day) == false, \
-                                    'bg-neutral-800 text-white hover:bg-neutral-800/70': datePickerIsSelectedDate(day) == true \
-                                    }
-                                    """
+                                    pinesAlpineBindClass([
+                                        (
+                                            twValue(.backgroundColor(PinesColor.neutral.shade(.subtle))),
+                                            "datePickerIsToday(day) == true"
+                                        ),
+                                        (
+                                            twValue(
+                                                .textColor(PinesColor.gray.shade(.strong)),
+                                                .backgroundColor(PinesColor.neutral.shade(.subtle), variants: [.hover])
+                                            ),
+                                            "datePickerIsToday(day) == false && datePickerIsSelectedDate(day) == false"
+                                        ),
+                                        (
+                                            twValue(
+                                                .backgroundColor(PinesColor.neutral.shade(.deep)),
+                                                .textColor(.white),
+                                                .backgroundColor(PinesColor.neutral.shade(.deep), opacity: 70, variants: [.hover])
+                                            ),
+                                            "datePickerIsSelectedDate(day) == true"
+                                        ),
+                                    ])
                                 ),
-                                .class(
-                                    "flex justify-center items-center w-7 h-7 text-sm leading-none text-center rounded-full cursor-pointer"
-                                )
+                                .display(.flex),
+                                .justify(.center),
+                                .items(.center),
+                                .width(.size(7)),
+                                .height(.size(7)),
+                                .fontSize(.sm),
+                                .lineHeight(.none),
+                                .textAlign(.center),
+                                .borderRadius(.full),
+                                .cursor(.pointer)
                             ) {
                                 ""
                             }

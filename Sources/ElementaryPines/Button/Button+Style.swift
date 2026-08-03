@@ -1,6 +1,9 @@
+import Elementary
+import ElementaryTailwind
+
 /// Layout styles for a Pines-styled button. Combine with `PinesColor` to get
-/// the full set of 15 button variants from the original Pines library
-/// (3 layouts × 5 colors).
+/// the full set of button variants from the original Pines library
+/// (3 layouts × 11 colors = 33 variants).
 ///
 /// Apply with `.pinesButtonStyle(_:color:)` on any `HTMLElement<HTMLTag.button>`:
 /// ```swift
@@ -18,42 +21,65 @@ public enum PinesButtonStyle: String, Sendable, CaseIterable {
 }
 
 extension PinesButtonStyle {
-    /// The Tailwind utility classes for this style + color combination.
-    /// Faithful to the original Pines examples — class *order* matches the
-    /// source HTML for easy diffing in snapshot tests.
-    public func classes(_ color: PinesColor) -> String {
-        let base = "inline-flex items-center justify-center px-4 py-2 text-sm font-medium tracking-wide"
+    /// Typed HTML attributes for this style + color combination.
+    public func attributes(_ color: PinesColor) -> [HTMLAttribute<HTMLTag.button>] {
+        var attrs: [HTMLAttribute<HTMLTag.button>] = [
+            .display(.inlineFlex), .items(.center), .justify(.center),
+            .paddingX(.size(4)), .paddingY(.size(2)),
+            .fontSize(.sm), .fontWeight(.medium), .letterSpacing(.wide),
+        ]
         switch self {
-        case .solid: return Self.solidClasses(base: base, color: color)
-        case .tonal: return Self.tonalClasses(base: base, color: color)
-        case .outline: return Self.outlineClasses(base: base, color: color)
+        case .solid: attrs.append(contentsOf: solidAttributes(color: color))
+        case .tonal: attrs.append(contentsOf: tonalAttributes(color: color))
+        case .outline: attrs.append(contentsOf: outlineAttributes(color: color))
         }
+        return attrs
     }
 
-    private static func solidClasses(base: String, color: PinesColor) -> String {
-        let scale = color.solidScale
-        return """
-            \(base) text-white transition-colors duration-200 rounded-md \
-            \(scale.bg) \(scale.hover) focus:ring-2 focus:ring-offset-2 \(scale.ring) \
-            focus:shadow-outline focus:outline-none
-            """
+    // MARK: - Per-style helpers
+
+    private func solidAttributes(color: PinesColor) -> [HTMLAttribute<HTMLTag.button>] {
+        let scale = color.solidButtonScale
+        return [
+            .textColor(.white),
+            .transition(.colors), .transitionDuration(.ms(200)),
+            .borderRadius(.md),
+            .backgroundColor(scale.bg),
+            .backgroundColor(scale.hover, variants: [.hover]),
+            .ringWidth(.size(2), variants: [.focus]),
+            .ringOffsetWidth(.size(2), variants: [.focus]),
+            .ringColor(scale.ring, variants: [.focus]),
+            .class("shadow-outline", variants: [.focus]),
+            .outlineStyle(.hidden, variants: [.focus]),
+        ]
     }
 
-    private static func tonalClasses(base: String, color: PinesColor) -> String {
-        let scale = color.tonalScale
-        return """
-            \(base) \(scale.text) transition-colors duration-100 rounded-md \
-            focus:ring-2 focus:ring-offset-2 \(scale.ring) \(scale.bg) \
-            \(scale.hoverText) \(scale.hoverBg)
-            """
+    private func tonalAttributes(color: PinesColor) -> [HTMLAttribute<HTMLTag.button>] {
+        let scale = color.tonalButtonScale
+        return [
+            .textColor(scale.text),
+            .transition(.colors), .transitionDuration(.ms(100)),
+            .borderRadius(.md),
+            .ringWidth(.size(2), variants: [.focus]),
+            .ringOffsetWidth(.size(2), variants: [.focus]),
+            .ringColor(scale.ring, variants: [.focus]),
+            .backgroundColor(scale.bg),
+            .textColor(scale.hoverText, variants: [.hover]),
+            .backgroundColor(scale.hoverBg, variants: [.hover]),
+        ]
     }
 
-    private static func outlineClasses(base: String, color: PinesColor) -> String {
-        let scale = color.outlineScale
-        return """
-            \(base) text-\(scale.text) transition-colors duration-100 \
-            bg-white border-2 rounded-md border-\(scale.border) \
-            hover:text-white hover:bg-\(scale.hoverBg)
-            """
+    private func outlineAttributes(color: PinesColor) -> [HTMLAttribute<HTMLTag.button>] {
+        let scale = color.outlineButtonScale
+        return [
+            .textColor(scale.text),
+            .transition(.colors), .transitionDuration(.ms(100)),
+            .borderRadius(.md),
+            .backgroundColor(.white),
+            .borderWidth(.size(2)),
+            .borderColor(scale.border),
+            .textColor(.white, variants: [.hover]),
+            .backgroundColor(scale.hoverBg, variants: [.hover]),
+        ]
     }
 }

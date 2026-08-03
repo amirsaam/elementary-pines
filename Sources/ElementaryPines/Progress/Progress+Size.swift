@@ -1,3 +1,5 @@
+import ElementaryTailwind
+
 /// Height variants for `pinesProgress(_:of:color:size:)`.
 ///
 /// - `.md` (default) is the base progress bar height (`h-3`).
@@ -18,12 +20,12 @@ public enum PinesProgressSize: Sendable {
 }
 
 extension PinesProgressSize {
-    /// The Tailwind height class for both the track and the fill bar.
-    var heightClass: String {
+    /// The Tailwind height token for this size.
+    var heightToken: TWTHeight {
         switch self {
-        case .sm: return "h-1.5"
-        case .md: return "h-3"
-        case .lg: return "h-4"
+        case .sm: .size(1.5)
+        case .md: .size(3)
+        case .lg: .size(4)
         }
     }
 }

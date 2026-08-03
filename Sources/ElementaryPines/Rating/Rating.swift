@@ -1,5 +1,6 @@
 import Elementary
 import ElementaryAlpine
+import ElementaryTailwind
 
 /// Renders a rating component matching the Pines UI rating design.
 ///
@@ -33,7 +34,7 @@ import ElementaryAlpine
 ///   - disabled: Whether the rating is disabled. Defaults to false.
 ///   - compactReset: When true, shows an inline circle-x reset button
 ///     instead of a separate button below. Defaults to false.
-///   - attributes: Extra HTML attributes (reserved for future use).
+///   - attributes: Extra HTML attributes merged into the root element.
 public func pinesRating(
     icon: PinesRatingIcon = .star,
     color: PinesColor = .yellow,
@@ -42,7 +43,7 @@ public func pinesRating(
     value: Int = 0,
     disabled: Bool = false,
     compactReset: Bool = false,
-    attributes: [HTMLAttribute<HTMLTag.input>] = []
+    attributes: [HTMLAttribute<HTMLTag.div>] = []
 ) -> some HTML {
     let xData = ratingXData(
         disabled: disabled,
@@ -57,19 +58,29 @@ public func pinesRating(
     let paths = ratingPaths(icon: icon, emptyStyle: emptyStyle)
 
     return div(
-        .class(classes.container),
-        .x.data(xData),
-        .x.setup("this.stars = this.value")
+        attributes: classes.containerAttributes + [
+            .x.data(xData),
+            .x.setup("this.stars = this.value"),
+        ] + attributes
     ) {
-        ratedTextView(text: classes.ratedText, suffix: classes.ratedSuffix)
+        ratedTextView(
+            compactReset: compactReset,
+            color: color,
+            suffix: classes.ratedSuffix
+        )
 
-        ul(.class("flex items-center")) {
+        let listAttributes: [HTMLAttribute<HTMLTag.ul>] =
+            compactReset
+            ? [.display(.flex)]
+            : [.display(.flex), .items(.center)]
+        ul(attributes: listAttributes) {
             ratingStars(
                 emptyPath: paths.empty,
                 filledPath: paths.filled,
                 emptyColor: classes.emptyColor,
                 emptyStyle: emptyStyle,
-                filledColor: classes.filledColor
+                filledColor: classes.filledColor,
+                compactReset: compactReset
             )
 
             if compactReset {
@@ -121,11 +132,10 @@ private func ratingXData(
 }
 
 private struct RatingClasses {
-    let container: String
+    let containerAttributes: [HTMLAttribute<HTMLTag.div>]
     let emptyColor: String
     let emptyStyle: PinesRatingEmptyStyle
     let filledColor: String
-    let ratedText: String
     let ratedSuffix: String
 }
 
@@ -135,57 +145,98 @@ private func ratingClasses(
     compactReset: Bool
 ) -> RatingClasses {
     let emptyColor: String = {
+        if compactReset {
+            return twValue(.textColor(color.shade(.strong)), .fillCurrent())
+        }
         switch emptyStyle {
-        case .outlined: return "text-gray-900"
-        case .filled: return "text-gray-300 fill-current"
+        case .outlined: return twValue(.textColor(PinesColor.gray.shade(.dark)))
+        case .filled: return twValue(.textColor(PinesColor.gray.shade(.light)), .fillCurrent())
         }
     }()
 
-    let filledColor =
-        color == .yellow
-        ? "text-yellow-400 fill-current"
-        : "text-\(color.rawValue)-600 fill-current"
+    let filledColor: String = {
+        if compactReset {
+            return twValue(.textColor(color.shade(.strong)), .fillCurrent())
+        }
+        guard color == .yellow else {
+            return twValue(.textColor(color.shade(.strong)), .fillCurrent())
+        }
+        return twValue(.textColor(PinesColor.yellow.shade(.accent)), .fillCurrent())
+    }()
 
-    let container =
-        compactReset
-        ? "relative flex items-center w-auto mx-auto jusitfy-center pt-4"
-        : "relative flex flex-col items-center max-w-6xl mx-auto jusitfy-center"
-
-    let ratedTextColor =
-        color == .yellow
-        ? "text-gray-900"
-        : "text-\(color.rawValue)-500"
-
-    let ratedTextFallback =
-        color == .yellow
-        ? "text-gray-900"
-        : "text-gray-400"
-
-    let ratedText =
-        compactReset
-        ? "absolute top-0 left-0 pl-1 -mt-1 text-sm \(ratedTextColor)"
-            + " duration-300 ease-out -translate-y-full opacity-0"
-        : "absolute -mt-6 text-xs font-medium \(ratedTextFallback)"
-            + " duration-300 ease-out -translate-y-full opacity-0"
+    let containerAttributes: [HTMLAttribute<HTMLTag.div>] = {
+        var attrs: [HTMLAttribute<HTMLTag.div>] = [
+            .position(.relative),
+            .display(.flex),
+            .items(.center),
+        ]
+        if compactReset {
+            attrs += [
+                .width(.auto),
+                .marginX(.auto),
+                .justify(.center),
+            ]
+        } else {
+            attrs += [
+                .flexDirection(.column),
+                .maxWidth(.sixxl),
+                .marginX(.auto),
+                .justify(.center),
+            ]
+        }
+        return attrs
+    }()
 
     let ratedSuffix = compactReset ? "" : " Stars"
 
     return RatingClasses(
-        container: container,
+        containerAttributes: containerAttributes,
         emptyColor: emptyColor,
         emptyStyle: emptyStyle,
         filledColor: filledColor,
-        ratedText: ratedText,
         ratedSuffix: ratedSuffix
     )
 }
 
-@ContentBuilder
-private func ratedTextView(text: String, suffix: String) -> some HTML {
-    div(
+private func ratedTextView(
+    compactReset: Bool,
+    color: PinesColor,
+    suffix: String
+) -> some HTML {
+    let textTWColor: TWColor = {
+        if color == .yellow { return PinesColor.gray.shade(.dark) }
+        return compactReset ? color.shade(.base) : PinesColor.gray.shade(.accent)
+    }()
+
+    var attrs: [HTMLAttribute<HTMLTag.div>] = [
         .x.ref("rated"),
-        .class(text)
-    ) {
+        .position(.absolute),
+    ]
+    if compactReset {
+        attrs += [
+            .insetTop(.zero),
+            .insetLeft(.zero),
+            .paddingLeft(.size(1)),
+            .marginTop(.size(2), negative: true),
+            .fontSize(.sm),
+            .textColor(textTWColor),
+        ]
+    } else {
+        attrs += [
+            .marginTop(.size(6), negative: true),
+            .fontSize(.xs),
+            .fontWeight(.medium),
+            .textColor(textTWColor),
+        ]
+    }
+    attrs += [
+        .transitionDuration(.ms(300)),
+        .transitionTimingFunction(.easeOut),
+        .translate(.y("full"), negative: true),
+        .opacity(.value(0)),
+    ]
+
+    return div(attributes: attrs) {
         HTMLRaw("Rated ")
         span(.x.text("value")) { "" }
         HTMLRaw(suffix)
@@ -269,7 +320,8 @@ private func ratingStars(
     filledPath: String,
     emptyColor: String,
     emptyStyle: PinesRatingEmptyStyle,
-    filledColor: String
+    filledColor: String,
+    compactReset: Bool
 ) -> some HTML {
     let xmlns: SVGAttribute<SVGTag.svg> = SVGAttribute(
         name: "xmlns",
@@ -285,28 +337,54 @@ private func ratingStars(
             .x.on("mouseover", "hoverStar(star)"),
             .x.on("mouseleave", "mouseLeftStar"),
             .x.on("click", "rate(star)"),
-            .class("px-1 cursor-pointer"),
+            .paddingX(.size(1)),
+            .cursor(.pointer),
             .x.bindClass(
-                "{ 'text-gray-400 cursor-not-allowed': disabled }"
+                pinesAlpineBindClass([
+                    (twValue(.textColor(PinesColor.gray.shade(.accent)), .cursor(.notAllowed)), "disabled")
+                ])
             )
         ) {
             SVG.svg(
                 SVGAttribute(name: "x-show", value: "star > stars"),
-                .class("w-6 h-6 \(emptyColor)"),
+                .width(.size(6)),
+                .height(.size(6)),
+                .class(emptyColor),
                 xmlns,
                 viewBox
             ) {
-                SVG.rect(.width(256), .height(256), .fill(.none))
+                SVG.rect(
+                    .width(256),
+                    .height(256),
+                    .fill(.none)
+                )
                 ratingEmptyPath(path: emptyPath, style: emptyStyle)
             }
             SVG.svg(
                 SVGAttribute(name: "x-show", value: "star <= stars"),
-                .class("w-6 h-6 \(filledColor)"),
+                .width(.size(6)),
+                .height(.size(6)),
+                .class(filledColor),
                 xmlns,
                 viewBox
             ) {
                 SVG.rect(.width(256), .height(256), .fill(.none))
-                SVG.path(.d(filledPath))
+                if compactReset {
+                    SVG.path(
+                        .d(filledPath),
+                        SVGAttribute(name: "opacity", value: "0.2")
+                    )
+                    SVG.path(
+                        .d(filledPath),
+                        .fill(.none),
+                        .stroke("currentColor"),
+                        .strokeWidth(16),
+                        .strokeLinecap(.round),
+                        .strokeLinejoin(.round)
+                    )
+                } else {
+                    SVG.path(.d(filledPath))
+                }
             }
         }
     }
@@ -314,43 +392,93 @@ private func ratingStars(
 
 @ContentBuilder
 private func compactResetButton(color: PinesColor) -> some HTML {
-    let bgClass =
-        color == .yellow
-        ? "text-yellow-600 bg-yellow-100 hover:bg-yellow-400 hover:text-white"
-        : "text-\(color.rawValue)-600 bg-\(color.rawValue)-100"
-            + " hover:bg-\(color.rawValue)-400 hover:text-white"
+    let twColor: TWColor = color == .yellow ? PinesColor.yellow.shade(.strong) : color.shade(.strong)
+    let twBg: TWColor = color == .yellow ? PinesColor.yellow.shade(.tint2) : color.shade(.tint2)
+    let twHoverBg: TWColor = color == .yellow ? PinesColor.yellow.shade(.accent) : color.shade(.accent)
 
     button(
         .x.show("value"),
         .x.on("click", "reset"),
-        .class(
-            "ml-1 inline-flex items-center justify-center"
-                + " w-5 h-5 text-xs rounded-full transition-colors"
-        ),
-        .class(bgClass),
+        .type(.button),
+        .position(.absolute),
+        .insetRight(.zero),
+        .display(.inlineFlex),
+        .items(.center),
+        .justify(.center),
+        .width(.size(5)),
+        .height(.size(5)),
+        .marginRight(.size(1), negative: true),
+        .translate(.x("full")),
+        .fontSize(.xs),
+        .borderRadius(.full),
+        .transition(.colors),
+        .textColor(twColor),
+        .backgroundColor(twBg),
+        .backgroundColor(twHoverBg, variants: [.hover]),
+        .textColor(.white, variants: [.hover]),
         .x.bindClass(
-            "{ 'opacity-50 cursor-not-allowed': disabled }"
+            pinesAlpineBindClass([
+                (twValue(.opacity(.value(50)), .cursor(.notAllowed)), "disabled")
+            ])
         )
     ) {
-        pinesIcon(.x, size: .xs)
+        SVG.svg(
+            .width(.size(3)),
+            .height(.size(3)),
+            SVGAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg"),
+            SVGAttribute(name: "viewBox", value: "0 0 256 256")
+        ) {
+            SVG.rect(.width(256), .height(256), .fill(.none))
+            SVG.line(
+                .x1(200),
+                .y1(56),
+                .x2(56),
+                .y2(200),
+                .stroke("currentColor"),
+                .strokeLinecap(.round),
+                .strokeLinejoin(.round),
+                .strokeWidth(16)
+            )
+            SVG.line(
+                .x1(200),
+                .y1(200),
+                .x2(56),
+                .y2(56),
+                .stroke("currentColor"),
+                .strokeLinecap(.round),
+                .strokeLinejoin(.round),
+                .strokeWidth(16)
+            )
+        }
     }
 }
 
 @ContentBuilder
 private func fullResetButton() -> some HTML {
     button(
+        .type(.button),
         .x.on("click", "reset"),
-        .class(
-            "inline-flex items-center px-2 py-1 mt-3 text-xs"
-                + " text-gray-600 bg-gray-200 rounded-full"
-                + " hover:bg-black hover:text-white"
-        ),
+        .display(.inlineFlex),
+        .items(.center),
+        .paddingX(.size(2)),
+        .paddingY(.size(1)),
+        .marginTop(.size(3)),
+        .fontSize(.xs),
+        .textColor(PinesColor.gray.shade(.strong)),
+        .backgroundColor(PinesColor.gray.range(200)),
+        .borderRadius(.full),
+        .backgroundColor(.black, variants: [.hover]),
+        .textColor(.white, variants: [.hover]),
         .x.bindClass(
-            "{ 'opacity-50 cursor-not-allowed': disabled }"
+            pinesAlpineBindClass([
+                (twValue(.opacity(.value(50)), .cursor(.notAllowed)), "disabled")
+            ])
         )
     ) {
         SVG.svg(
-            .class("w-3 h-3 mr-0.5"),
+            .width(.size(3)),
+            .height(.size(3)),
+            .marginRight(.size(0.5)),
             SVGAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg"),
             SVGAttribute(name: "viewBox", value: "0 0 256 256")
         ) {

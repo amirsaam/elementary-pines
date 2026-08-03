@@ -1,5 +1,6 @@
 import Elementary
 import ElementaryAlpine
+import ElementaryTailwind
 
 /// Renders a Pines UI banner: a fixed top- (or bottom-) of-page
 /// announcement bar driven by Alpine.js.
@@ -23,12 +24,12 @@ import ElementaryAlpine
 ///      x-transition:leave-start="translate-y-0"
 ///      x-transition:leave-end="-translate-y-10"
 ///      x-init="setTimeout(()=>{ bannerVisible = true }, bannerVisibleAfter);"
-///      class="fixed top-0 left-0 w-full h-auto py-2 duration-300 ease-out bg-white shadow-sm sm:py-0 sm:h-10" x-cloak>
+///      class="fixed top-0 left-0 w-full h-auto py-2 duration-300 ease-out bg-white shadow-xs sm:py-0 sm:h-10" x-cloak>
 ///     <div class="flex items-center justify-between w-full h-full px-3 mx-auto max-w-7xl">
 ///         <a href="#" class="flex flex-col w-full h-full text-xs leading-6 text-black duration-150 ease-out sm:flex-row sm:items-center opacity-80 hover:opacity-100">
 ///             <span class="flex items-center">
 ///                 <!-- icon (unless `icon: nil`) -->
-///                 <strong class="font-semibold">New Feature</strong><span class="hidden w-px h-4 mx-3 rounded-full sm:block bg-neutral-200"></span>
+///                 <strong class="font-semibold">New Feature</strong><span class="hidden w-[1px] h-4 mx-3 rounded-full sm:block bg-neutral-200"></span>
 ///             </span>
 ///             <span class="block pt-1 pb-2 leading-none sm:inline sm:pt-0 sm:pb-0">Click here to learn about our latest feature</span>
 ///         </a>
@@ -76,101 +77,135 @@ public func pinesBanner(
     dismissible: Bool = true,
     position: PinesBannerPosition = .top
 ) -> some HTML {
-    let styles = BannerPositionStyles(position: position)
+    let isTop = position == .top
+    let hiddenTranslation = isTop ? twValue(.translate(.y("10"), negative: true)) : twValue(.translate(.y("full")))
 
     return div(
         .x.data("{ bannerVisible: false, bannerVisibleAfter: 300 }"),
         .x.show("bannerVisible"),
-        .x.transitionEnter("transition ease-out duration-500"),
-        .x.transitionEnterStart(styles.hiddenTranslation),
-        .x.transitionEnterEnd("translate-y-0"),
-        .x.transitionLeave("transition ease-in duration-300"),
-        .x.transitionLeaveStart("translate-y-0"),
-        .x.transitionLeaveEnd(styles.hiddenTranslation),
+        .x.transitionEnter(
+            twValue(
+                .transition(.all),
+                .transitionTimingFunction(.easeOut),
+                .transitionDuration(.ms(500))
+            )
+        ),
+        .x.transitionEnterStart(hiddenTranslation),
+        .x.transitionEnterEnd(twValue(.translate(.y("0")))),
+        .x.transitionLeave(
+            twValue(
+                .transition(.all),
+                .transitionTimingFunction(.easeIn),
+                .transitionDuration(.ms(300))
+            )
+        ),
+        .x.transitionLeaveStart(twValue(.translate(.y("0")))),
+        .x.transitionLeaveEnd(hiddenTranslation),
         .x.setup("setTimeout(()=>{ bannerVisible = true }, bannerVisibleAfter);"),
-        .class("fixed \(styles.edge) left-0 w-full h-auto py-2 duration-300 ease-out \(styles.background) shadow-sm sm:py-0 sm:h-10"),
+        .position(.fixed),
+        isTop ? .insetTop(.zero) : .insetBottom(.zero),
+        .insetLeft(.zero),
+        .width(.full),
+        .height(.auto),
+        .paddingY(.size(2)),
+        .transitionDuration(.ms(300)),
+        .transitionTimingFunction(.easeOut),
+        .backgroundColor(isTop ? .white : .black),
+        .boxShadow(.xs),
+        .paddingY(.size(0), variants: [.sm]),
+        .height(.size(10), variants: [.sm]),
         .x.cloak
     ) {
-        div(.class("flex items-center justify-between w-full h-full px-3 mx-auto max-w-7xl")) {
+        div(
+            .display(.flex),
+            .items(.center),
+            .justify(.between),
+            .width(.full),
+            .height(.full),
+            .paddingX(.size(3)),
+            .marginX(.auto),
+            .maxWidth(.sevenxl),
+        ) {
             a(
                 .href(href),
-                .class(
-                    "flex flex-col w-full h-full text-xs leading-6 \(styles.text) "
-                        + "duration-150 ease-out sm:flex-row sm:items-center opacity-80 hover:opacity-100"
-                )
+                .display(.flex),
+                .flexDirection(.column),
+                .width(.full),
+                .height(.full),
+                .fontSize(.xs),
+                .lineHeight(.value(6)),
+                .textColor(isTop ? .black : .white),
+                .transitionDuration(.ms(150)),
+                .transitionTimingFunction(.easeOut),
+                .flexDirection(.row, variants: [.sm]),
+                .items(.center, variants: [.sm]),
+                .opacity(.value(80)),
+                .opacity(.value(100), variants: [.hover])
             ) {
-                span(.class("flex items-center")) {
+                span(.display(.flex), .items(.center)) {
                     if let icon {
                         switch icon {
                         case .wand:
-                            pinesSpecialIcon(.wand, attributes: [.class("w-4 h-4 mr-1")])
+                            pinesSpecialIcon(.wand, attributes: [.width(.size(4)), .height(.size(4)), .marginRight(.size(1))])
                         case .kind(let kind):
-                            pinesIcon(kind, size: .sm, attributes: [.class("mr-1")])
+                            pinesIcon(kind, size: .sm, attributes: [.marginRight(.size(1))])
                         case .custom(let path):
-                            img(.src(path), .class("w-4 h-4 mr-1"))
+                            img(.src(path), .width(.size(4)), .height(.size(4)), .marginRight(.size(1)))
                         }
                     }
-                    strong(.class("font-semibold")) {
+                    strong(.fontWeight(.semibold)) {
                         label
                     }
-                    span(.class("hidden w-px h-4 mx-3 rounded-full sm:block \(styles.divider)")) {
+                    span(
+                        .display(.hidden),
+                        .width(.arbitrary("1px")),
+                        .height(.size(4)),
+                        .marginX(.size(3)),
+                        .borderRadius(.full),
+                        .display(.block, variants: [.sm]),
+                        .backgroundColor(isTop ? PinesColor.neutral.shade(.subtle) : PinesColor.neutral.shade(.bold))
+                    ) {
                         ""
                     }
                 }
-                span(.class("block pt-1 pb-2 leading-none sm:inline sm:pt-0 sm:pb-0")) {
+                span(
+                    .display(.block),
+                    .paddingTop(.size(1)),
+                    .paddingBottom(.size(2)),
+                    .lineHeight(.none),
+                    .display(.inline, variants: [.sm]),
+                    .paddingTop(.size(0), variants: [.sm]),
+                    .paddingBottom(.size(0), variants: [.sm])
+                ) {
                     message
                 }
             }
             if dismissible {
                 button(
+                    .type(.button),
                     .x.on("click", "bannerVisible=false; setTimeout(()=>{ bannerVisible = true }, 1000);"),
-                    .class(
-                        "flex items-center flex-shrink-0 translate-x-1 ease-out duration-150 "
-                            + "justify-center w-6 h-6 p-1.5 \(styles.text) rounded-full \(styles.buttonHover)"
+                    .display(.flex),
+                    .items(.center),
+                    .flexShrink(.shrink0),
+                    .translate(.x("1")),
+                    .transitionTimingFunction(.easeOut),
+                    .transitionDuration(.ms(150)),
+                    .justify(.center),
+                    .width(.size(6)),
+                    .height(.size(6)),
+                    .padding(.size(1.5)),
+                    .textColor(isTop ? .black : .white),
+                    .borderRadius(.full),
+                    .backgroundColor(
+                        isTop
+                            ? PinesColor.neutral.shade(.tint2)
+                            : PinesColor.neutral.shade(.deep),
+                        variants: [.hover]
                     )
                 ) {
                     pinesBannerDismissIcon()
                 }
             }
-        }
-    }
-}
-
-/// Per-position style values for the banner (white at top, black at bottom).
-private struct BannerPositionStyles {
-    /// The fixed edge class: `top-0` or `bottom-0`.
-    let edge: String
-    /// The banner background class: `bg-white` or `bg-black`.
-    let background: String
-    /// The foreground text class applied to the link and the dismiss button:
-    /// `text-black` or `text-white`.
-    let text: String
-    /// The divider background class: `bg-neutral-200` or `bg-neutral-700`.
-    let divider: String
-    /// The dismiss button hover class: `hover:bg-neutral-100` or
-    /// `hover:bg-neutral-800`.
-    let buttonHover: String
-    /// The off-screen translation used for `x-transition:enter-start` and
-    /// `x-transition:leave-end`: `-translate-y-10` (top) or
-    /// `translate-y-full` (bottom).
-    let hiddenTranslation: String
-
-    init(position: PinesBannerPosition) {
-        switch position {
-        case .top:
-            edge = "top-0"
-            background = "bg-white"
-            text = "text-black"
-            divider = "bg-neutral-200"
-            buttonHover = "hover:bg-neutral-100"
-            hiddenTranslation = "-translate-y-10"
-        case .bottom:
-            edge = "bottom-0"
-            background = "bg-black"
-            text = "text-white"
-            divider = "bg-neutral-700"
-            buttonHover = "hover:bg-neutral-800"
-            hiddenTranslation = "translate-y-full"
         }
     }
 }
@@ -184,7 +219,8 @@ private func pinesBannerDismissIcon() -> some HTML {
         SVGAttribute(name: "viewBox", value: "0 0 24 24"),
         SVGAttribute(name: "stroke-width", value: "1.5"),
         SVGAttribute(name: "stroke", value: "currentColor"),
-        .class("w-full h-full")
+        .width(.full),
+        .height(.full)
     ) {
         SVG.path(
             .d(PinesIconKind.x.path),

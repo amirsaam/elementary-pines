@@ -23,14 +23,8 @@ public extension HTMLElement where Tag == HTMLTag.button {
     /// button { "Save" }.pinesButtonStyle(.solid, color: .blue)
     /// button { "Cancel" }.pinesButtonStyle(.tonal, color: .neutral)
     /// button { "Delete" }.pinesButtonStyle(.outline, color: .red)
-    /// button { "Default" }.pinesButtonStyle(.solid)  // color defaults to .neutral
     /// ```
     func pinesButtonStyle(_ style: PinesButtonStyle, color: PinesColor = .neutral) -> Self {
-        let attr = HTMLAttribute<Tag>(
-            name: "class",
-            value: style.classes(color),
-            mergedBy: .appending(separatedBy: " ")
-        )
-        return self.attributes(attr)
+        self.attributes(contentsOf: style.attributes(color))
     }
 }

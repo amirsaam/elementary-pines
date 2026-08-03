@@ -5,14 +5,15 @@ Type-safe [Pines UI](https://devdojo.com/pines) components for [Elementary](http
 ```swift
 import Elementary
 import ElementaryPines
+import ElementaryTailwind
 
 struct ProductPage: HTMLDocument {
     var title: String { "Featured product" }
 
     var body: some HTML {
-        main(.class("max-w-2xl mx-auto p-8")) {
+        main(.maxWidth(.xxl), .marginX(.auto), .padding(.size(8))) {
             pinesCard {
-                div(.class("p-7")) {
+                div(.padding(.size(7))) {
                     h2 { "Featured product" }
                     p { "A short description of the product." }
                     button { "Add to cart" }
@@ -28,15 +29,22 @@ struct ProductPage: HTMLDocument {
 
 ```html
 <main class="max-w-2xl mx-auto p-8">
-    <div class="rounded-lg overflow-hidden border border-neutral-200/60 bg-white text-neutral-700 shadow-sm">
+    <div class="rounded-lg overflow-hidden border border-neutral-200/60 bg-white text-neutral-700 shadow-xs">
         <div class="p-7">
             <h2>Featured product</h2>
             <p>A short description of the product.</p>
-            <button class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium tracking-wide text-white transition-colors duration-200 rounded-md bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-offset-2 focus:ring-blue-700 focus:shadow-outline focus:outline-none">Add to cart</button>
+            <button class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium tracking-wide text-white transition-colors duration-200 rounded-md bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-offset-2 focus:ring-blue-700 focus:shadow-outline focus:outline-hidden">Add to cart</button>
         </div>
     </div>
 </main>
 ```
+
+## Compatibility
+
+| ElementaryPines       | ElementaryAlpine | ElementaryTailwind | Elementary |
+| --------------------- | ---------------- | ------------------ | ---------- |
+| 0.1.xxx (released)    | —                | —                  | 0.7.0      |
+| Main branch (WIP)     | 0.4.xxx          | 0.3.xxx (v4.3.3)   | 0.8.0      |
 
 ## Use it
 
@@ -62,7 +70,7 @@ let package = Package(
 )
 ```
 
-`ElementaryPines` depends on `ElementaryAlpine`, which depends on `Elementary`. Swift Package Manager resolves these transitively — no need to declare them as direct dependencies.
+`ElementaryPines` depends on `ElementaryAlpine` and `ElementaryTailwind` (both typed attribute layers on top of `Elementary`). Swift Package Manager resolves these transitively — no need to declare them as direct dependencies.
 
 This package requires Swift 6.1 with `StrictConcurrency=complete` and targets macOS v14, iOS v15, tvOS v17, watchOS v10.
 
@@ -75,7 +83,7 @@ import ElementaryPines
 
 var head: some HTML {
     meta(.charset(.utf8))
-    script(.src("https://cdn.tailwindcss.com")) {}
+    script(.src("https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4")) {}
     setupPines()
     setupAlpine(plugins: [.collapse, .focus])
 }
@@ -89,7 +97,7 @@ pinesIcon(.check, size: .sm)        // .xs, .sm, .md, .lg, .xl
 pinesIcon(.warning, color: .red)
 
 // extra attributes — pass Alpine directives or extra classes; classes merge
-pinesIcon(.check, attributes: [.class("ml-2")])
+pinesIcon(.check, attributes: [.marginLeft(.size(2))])
 pinesIcon(.check, attributes: [.x.show("isVisible")])
 ```
 
@@ -103,7 +111,7 @@ button { "Delete" }.pinesButtonStyle(.outline)           // transparent, colored
 ```swift
 // 4 card variants — same pattern as the original `pines/elements/card.html`
 pinesCard {
-    div(.class("p-7")) { h2 { "Title" }; p { "Body" } }
+    div(.padding(.size(7))) { h2 { "Title" }; p { "Body" } }
 }
 
 pinesCard(.image, image: "photo.jpg") {
@@ -112,8 +120,8 @@ pinesCard(.image, image: "photo.jpg") {
 }
 
 pinesCard(.stat) {
-    p(.class("text-3xl font-bold")) { "1,234" }
-    p(.class("text-sm text-neutral-500")) { "Total users" }
+    p(.fontSize(.xxxl), .fontWeight(.bold)) { "1,234" }
+    p(.fontSize(.sm), .textColor(PinesColor.neutral.shade(.base))) { "Total users" }
 }
 ```
 
@@ -192,7 +200,7 @@ pinesSelect(items: [
     .init(title: "Cheese", value: "cheese", disabled: true),
 ])
 
-pinesSelect(items: fruits, placeholder: "Choose a fruit", width: "w-72")
+pinesSelect(items: fruits, placeholder: "Choose a fruit", width: .size(72))
 ```
 
 ```swift
@@ -263,7 +271,7 @@ pinesSwitch(labelText: "Airplane Mode", name: "airplane", id: "airplane", attrib
 // date picker — calendar dropdown with month/year navigation
 pinesDatePicker()
 pinesDatePicker(labelText: "Birthday", format: .mmDdYyyy)
-pinesDatePicker(labelText: "Start Date", placeholder: "Pick a date", width: "w-72")
+pinesDatePicker(labelText: "Start Date", placeholder: "Pick a date", width: .size(72))
 pinesDatePicker(disabled: true)
 ```
 
@@ -329,7 +337,7 @@ pinesQuote(
 
 ## Components
 
-The package ships 17 free functions. Each wraps the matching Pines UI element with type-safe parameters.
+The package ships 18 component functions. Each wraps the matching Pines UI element with type-safe parameters.
 
 | Function                        | Variants                                                                                       | Notes                                                    |
 | ------------------------------- | ---------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
@@ -347,13 +355,13 @@ The package ships 17 free functions. Each wraps the matching Pines UI element wi
 | `pinesBanner(label:message:href:icon:dismissible:position:)` | `PinesBannerPosition` `.top` (white) / `.bottom` (black). `icon:` defaults to `.wand`; pass `nil` to omit. | Alpine-driven fixed banner with show/hide transitions and a dismiss button. |
 | `pinesInput(type:color:placeholder:name:value:id:disabled:attributes:)` | `String` type (e.g. `"text"`, `"email"`, `"password"`); color overrides the 300/400 border + ring pair | Tailwind-only — users add `x-data`/`x-model` on the call site for dynamic behavior. |
 | `pinesTextarea(color:placeholder:name:id:rows:disabled:attributes:)` | `String?` placeholder; color overrides the 300/400 border + placeholder + ring pair | Tailwind-only — no built-in auto-resize; users add `x-data`/`x-model` on the call site. |
-| `pinesSelect(items:placeholder:width:)` | `[PinesSelectItem]` (Codable, with `title`/`value`/`disabled`); any Tailwind width class | Alpine-driven — emits full `x-data` state, `x-init` (`$watch`), 5 `@keydown.*` handlers, `x-transition`, `x-cloak`, `x-for` template. Requires `setupAlpine()` in `<head>`. |
+| `pinesSelect(items:placeholder:width:)` | `[PinesSelectItem]` (Codable, Sendable, with `title`/`value`/`disabled`); typed `TWTWidth` | Alpine-driven — emits full `x-data` state, `x-init` (`$watch`), 5 `@keydown.*` handlers, `x-transition`, `x-cloak`, `x-for` template. Requires `setupAlpine()` in `<head>`. |
 | `pinesCheckbox` | 3 overloads: `.default` (visible input + label), `.card` (peer-checked card), `.custom` (user-supplied `labelClasses` for `peer-checked:[&_...]` targeting) | Use `.default` with `labelText:`; `.card`/`.custom` with `content:` trailing closure; all accept `attributes:` for Alpine directives on the `<input>`. |
 | `pinesRadioGroup(options:name:disabled:)` | `[PinesRadioGroupOption]` with `title`/`value`/optional `description`; `name` groups radio inputs; `disabled` disables all | Alpine-driven — emits full `x-data` state with `x-for` template loop; options JSON-encoded. Requires `setupAlpine()` in `<head>`. |
 | `pinesRating(icon:color:emptyStyle:maxStars:value:disabled:compactReset:)` | 2 icons (`PinesRatingIcon`) × 2 empty styles (`PinesRatingEmptyStyle`) × 11 colors; `maxStars`/`value`/`disabled`/`compactReset` | Alpine-driven — hover preview, click-to-rate, reset button (compact inline or below). Requires `setupAlpine()` in `<head>`. |
 | `pinesRangeSlider(color:name:id:min:max:value:step:disabled:)` | 11 colors; configurable `min`/`max`/`value`/`step`/`disabled` | Tailwind-only — `[&::-webkit-slider-thumb]`, `[&::-moz-range-track]` etc. for custom thumb/track styling. No Alpine dependency. |
 | `pinesSwitch(labelText:color:size:name:id:checked:disabled:attributes:)` | `PinesSwitchSize`: `.default` (h-6 w-10), `.small` (h-4 w-6); 11 colors; `checked`/`disabled` | Alpine-driven — hidden checkbox, button toggle, label click. Requires `setupAlpine()` in `<head>`. |
-| `pinesDatePicker(labelText:placeholder:format:width:disabled:)` | `PinesDatePickerFormat`: `.monthDayYear` (default), `.mmDdYyyy`, `.ddMmYyyy`, `.yyyMmDd`, `.dayMonthShortYear`; any Tailwind width class | Alpine-driven — full calendar dropdown with month/year navigation, day-of-week headers, day grid, and `x-transition`. Requires `setupPines()` in `<head>`. |
+| `pinesDatePicker(labelText:placeholder:format:width:disabled:)` | `PinesDatePickerFormat`: `.monthDayYear` (default), `.mmDdYyyy`, `.ddMmYyyy`, `.yyyMmDd`, `.dayMonthShortYear`; typed `TWTWidth` | Alpine-driven — full calendar dropdown with month/year navigation, day-of-week headers, day grid, and `x-transition`. Requires `setupAlpine()` in `<head>`. |
 
 ## Alpine integration
 
@@ -390,7 +398,7 @@ The `setupPines()` function emits a single `<style>` block. Call it once in the 
 var head: some HTML {
     meta(.charset(.utf8))
     setupPines()
-    script(.src("https://cdn.tailwindcss.com")) {}
+    script(.src("https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4")) {}
     setupAlpine(plugins: [.collapse, .focus])
 }
 ```
@@ -401,7 +409,7 @@ var head: some HTML {
 <style>[x-cloak] { display: none !important; }</style>
 ```
 
-If you can't (or don't want to) use a CDN, self-host the `tailwind.min.css` output of your project — the same as you would for any other Tailwind project. The class strings in every component are the standard Tailwind utility classes, not custom CSS.
+If you can't (or don't want to) use a CDN, self-host the compiled CSS output of your project — the same as you would for any other Tailwind project. The class strings in every component are the standard Tailwind utility classes, not custom CSS.
 
 ## Color conventions
 
@@ -414,7 +422,7 @@ The `PinesColor` enum's 11 cases map to Tailwind's default color palette. Each c
 | 700 / 800 (gray)    | `gray`                                            |
 | 950 / 900 (neutral) | `neutral`                                         |
 
-`.pinesButtonStyle(.solid, color: .neutral)` renders `bg-black` (per the original), not `bg-neutral-950`. `.pinesBadgeStyle(.solid, color: .neutral)` and `.icon, color: .neutral` follow the same special case.
+`.pinesButtonStyle(.solid, color: .neutral)` renders `bg-neutral-950` (the neutral dark end of the palette). `.pinesBadgeStyle(.solid, color: .neutral)` and `.icon, color: .neutral` render `bg-black` (per the original Pines badge source).
 
 ## Documentation
 
@@ -425,7 +433,7 @@ The full API is documented in source — every public type and function has doc 
 - [`Sources/ElementaryPines/Card/Card.swift`](./Sources/ElementaryPines/Card/Card.swift) — `pinesCard`
 - [`Sources/ElementaryPines/Alert/Alert+Variant.swift`](./Sources/ElementaryPines/Alert/Alert+Variant.swift) — `pinesAlert`
 
-The full test suite (119 snapshot and integration tests, including Alpine directive smoke tests) lives in [`Tests/ElementaryPinesTests/`](./Tests/ElementaryPinesTests/).
+The full test suite (122 snapshot and integration tests, including Alpine directive smoke tests) lives in [`Tests/ElementaryPinesTests/`](./Tests/ElementaryPinesTests/).
 
 ## Why this exists
 
@@ -438,6 +446,26 @@ The [Pines UI](https://devdojo.com/pines) library is a collection of pre-built A
 - `setupPines`, `PinesColor`, `.pinesButtonStyle`, `.pinesBadgeStyle`, `pinesCard`, `pinesIcon`, `pinesAlert`, `pinesProgress`, `pinesQuote`, `pinesRating`, `pinesRangeSlider`, `pinesBreadcrumb`, `pinesBanner`, `pinesInput`, `pinesTextarea`, `pinesSelect`, `pinesCheckbox`, `pinesRadioGroup`, `pinesSwitch`, `pinesDatePicker`
 
 Alpine directive compatibility is verified by a dedicated smoke suite covering `x-text`, `x-model`, `x-on:click`, `x-data`, `x-show`, and modifiers.
+
+## FAQ
+
+**Why do some components return `HTMLRaw(html.render())` instead of the element directly?**
+
+The package compiles with Swift 6.1 and `StrictConcurrency=complete`. Returning a deeply nested `HTMLElement` value (e.g. a `div` whose content is itself a `span`) directly from a `some HTML` function is miscompiled by the Swift 6.1 opaque-type inference — rendering produces corrupted output or a runtime `SIGSEGV`. Wrapping the already-rendered HTML string in `HTMLRaw` erases the concrete element type, sidestepping the bug.
+
+It is not an optimization or a workaround for a design limitation — it is a compiler-bug workaround. Do not "simplify" `HTMLRaw(html.render())` back to `return html`; the tests that cover these components will crash if you do.
+
+**Why are some Tailwind classes still written as raw strings?**
+
+Only classes with no typed `ElementaryTailwind` token are raw:
+
+- `ring-offset-background`, `text-foreground` — CSS-variable theme tokens. `TWColor.arbitrary(...)` would add brackets (`ring-offset-[background]`), changing the class name.
+- `shadow-outline`, `active-breadcrumb` — custom component classes with no token case.
+- `peer`, `group` — marker classes; `TWVariant` only defines `group-*`/`peer-*` *variants*, not the marker itself.
+
+**Why do some Alpine directives on SVGs use raw `SVGAttribute(name: "x-show", ...)`?**
+
+SVG elements don't conform to `HTMLTrait.Attributes.Global`, and `ElementaryAlpine` 0.4.000 does not expose `x-show`-style helpers for `SVGAttribute`. The raw attribute is the only supported path today.
 
 ## Future directions
 

@@ -72,7 +72,8 @@ final class BadgeStyleModifierTests: XCTestCase {
             span {
                 SVG.svg(
                     attributes: [
-                        .class("w-3.5 h-3.5"),
+                        .width(.size(3.5)),
+                        .height(.size(3.5)),
                         SVGAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg"),
                         SVGAttribute(name: "viewBox", value: "0 0 24 24"),
                         SVGAttribute(name: "fill", value: "currentColor"),

@@ -1,3 +1,6 @@
+import Elementary
+import ElementaryTailwind
+
 /// Layout variants for `pinesCard`.
 ///
 /// Each variant changes the card's outer structure and inner layout.
@@ -23,14 +26,17 @@ public enum PinesCardVariant: Sendable {
 }
 
 extension PinesCardVariant {
-    /// Extra Tailwind utility classes appended to the card's outer div for
-    /// this variant. Empty for `.basic` and `.image`.
-    public var outerSuffix: String {
+    /// Extra typed attributes appended to the card's outer div for this variant.
+    public var outerAttributes: [HTMLAttribute<HTMLTag.div>] {
         switch self {
-        case .basic: return ""
-        case .image: return ""
-        case .horizontal: return " flex flex-col md:flex-row"
-        case .stat: return " text-center p-7"
+        case .basic, .image: return []
+        case .horizontal:
+            return [
+                .display(.flex),
+                .flexDirection(.column),
+                .flexDirection(.row, variants: [.md]),
+            ]
+        case .stat: return [.textAlign(.center), .padding(.size(7))]
         }
     }
 }

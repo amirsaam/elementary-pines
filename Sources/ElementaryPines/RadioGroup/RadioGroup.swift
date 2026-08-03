@@ -1,5 +1,6 @@
 import Elementary
 import ElementaryAlpine
+import ElementaryTailwind
 import Foundation
 
 /// Renders a styled radio group matching the Pines UI radio group design.
@@ -13,9 +14,13 @@ import Foundation
 /// **Generated HTML:**
 /// ```html
 /// <div class="space-y-3" x-data="{ radioGroupSelectedValue: null, radioGroupOptions: [...] }">
-///     <template x-for="(option, index) in radioGroupOptions" :key="index">
-///         <label @click="radioGroupSelectedValue=option.value" class="flex items-start p-5 space-x-3 ...">
-///             <input type="radio" name="..." :value="option.value" class="text-gray-900 ...">
+///     <template x-for="(option, index) in radioGroupOptions" x-bind:key="index">
+///         <label x-on:click="if(!option.disabled){ radioGroupSelectedValue=option.value }"
+///                x-bind:class="{ 'opacity-50 pointer-events-none' : option.disabled }"
+///                class="flex items-start p-5 space-x-3 bg-white border rounded-md shadow-xs hover:bg-gray-50 border-neutral-200/70">
+///             <input type="radio" name="..." x-bind:value="option.value"
+///                    class="text-gray-900 translate-y-px focus:ring-gray-700"
+///                    x-bind:disabled="option.disabled">
 ///             <span class="relative flex flex-col text-left space-y-1.5 leading-none">
 ///                 <span x-text="option.title" class="font-semibold"></span>
 ///                 <span x-text="option.description" class="text-sm opacity-50"></span>
@@ -53,12 +58,19 @@ public func pinesRadioGroup(
 
     let xDataString = #"{"radioGroupSelectedValue":null,"radioGroupOptions":\#(optionsLiteral)}"#
 
-    var inputClasses = "text-gray-900 translate-y-px focus:ring-gray-700"
+    var inputAttrs: [HTMLAttribute<HTMLTag.input>] = [
+        .textColor(PinesColor.gray.shade(.dark)),
+        .translate(.y("px")),
+        .ringColor(PinesColor.gray.shade(.bold), variants: [.focus]),
+    ]
     if disabled {
-        inputClasses += " disabled:opacity-50 disabled:cursor-not-allowed"
+        inputAttrs.append(contentsOf: [
+            .opacity(.value(50), variants: [.disabled]),
+            .cursor(.notAllowed, variants: [.disabled]),
+        ])
     }
 
-    let html = div(.class("space-y-3"), .x.data(xDataString)) {
+    let html = div(.spaceY(.size(3)), .x.data(xDataString)) {
         template(.x.loop("(option, index) in radioGroupOptions"), .x.bind("key", "index")) {
             let clickHandler: [HTMLAttribute<HTMLTag.label>] =
                 disabled
@@ -67,12 +79,21 @@ public func pinesRadioGroup(
             let labelClasses: [HTMLAttribute<HTMLTag.label>] =
                 disabled
                 ? []
-                : [.x.bindClass("{ 'opacity-50 pointer-events-none': option.disabled }")]
+                : [
+                    .x.bindClass(
+                        pinesAlpineBindClass([
+                            (twValue(.opacity(.value(50)), .pointerEvents(.none)), "option.disabled")
+                        ])
+                    )
+                ]
             label(
                 attributes: clickHandler + labelClasses + [
-                    .class(
-                        "flex items-start p-5 space-x-3 bg-white border rounded-md shadow-sm hover:bg-gray-50 border-neutral-200/70"
-                    )
+                    .display(.flex), .items(.start), .padding(.size(5)),
+                    .spaceX(.size(3)),
+                    .backgroundColor(.white),
+                    .borderWidth(.bare), .borderRadius(.md), .boxShadow(.xs),
+                    .backgroundColor(PinesColor.gray.shade(.tint1), variants: [.hover]),
+                    .borderColor(PinesColor.neutral.shade(.subtle), opacity: 70),
                 ]
             ) {
                 let disabledAttribute: [HTMLAttribute<HTMLTag.input>] =
@@ -84,12 +105,25 @@ public func pinesRadioGroup(
                         .type(.radio),
                         .name(name),
                         .x.bind("value", "option.value"),
-                        .class(inputClasses),
-                    ] + disabledAttribute
+                    ] + inputAttrs + disabledAttribute
                 input(attributes: inputAttributes)
-                span(.class("relative flex flex-col text-left space-y-1.5 leading-none")) {
-                    span(.x.text("option.title"), .class("font-semibold")) { "" }
-                    span(.x.text("option.description"), .class("text-sm opacity-50")) { "" }
+                span(
+                    .position(.relative),
+                    .display(.flex),
+                    .flexDirection(.column),
+                    .textAlign(.left),
+                    .spaceY(.size(1.5)),
+                    .lineHeight(.none)
+                ) {
+                    span(
+                        .x.text("option.title"),
+                        .fontWeight(.semibold)
+                    ) { "" }
+                    span(
+                        .x.text("option.description"),
+                        .fontSize(.sm),
+                        .opacity(.value(50))
+                    ) { "" }
                 }
             }
         }

@@ -18,13 +18,15 @@ let package = Package(
         .library(name: "ElementaryPines", targets: ["ElementaryPines"])
     ],
     dependencies: [
-        .package(url: "https://github.com/amirsaam/elementary-alpine.git", from: "0.4.000")
+        .package(url: "https://github.com/amirsaam/elementary-alpine.git", from: "0.4.000"),
+        .package(url: "https://github.com/amirsaam/elementary-tailwind.git", from: "0.3.000")
     ],
     targets: [
         .target(
             name: "ElementaryPines",
             dependencies: [
-                .product(name: "ElementaryAlpine", package: "elementary-alpine")
+                .product(name: "ElementaryAlpine", package: "elementary-alpine"),
+                .product(name: "ElementaryTailwind", package: "elementary-tailwind")
             ],
             path: "Sources/ElementaryPines",
             swiftSettings: featureFlags

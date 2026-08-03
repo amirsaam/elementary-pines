@@ -13,7 +13,12 @@ final class AlertTests: XCTestCase {
             pinesAlert {
                 pinesIcon(.info, size: .sm)
                 h5 { "Alert Message Headline" }
-                div(.class("text-sm opacity-70")) { "This is the subtext for your alert message." }
+                div(
+                    .fontSize(.sm),
+                    .opacity(.value(70))
+                ) {
+                    "This is the subtext for your alert message."
+                }
             },
             expected
         )

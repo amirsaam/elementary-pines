@@ -1,4 +1,5 @@
 import Elementary
+import ElementaryTailwind
 
 /// Renders a Pines-styled SVG icon. The `color` is applied as a Tailwind
 /// `text-X-Y` class on the SVG (so it sets the stroke color via
@@ -6,16 +7,16 @@ import Elementary
 /// added and the icon inherits color from the parent.
 ///
 /// Pass `attributes` to layer on Alpine directives, extra classes, or
-/// any other SVG attribute. Classes are merged with the default
-/// size/color class (so `attributes: [.class("ml-2")]` produces
-/// `class="w-4 h-4 ml-2"`).
+/// any other SVG attribute. Attributes are merged with the default
+/// size/color class (so `attributes: [.marginLeft(.size(2))]` produces
+/// `class="w-5 h-5 ml-2"`).
 ///
 /// ```swift
 /// pinesIcon(.check)                                                          // md, currentColor
 /// pinesIcon(.check, size: .lg)                                               // w-6 h-6, currentColor
-/// pinesIcon(.check, color: .green)                                           // md, text-green-500
-/// pinesIcon(.check, size: .lg, color: .blue)                                 // w-6 h-6, text-blue-500
-/// pinesIcon(.check, attributes: [.class("ml-2")])                            // class merges
+/// pinesIcon(.check, color: .green)                                           // md, text-green-600
+/// pinesIcon(.check, size: .lg, color: .blue)                                 // w-6 h-6, text-blue-600
+/// pinesIcon(.check, attributes: [.marginLeft(.size(2))])                     // attributes merge
 /// pinesIcon(.check, attributes: [.x.show("isVisible")])                      // Alpine directive
 /// ```
 public func pinesIcon(
@@ -28,7 +29,7 @@ public func pinesIcon(
     let sizeClass = size.classes
     let colorClass: String = {
         if let color, color != .neutral {
-            "text-\(color.outlineScale.text)"
+            twValue(.textColor(TWColor(color.rawValue, color.iconShade)))
         } else {
             ""
         }

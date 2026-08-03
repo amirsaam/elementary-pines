@@ -1,4 +1,5 @@
 import Elementary
+import ElementaryTailwind
 
 /// Wraps the given content in a Pines-styled card container.
 ///
@@ -10,7 +11,7 @@ import Elementary
 ///
 /// **Generated HTML:**
 /// ```html
-/// <div class="rounded-lg overflow-hidden border border-neutral-200/60 bg-white text-neutral-700 shadow-sm">
+/// <div class="rounded-lg overflow-hidden border border-neutral-200/60 bg-white text-neutral-700 shadow-xs">
 ///     <!-- user content -->
 /// </div>
 /// ```
@@ -18,7 +19,7 @@ import Elementary
 /// **Example:**
 /// ```swift
 /// pinesCard {
-///     div(.class("p-7")) {
+///     div(.padding(.size(7))) {
 ///         h2 { "Product Name" }
 ///         p { "Description" }
 ///         button { "View" }
@@ -36,8 +37,8 @@ import Elementary
 /// }
 ///
 /// pinesCard(.stat) {
-///     p(.class("text-3xl font-bold")) { "1,234" }
-///     p(.class("text-sm text-neutral-500")) { "Total users" }
+///     p(.fontSize(.xxxl), .fontWeight(.bold)) { "1,234" }
+///     p(.fontSize(.sm), .textColor(PinesColor.neutral.shade(.base))) { "Total users" }
 /// }
 /// ```
 public func pinesCard<Content: HTML>(
@@ -45,11 +46,17 @@ public func pinesCard<Content: HTML>(
     image: String? = nil,
     @ContentBuilder content: () -> Content
 ) -> some HTML {
-    let base = "rounded-lg overflow-hidden border border-neutral-200/60 bg-white text-neutral-700 shadow-sm"
-    let outer = base + variant.outerSuffix
+    let outerAttributes: [HTMLAttribute<HTMLTag.div>] =
+        [
+            .borderRadius(.lg),
+            .overflow(.hidden),
+            .borderWidth(.bare),
+            .borderColor(PinesColor.neutral.shade(.subtle), opacity: 60),
+            .backgroundColor(.white),
+            .textColor(PinesColor.neutral.shade(.bold)),
+            .boxShadow(.xs),
+        ] + variant.outerAttributes
 
-    // Resolve the image URL outside the ContentBuilder so the guard can run
-    // before the builder closure starts.
     let imageURL: String? = {
         switch variant {
         case .image, .horizontal:
@@ -60,13 +67,19 @@ public func pinesCard<Content: HTML>(
         }
     }()
 
-    return div(.class(outer)) {
+    return div(attributes: outerAttributes) {
         if variant == .image, let imageURL {
-            img(.src(imageURL), .class("w-full h-auto"))
-            div(.class("p-7")) { content() }
+            img(.src(imageURL), .width(.full), .height(.auto))
+            div(.padding(.size(7))) { content() }
         } else if variant == .horizontal, let imageURL {
-            img(.src(imageURL), .class("w-full md:w-48 h-auto"))
-            div(.class("p-7 flex-1")) { content() }
+            img(
+                .src(imageURL),
+                .objectFit(.cover),
+                .width(.auto),
+                .height(.size(48)),
+                .aspect(.video)
+            )
+            div(.padding(.size(7)), .flex(.one)) { content() }
         } else {
             content()
         }

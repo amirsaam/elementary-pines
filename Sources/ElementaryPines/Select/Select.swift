@@ -1,5 +1,6 @@
 import Elementary
 import ElementaryAlpine
+import ElementaryTailwind
 import Foundation
 
 /// Renders a styled custom select element matching the Pines UI select design.
@@ -19,18 +20,18 @@ import Foundation
 ///     .init(title: "Cheese", value: "cheese", disabled: true),
 /// ])
 ///
-/// pinesSelect(items: items, placeholder: "Choose a fruit", width: "w-72")
+/// pinesSelect(items: items, placeholder: "Choose a fruit", width: .size(72))
 /// ```
 ///
 /// - Parameters:
 ///   - items: The list of selectable items. Defaults to empty.
 ///   - placeholder: Placeholder text shown when nothing is selected.
 ///     Defaults to `"Select Item"`.
-///   - width: Tailwind width class for the select. Defaults to `"w-64"`.
+///   - width: Tailwind width token for the select. Defaults to `.size(64)`.
 public func pinesSelect(
     items: [PinesSelectItem] = [],
     placeholder: String = "Select Item",
-    width: String = "w-64"
+    width: TWTWidth = .size(64)
 ) -> some HTML {
     let encoder = JSONEncoder()
     encoder.outputFormatting = [.sortedKeys]
@@ -45,7 +46,8 @@ public func pinesSelect(
     let xInitScript = PinesSelectState.xInit
 
     return div(
-        .class("relative \(width)"),
+        .position(.relative),
+        .width(width),
         .x.data(xData),
         .x.setup(xInitScript),
         .x.on("keydown", "if(selectOpen){ selectOpen=false; }", modifiers: [.escape]),
@@ -64,16 +66,54 @@ public func pinesSelect(
     ) {
         button(
             .x.ref("selectButton"),
+            .type(.button),
             .x.on("click", "selectOpen=!selectOpen"),
-            .x.bindClass("{ 'focus:ring-2 focus:ring-offset-2 focus:ring-neutral-400' : !selectOpen }"),
-            .class(
-                "relative min-h-[38px] flex items-center justify-between w-full py-2 pl-3 pr-10 text-left bg-white border rounded-md shadow-sm cursor-default border-neutral-200/70 focus:outline-none text-sm"
-            )
+            .x.bindClass(
+                pinesAlpineBindClass([
+                    (
+                        twValue(
+                            .ringWidth(.size(2), variants: [.focus]),
+                            .ringOffsetWidth(.size(2), variants: [.focus]),
+                            .ringColor(PinesColor.neutral.shade(.accent), variants: [.focus])
+                        ),
+                        "!selectOpen"
+                    )
+                ])
+            ),
+            .position(.relative),
+            .minHeight(.arbitrary("38px")),
+            .display(.flex),
+            .items(.center),
+            .justify(.between),
+            .width(.full),
+            .paddingY(.size(2)),
+            .paddingLeft(.size(3)),
+            .paddingRight(.size(10)),
+            .textAlign(.left),
+            .backgroundColor(.white),
+            .borderWidth(.bare),
+            .borderRadius(.md),
+            .boxShadow(.xs),
+            .cursor(.default),
+            .borderColor(PinesColor.neutral.shade(.subtle), opacity: 70),
+            .outlineStyle(.hidden, variants: [.focus]),
+            .fontSize(.sm)
         ) {
-            span(.x.text("selectedItem ? selectedItem.title : '\(placeholder)'"), .class("truncate")) {
+            span(
+                .x.text("selectedItem ? selectedItem.title : \(pinesJavaScriptStringLiteral(placeholder))"),
+                .textOverflow(.truncate)
+            ) {
                 placeholder
             }
-            span(.class("absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none")) {
+            span(
+                .position(.absolute),
+                .insetY(.zero),
+                .insetRight(.zero),
+                .display(.flex),
+                .items(.center),
+                .paddingRight(.size(2)),
+                .pointerEvents(.none)
+            ) {
                 pinesIcon(.chevronDown)
             }
         }
@@ -81,35 +121,82 @@ public func pinesSelect(
             .x.show("selectOpen"),
             .x.ref("selectableItemsList"),
             .x.on("click", "selectOpen = false", modifiers: [.outside]),
-            .x.transitionEnter("transition ease-out duration-50"),
-            .x.transitionEnterStart("opacity-0 -translate-y-1"),
-            .x.transitionEnterEnd("opacity-100"),
-            .x.bindClass("{ 'bottom-0 mb-10' : selectDropdownPosition == 'top', 'top-0 mt-10' : selectDropdownPosition == 'bottom' }"),
+            .x.transitionEnter(twValue(.transition(.all), .transitionTimingFunction(.easeOut), .transitionDuration(.ms(50)))),
+            .x.transitionEnterStart(twValue(.opacity(.value(0)), .translate(.y("1"), negative: true))),
+            .x.transitionEnterEnd(twValue(.opacity(.value(100)))),
+            .x.bindClass(
+                pinesAlpineBindClass([
+                    (
+                        twValue(.insetBottom(.zero), .marginBottom(.size(10))),
+                        "selectDropdownPosition == 'top'"
+                    ),
+                    (
+                        twValue(.insetTop(.zero), .marginTop(.size(10))),
+                        "selectDropdownPosition == 'bottom'"
+                    ),
+                ])
+            ),
             .x.cloak,
-            .class(
-                "absolute w-full py-1 mt-1 overflow-auto text-sm bg-white rounded-md shadow-md max-h-56 ring-1 ring-black ring-opacity-5 focus:outline-none"
-            )
+            .position(.absolute),
+            .width(.full),
+            .paddingY(.size(1)),
+            .marginTop(.size(1)),
+            .overflow(.auto),
+            .fontSize(.sm),
+            .backgroundColor(.white),
+            .borderRadius(.md),
+            .boxShadow(.md),
+            .maxHeight(.size(56)),
+            .ringWidth(.size(1)),
+            .ringColor(.black, opacity: 5),
+            .outlineStyle(.hidden, variants: [.focus])
         ) {
             template(.x.loop("item in selectableItems"), .x.bind("key", "item.value")) {
                 li(
                     .x.on("click", "selectedItem=item; selectOpen=false; $refs.selectButton.focus();"),
                     .x.bind("id", "item.value + '-' + selectId"),
                     .x.bind("data-disabled", "item.disabled"),
-                    .x.bindClass("{ 'bg-neutral-100 text-gray-900' : selectableItemIsActive(item), '' : !selectableItemIsActive(item) }"),
+                    .x.bindClass(
+                        pinesAlpineBindClass([
+                            (
+                                twValue(
+                                    .backgroundColor(PinesColor.neutral.shade(.tint2)),
+                                    .textColor(PinesColor.gray.shade(.dark))
+                                ),
+                                "selectableItemIsActive(item)"
+                            ),
+                            ("", "!selectableItemIsActive(item)"),
+                        ])
+                    ),
                     .x.on("mousemove", "selectableItemActive=item"),
-                    .class(
-                        "relative flex items-center h-full py-2 pl-8 text-gray-700 cursor-default select-none data-[disabled]:opacity-50 data-[disabled]:pointer-events-none"
-                    )
+                    .position(.relative),
+                    .display(.flex),
+                    .items(.center),
+                    .height(.full),
+                    .paddingY(.size(2)),
+                    .paddingLeft(.size(8)),
+                    .textColor(PinesColor.gray.shade(.bold)),
+                    .cursor(.default),
+                    .userSelect(.none),
+                    .opacity(.value(50), variants: [.arbitrary("data-[disabled]")]),
+                    .pointerEvents(.none, variants: [.arbitrary("data-[disabled]")])
                 ) {
-                    pinesIcon(
-                        .check,
-                        size: .sm,
-                        attributes: [
-                            SVGAttribute(name: "x-show", value: "selectedItem.value==item.value"),
-                            .class("absolute left-0 ml-2 text-neutral-400"),
-                        ]
-                    )
-                    span(.class("block font-medium truncate"), .x.text("item.title")) {
+                    SVG.svg(
+                        SVGAttribute(name: "x-show", value: "selectedItem.value==item.value"),
+                        SVGAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg"),
+                        SVGAttribute(name: "fill", value: "none"),
+                        SVGAttribute(name: "viewBox", value: "0 0 20 20"),
+                        SVGAttribute(name: "stroke", value: "currentColor"),
+                        SVGAttribute(name: "stroke-width", value: "2"),
+                        SVGAttribute(name: "class", value: "absolute left-0 ml-2 w-4 h-4 text-neutral-400")
+                    ) {
+                        SVG.polyline(
+                            .points("20 6 9 17 4 12"),
+                            .strokeLinecap(.round),
+                            .strokeLinejoin(.round)
+                        )
+                    }
+                    span(.display(.block), .fontWeight(.medium), .textOverflow(.truncate), .x.text("item.title")) {
                         ""
                     }
                 }

@@ -47,4 +47,28 @@ final class DatePickerTests: XCTestCase {
             expected
         )
     }
+
+    func testDatePickerAppliesRootAttributes() throws {
+        let expected = try String(
+            contentsOf: fixtureURL("datepicker-attributes.html"),
+            encoding: .utf8
+        )
+        HTMLAssertEqual(
+            pinesDatePicker(
+                attributes: [HTMLAttribute<HTMLTag.div>(name: "data-testid", value: "date-picker")]
+            ),
+            expected
+        )
+    }
+
+    func testDatePickerUsesTypedWidth() throws {
+        let expected = try String(
+            contentsOf: fixtureURL("datepicker-width.html"),
+            encoding: .utf8
+        )
+        HTMLAssertEqual(
+            pinesDatePicker(width: .size(72)),
+            expected
+        )
+    }
 }

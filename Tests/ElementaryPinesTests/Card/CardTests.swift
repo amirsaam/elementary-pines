@@ -11,10 +11,18 @@ final class CardTests: XCTestCase {
         )
         HTMLAssertEqual(
             pinesCard {
-                div(.class("relative")) {
-                    img(.src("https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=2370"), .class("w-full h-auto"))
+                div(
+                    .position(.relative)
+                ) {
+                    img(
+                        .src("https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=2370"),
+                        .width(.full),
+                        .height(.auto)
+                    )
                 }
-                div(.class("p-7")) {
+                div(
+                    .class("p-7")
+                ) {
                     h2 { "Product Name" }
                     p { "Description" }
                     button { "View Product" }
@@ -72,8 +80,14 @@ final class CardTests: XCTestCase {
         )
         HTMLAssertEqual(
             pinesCard(.stat) {
-                p(.class("text-3xl font-bold")) { "1,234" }
-                p(.class("text-sm text-neutral-500")) { "Total users" }
+                p(
+                    .fontSize(.xxxl),
+                    .fontWeight(.bold)
+                ) { "1,234" }
+                p(
+                    .fontSize(.sm),
+                    .textColor(PinesColor.neutral.shade(.base))
+                ) { "Total users" }
             },
             expected
         )
