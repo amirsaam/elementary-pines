@@ -21,7 +21,7 @@ final class CardTests: XCTestCase {
                     )
                 }
                 div(
-                    .class("p-7")
+                    .padding(.size(7))
                 ) {
                     h2 { "Product Name" }
                     p { "Description" }

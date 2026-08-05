@@ -55,7 +55,15 @@ final class BadgeStyleModifierTests: XCTestCase {
         )
         HTMLAssertEqual(
             span {
-                span(.class("block w-1.5 h-1.5 -ml-0.5 mr-1 bg-green-500 rounded-full")) {}
+                span(
+                    .display(.block),
+                    .width(.size(1.5)),
+                    .height(.size(1.5)),
+                    .marginLeft(.size(0.5), negative: true),
+                    .marginRight(.size(1)),
+                    .backgroundColor(PinesColor.green.shade(.base)),
+                    .borderRadius(.full)
+                ) {}
                 span { "Online" }
             }
             .pinesBadgeStyle(.dot, color: .green),

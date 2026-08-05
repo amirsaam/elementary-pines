@@ -51,7 +51,10 @@ final class AlpineDirectiveTests: XCTestCase {
                 input(
                     .type(.text),
                     HTMLAttribute(name: "x-model", value: "search"),
-                    .class("border rounded-sm px-2 py-1")
+                    .borderWidth(.bare),
+                    .borderRadius(.sm),
+                    .paddingX(.size(2)),
+                    .paddingY(.size(1))
                 )
             },
             expected

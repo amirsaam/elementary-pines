@@ -76,10 +76,10 @@ final class CheckboxTests: XCTestCase {
         )
         HTMLAssertEqual(
             pinesCheckbox(name: "lib", id: "lib") {
-                div(.class("flex items-center space-x-5")) {
-                    div(.class("flex flex-col justify-start")) {
-                        div(.class("w-full text-lg font-semibold")) { "AlpineJS" }
-                        div(.class("w-full text-sm opacity-60")) { "Lightweight JS framework" }
+                div(.display(.flex), .items(.center), .spaceX(.size(5))) {
+                    div(.display(.flex), .flexDirection(.column), .justify(.start)) {
+                        div(.width(.full), .fontSize(.lg), .fontWeight(.semibold)) { "AlpineJS" }
+                        div(.width(.full), .fontSize(.sm), .opacity(.value(60))) { "Lightweight JS framework" }
                     }
                 }
             },
@@ -94,10 +94,10 @@ final class CheckboxTests: XCTestCase {
         )
         HTMLAssertEqual(
             pinesCheckbox(color: .green, checked: true, name: "card-checked", id: "card-checked") {
-                div(.class("flex items-center space-x-5")) {
-                    div(.class("flex flex-col justify-start")) {
-                        div(.class("w-full text-lg font-semibold")) { "AlpineJS" }
-                        div(.class("w-full text-sm opacity-60")) { "Lightweight JS framework" }
+                div(.display(.flex), .items(.center), .spaceX(.size(5))) {
+                    div(.display(.flex), .flexDirection(.column), .justify(.start)) {
+                        div(.width(.full), .fontSize(.lg), .fontWeight(.semibold)) { "AlpineJS" }
+                        div(.width(.full), .fontSize(.sm), .opacity(.value(60))) { "Lightweight JS framework" }
                     }
                 }
             },
@@ -112,10 +112,10 @@ final class CheckboxTests: XCTestCase {
         )
         HTMLAssertEqual(
             pinesCheckbox(disabled: true, name: "card-disabled", id: "card-disabled") {
-                div(.class("flex items-center space-x-5")) {
-                    div(.class("flex flex-col justify-start")) {
-                        div(.class("w-full text-lg font-semibold")) { "AlpineJS" }
-                        div(.class("w-full text-sm opacity-60")) { "Lightweight JS framework" }
+                div(.display(.flex), .items(.center), .spaceX(.size(5))) {
+                    div(.display(.flex), .flexDirection(.column), .justify(.start)) {
+                        div(.width(.full), .fontSize(.lg), .fontWeight(.semibold)) { "AlpineJS" }
+                        div(.width(.full), .fontSize(.sm), .opacity(.value(60))) { "Lightweight JS framework" }
                     }
                 }
             },
@@ -132,10 +132,10 @@ final class CheckboxTests: XCTestCase {
             pinesCheckbox(name: "card-attr", id: "card-attr") {
                 [.x.model("selected")]
             } content: {
-                div(.class("flex items-center space-x-5")) {
-                    div(.class("flex flex-col justify-start")) {
-                        div(.class("w-full text-lg font-semibold")) { "AlpineJS" }
-                        div(.class("w-full text-sm opacity-60")) { "Lightweight JS framework" }
+                div(.display(.flex), .items(.center), .spaceX(.size(5))) {
+                    div(.display(.flex), .flexDirection(.column), .justify(.start)) {
+                        div(.width(.full), .fontSize(.lg), .fontWeight(.semibold)) { "AlpineJS" }
+                        div(.width(.full), .fontSize(.sm), .opacity(.value(60))) { "Lightweight JS framework" }
                     }
                 }
             },
@@ -150,7 +150,17 @@ final class CheckboxTests: XCTestCase {
         )
         HTMLAssertEqual(
             pinesCheckbox(name: "x", id: "x", labelClasses: customLabelClasses) {
-                span(.class("flex items-center justify-center w-5 h-5 border-2 rounded-sm custom-checkbox text-neutral-900")) {
+                span(
+                    .display(.flex),
+                    .items(.center),
+                    .justify(.center),
+                    .width(.size(5)),
+                    .height(.size(5)),
+                    .borderWidth(.size(2)),
+                    .borderRadius(.sm),
+                    .class("custom-checkbox"),
+                    .textColor(PinesColor.neutral.shade(.dark))
+                ) {
                     SVG.svg(
                         attributes: [
                             SVGAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg"),
@@ -181,7 +191,17 @@ final class CheckboxTests: XCTestCase {
         )
         HTMLAssertEqual(
             pinesCheckbox(color: .red, checked: true, name: "custom-checked", id: "custom-checked", labelClasses: customLabelClasses) {
-                span(.class("flex items-center justify-center w-5 h-5 border-2 rounded-sm custom-checkbox text-neutral-900")) {
+                span(
+                    .display(.flex),
+                    .items(.center),
+                    .justify(.center),
+                    .width(.size(5)),
+                    .height(.size(5)),
+                    .borderWidth(.size(2)),
+                    .borderRadius(.sm),
+                    .class("custom-checkbox"),
+                    .textColor(PinesColor.neutral.shade(.dark))
+                ) {
                     SVG.svg(
                         attributes: [
                             SVGAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg"),
@@ -212,7 +232,17 @@ final class CheckboxTests: XCTestCase {
         )
         HTMLAssertEqual(
             pinesCheckbox(disabled: true, name: "custom-disabled", id: "custom-disabled", labelClasses: customLabelClasses) {
-                span(.class("flex items-center justify-center w-5 h-5 border-2 rounded-sm custom-checkbox text-neutral-900")) {
+                span(
+                    .display(.flex),
+                    .items(.center),
+                    .justify(.center),
+                    .width(.size(5)),
+                    .height(.size(5)),
+                    .borderWidth(.size(2)),
+                    .borderRadius(.sm),
+                    .class("custom-checkbox"),
+                    .textColor(PinesColor.neutral.shade(.dark))
+                ) {
                     SVG.svg(
                         attributes: [
                             SVGAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg"),
@@ -245,7 +275,17 @@ final class CheckboxTests: XCTestCase {
             pinesCheckbox(name: "custom-attr", id: "custom-attr", labelClasses: customLabelClasses) {
                 [.x.model("custom")]
             } content: {
-                span(.class("flex items-center justify-center w-5 h-5 border-2 rounded-sm custom-checkbox text-neutral-900")) {
+                span(
+                    .display(.flex),
+                    .items(.center),
+                    .justify(.center),
+                    .width(.size(5)),
+                    .height(.size(5)),
+                    .borderWidth(.size(2)),
+                    .borderRadius(.sm),
+                    .class("custom-checkbox"),
+                    .textColor(PinesColor.neutral.shade(.dark))
+                ) {
                     SVG.svg(
                         attributes: [
                             SVGAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg"),

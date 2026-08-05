@@ -15,7 +15,7 @@ final class PinesIconAttributesTests: XCTestCase {
             encoding: .utf8
         )
         HTMLAssertEqual(
-            pinesIcon(.check, size: .sm, attributes: [.class("ml-2")]),
+            pinesIcon(.check, size: .sm, attributes: [.marginLeft(.size(2))]),
             expected
         )
     }
@@ -44,7 +44,7 @@ final class PinesIconAttributesTests: XCTestCase {
                 .check,
                 size: .sm,
                 attributes: [
-                    .class("ml-2"),
+                    .marginLeft(.size(2)),
                     HTMLAttribute(name: "x-show", value: "isVisible"),
                 ]
             ),
