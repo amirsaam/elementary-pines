@@ -1,4 +1,4 @@
-# Pines + Elementary: The Alpine and Tailwind UI Library in Swift
+# ElementaryPines: The Alpine and Tailwind UI Library in Swift
 
 Type-safe [Pines UI](https://devdojo.com/pines) components for [Elementary](https://github.com/elementary-swift/elementary) — the Alpine.js + Tailwind UI library, rendered directly from Swift on Server.
 
@@ -41,10 +41,11 @@ struct ProductPage: HTMLDocument {
 
 ## Compatibility
 
-| ElementaryPines       | ElementaryAlpine | ElementaryTailwind | Elementary |
-| --------------------- | ---------------- | ------------------ | ---------- |
-| 0.1.xxx               | —                | —                  | 0.7.0      |
-| 0.2.xxx               | 0.4.xxx          | 0.3.xxx (v4.3.3)   | 0.8.0      |
+| ElementaryPines         | ElementaryAlpine | ElementaryTailwind | Elementary |
+| ----------------------- | ---------------- | ------------------ | ---------- |
+| 0.1.xxx                 | —                | —                  | 0.7.0      |
+| 0.2.000                 | 0.4.xxx          | 0.3.000            | 0.8.0      |
+| 0.2.100 (& Higher)      | 0.4.xxx          | 0.3.700 (& Higher) | 0.8.0      |
 
 ## Use it
 
