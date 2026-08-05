@@ -43,8 +43,8 @@ struct ProductPage: HTMLDocument {
 
 | ElementaryPines       | ElementaryAlpine | ElementaryTailwind | Elementary |
 | --------------------- | ---------------- | ------------------ | ---------- |
-| 0.1.xxx (released)    | —                | —                  | 0.7.0      |
-| Main branch (WIP)     | 0.4.xxx          | 0.3.xxx (v4.3.3)   | 0.8.0      |
+| 0.1.xxx               | —                | —                  | 0.7.0      |
+| 0.2.xxx               | 0.4.xxx          | 0.3.xxx (v4.3.3)   | 0.8.0      |
 
 ## Use it
 
