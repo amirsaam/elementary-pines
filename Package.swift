@@ -68,6 +68,7 @@ let package = Package(
                 "Tabs/SnapshotFixtures",
                 "Textarea/SnapshotFixtures",
                 "Toast/SnapshotFixtures",
+                "Tooltip/SnapshotFixtures",
             ],
             swiftSettings: featureFlags
         ),
