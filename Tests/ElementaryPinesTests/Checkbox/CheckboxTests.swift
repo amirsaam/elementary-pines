@@ -150,7 +150,7 @@ final class CheckboxTests: XCTestCase {
         )
         HTMLAssertEqual(
             pinesCheckbox(name: "x", id: "x", labelClasses: customLabelClasses) {
-                span(.class("flex items-center justify-center w-5 h-5 border-2 rounded custom-checkbox text-neutral-900")) {
+                span(.class("flex items-center justify-center w-5 h-5 border-2 rounded-sm custom-checkbox text-neutral-900")) {
                     SVG.svg(
                         attributes: [
                             SVGAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg"),
@@ -181,7 +181,7 @@ final class CheckboxTests: XCTestCase {
         )
         HTMLAssertEqual(
             pinesCheckbox(color: .red, checked: true, name: "custom-checked", id: "custom-checked", labelClasses: customLabelClasses) {
-                span(.class("flex items-center justify-center w-5 h-5 border-2 rounded custom-checkbox text-neutral-900")) {
+                span(.class("flex items-center justify-center w-5 h-5 border-2 rounded-sm custom-checkbox text-neutral-900")) {
                     SVG.svg(
                         attributes: [
                             SVGAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg"),
@@ -212,7 +212,7 @@ final class CheckboxTests: XCTestCase {
         )
         HTMLAssertEqual(
             pinesCheckbox(disabled: true, name: "custom-disabled", id: "custom-disabled", labelClasses: customLabelClasses) {
-                span(.class("flex items-center justify-center w-5 h-5 border-2 rounded custom-checkbox text-neutral-900")) {
+                span(.class("flex items-center justify-center w-5 h-5 border-2 rounded-sm custom-checkbox text-neutral-900")) {
                     SVG.svg(
                         attributes: [
                             SVGAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg"),
@@ -245,7 +245,7 @@ final class CheckboxTests: XCTestCase {
             pinesCheckbox(name: "custom-attr", id: "custom-attr", labelClasses: customLabelClasses) {
                 [.x.model("custom")]
             } content: {
-                span(.class("flex items-center justify-center w-5 h-5 border-2 rounded custom-checkbox text-neutral-900")) {
+                span(.class("flex items-center justify-center w-5 h-5 border-2 rounded-sm custom-checkbox text-neutral-900")) {
                     SVG.svg(
                         attributes: [
                             SVGAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg"),

@@ -108,7 +108,7 @@ public func pinesCheckbox(
 
     var inputAttrs: [HTMLAttribute<HTMLTag.input>] = [
         HTMLAttribute(name: "type", value: "checkbox"),
-        .class("peer"),
+        .peer(.bare),
         .display(.hidden),
     ]
     if disabled {
@@ -136,7 +136,7 @@ public func pinesCheckbox(
         .borderWidth(.size(2)),
         .borderRadius(.lg),
         .cursor(.pointer),
-        .class("group"),
+        .group(.bare),
         .borderColor(PinesColor.neutral.shade(.subtle), opacity: 70),
         .textColor(PinesColor.neutral.shade(.strong)),
         .textColor(PinesColor.neutral.shade(.dark), variants: [.hover]),
@@ -166,7 +166,7 @@ public func pinesCheckbox(
 /// pinesCheckbox(name: "x", id: "x", labelClasses: "peer-checked:[&_svg]:scale-100 [&_svg]:scale-0 peer-checked:[&_.custom-checkbox]:border-blue-500 peer-checked:[&_.custom-checkbox]:bg-blue-500 text-sm font-medium text-neutral-600 flex items-center space-x-2") {
 ///     [.x.model("toggle")]
 /// } content: {
-///     span(.class("flex items-center justify-center w-5 h-5 border-2 rounded custom-checkbox text-neutral-900")) {
+///     span(.class("flex items-center justify-center w-5 h-5 border-2 rounded-sm custom-checkbox text-neutral-900")) {
 ///         // svg checkmark
 ///     }
 ///     span { "Custom Checkbox" }
@@ -187,7 +187,7 @@ public func pinesCheckbox(
 
     var inputAttrs: [HTMLAttribute<HTMLTag.input>] = [
         HTMLAttribute(name: "type", value: "checkbox"),
-        .class("peer"),
+        .peer(.bare),
         .display(.hidden),
     ]
     if disabled {
