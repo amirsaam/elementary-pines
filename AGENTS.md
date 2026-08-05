@@ -6,7 +6,7 @@ AI contribution guidelines for `elementary-pines`.
 
 `elementary-pines` is a server-side Swift wrapper for [Pines UI](https://devdojo.com/pines) — a collection of pre-built Alpine.js + Tailwind CSS components. It renders those same components type-safely via [Elementary](https://github.com/elementary-swift/elementary), with full snapshot test coverage.
 
-- `ElementaryPines` — 18 UI components (Alert, Badge, Banner, Breadcrumb, Button, Card, Checkbox, DatePicker, Icons, Input, Progress, Quote, RadioGroup, RangeSlider, Rating, Select, Switch, Textarea) + `PinesColor` color system
+- `ElementaryPines` — 22 UI components (Accordion, Alert, Badge, Banner, Breadcrumb, Button, Card, Checkbox, DatePicker, Icons, Input, Progress, Quote, RadioGroup, RangeSlider, Rating, Select, Switch, Tabs, Textarea, Toast, Tooltip) + `PinesColor` color system
 - `Pines.swift` — `setupPines()` entry point (emits `[x-cloak]` style for Alpine.js animations)
 
 ## Dependency chain
@@ -18,7 +18,7 @@ Do not declare elementary, elementary-alpine, or elementary-tailwind as direct d
 ## Commands
 
 ```bash
- swift test                                         # 122 tests
+ swift test                                         # 130 tests
 swift test --filter AlertTests                     # single test class
 swift test --parallel                              # parallel execution
 swift build --build-tests                          # CI build
@@ -56,7 +56,7 @@ Use `fix(scope):` for bug fixes and `chore(scope):` for maintenance tasks (depen
 
 ### Source (`Sources/ElementaryPines/`)
 
-- One directory per component: Alert, Badge, Banner, Breadcrumb, Button, Card, Checkbox, DatePicker, Icons, Input, Progress, Quote, RadioGroup, RangeSlider, Rating, Select, Switch, Textarea
+- One directory per component: Accordion, Alert, Badge, Banner, Breadcrumb, Button, Card, Checkbox, DatePicker, Icons, Input, Progress, Quote, RadioGroup, RangeSlider, Rating, Select, Switch, Tabs, Textarea, Toast, Tooltip
 - `Pines.swift` — `setupPines()` entry point (emits `[x-cloak]` style)
 - `Icons/Icons.swift` — `pinesIcon()` with 35 Heroicon kinds
 - `Icons/Icon+Special.swift` — `PinesSpecialIcon` enum + `pinesSpecialIcon()` for multi-path SVGs (wand, quoteMark)
@@ -95,7 +95,7 @@ Modifier enums co-locate in the same file as their component (e.g. `PinesButtonS
 - Tests are snapshot-based. Each component has `SnapshotFixtures/*.html` files containing expected HTML output.
 - To add a snapshot: write the expected HTML file first, then write the test that reads it.
 - `swift test` compares rendered output against fixtures and fails with a diff on mismatch. Review the diff before updating a fixture file.
-- Run `swift test` before any commit. All 122 tests must pass.
+- Run `swift test` before any commit. All 130 tests must pass.
 - After adding or modifying a component, add corresponding snapshot tests in `Tests/ElementaryPinesTests/<Component>/`.
 
 ## Conventions
@@ -143,7 +143,7 @@ Modifier enums co-locate in the same file as their component (e.g. `PinesButtonS
 ## Dependencies
 
 - `elementary-alpine` ≥ 0.4.000 (Alpine.js directives for Elementary)
-- `elementary-tailwind` ≥ 0.3.000 (Tailwind CSS typed attribute helpers for Elementary)
+- `elementary-tailwind` ≥ 0.3.700 (Tailwind CSS typed attribute helpers for Elementary)
 - `elementary` ≥ 0.8.0 (underlying HTML rendering library, resolved transitively)
 
 ## Upstream docs

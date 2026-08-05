@@ -335,9 +335,52 @@ pinesQuote(
 )
 ```
 
+```swift
+// accordion — collapsible title/body items; the activeAccordion state toggles each item
+// The collapse animation uses x-collapse, so load the Collapse plugin:
+// setupAlpine(plugins: [.collapse])
+pinesAccordion(items: [
+    .init(title: "How do I install?", body: "Add ElementaryPines to your Package.swift."),
+    .init(title: "Does it run on Linux?", body: "macOS only — no Linux support tested."),
+])
+```
+
+```swift
+// tabs — animated sliding marker, $id-scoped ids, one content panel per tab
+pinesTabs(tabs: [
+    .init(title: "Overview") {
+        p { "A quick overview." }
+    },
+    .init(title: "Details") {
+        p { "More details." }
+    },
+])
+```
+
+```swift
+// toast — teleported notification stack. Place pinesToast() once on the page,
+// then dispatch toasts from your own Alpine code with toast(...):
+//   toast('Saved', { type: 'success', position: 'bottom-right' })
+//   toast('Heads up', { description: 'Something happened.' })
+// Types: default/success/info/warning/danger; positions: the six screen edges.
+// x-teleport is core Alpine — no plugin required.
+pinesToast()
+```
+
+```swift
+// tooltip — wraps trigger content, shows text on hover
+pinesTooltip(text: "More info") {
+    button { "Hover me" }
+}
+
+pinesTooltip(text: "Left side", position: .left, arrow: false) {
+    span { "Hover me" }
+}
+```
+
 ## Components
 
-The package ships 18 component functions. Each wraps the matching Pines UI element with type-safe parameters.
+The package ships 22 component functions. Each wraps the matching Pines UI element with type-safe parameters.
 
 | Function                        | Variants                                                                                       | Notes                                                    |
 | ------------------------------- | ---------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
@@ -362,6 +405,10 @@ The package ships 18 component functions. Each wraps the matching Pines UI eleme
 | `pinesRangeSlider(color:name:id:min:max:value:step:disabled:)` | 11 colors; configurable `min`/`max`/`value`/`step`/`disabled` | Tailwind-only — `[&::-webkit-slider-thumb]`, `[&::-moz-range-track]` etc. for custom thumb/track styling. No Alpine dependency. |
 | `pinesSwitch(labelText:color:size:name:id:checked:disabled:attributes:)` | `PinesSwitchSize`: `.default` (h-6 w-10), `.small` (h-4 w-6); 11 colors; `checked`/`disabled` | Alpine-driven — hidden checkbox, button toggle, label click. Requires `setupAlpine()` in `<head>`. |
 | `pinesDatePicker(labelText:placeholder:format:width:disabled:)` | `PinesDatePickerFormat`: `.monthDayYear` (default), `.mmDdYyyy`, `.ddMmYyyy`, `.yyyMmDd`, `.dayMonthShortYear`; typed `TWTWidth` | Alpine-driven — full calendar dropdown with month/year navigation, day-of-week headers, day grid, and `x-transition`. Requires `setupAlpine()` in `<head>`. |
+| `pinesAccordion(items:)` | `[PinesAccordionItem]` (`Sendable`, `Equatable`, with `title`/`body` strings) | Alpine-driven — the `activeAccordion` state toggles each item open/closed. The collapse animation uses `x-collapse`, so it requires `setupAlpine(plugins: [.collapse])` in `<head>`. |
+| `pinesTabs(tabs:)` | `[PinesTab]` with `title` + `@ContentBuilder` content closure | Alpine-driven — animated sliding marker, `$id`-scoped ids, `x-show` content panels. Requires `setupAlpine()` in `<head>`. |
+| `pinesToast()` | — | Alpine-driven — teleported toast stack (`x-teleport` to `body`; core Alpine, no plugin). Listens for `toast-show` window events; dispatch with `toast('message', { type:, position:, description: })` from your own Alpine code. Types: `default`, `success`, `info`, `warning`, `danger`; positions: `top-left`, `top-center`, `top-right`, `bottom-right`, `bottom-center`, `bottom-left`. Requires `setupAlpine()` in `<head>`. |
+| `pinesTooltip(text:position:arrow:content:)` | `PinesTooltipPosition`: `.top` (default), `.left`, `.bottom`, `.right`; `arrow:` defaults to `true` | Alpine-driven — the `@ContentBuilder` content is the hover trigger; the tooltip shows on mouseenter/mouseleave. Requires `setupAlpine()` in `<head>`. |
 
 ## Alpine integration
 
@@ -409,6 +456,8 @@ var head: some HTML {
 <style>[x-cloak] { display: none !important; }</style>
 ```
 
+Plugin requirements: `pinesAccordion` animates with `x-collapse`, so load the Collapse plugin — `setupAlpine(plugins: [.collapse])`. `pinesToast` teleports with `x-teleport`, which ships in Alpine core and needs no plugin.
+
 If you can't (or don't want to) use a CDN, self-host the compiled CSS output of your project — the same as you would for any other Tailwind project. The class strings in every component are the standard Tailwind utility classes, not custom CSS.
 
 ## Color conventions
@@ -433,7 +482,7 @@ The full API is documented in source — every public type and function has doc 
 - [`Sources/ElementaryPines/Card/Card.swift`](./Sources/ElementaryPines/Card/Card.swift) — `pinesCard`
 - [`Sources/ElementaryPines/Alert/Alert+Variant.swift`](./Sources/ElementaryPines/Alert/Alert+Variant.swift) — `pinesAlert`
 
-The full test suite (122 snapshot and integration tests, including Alpine directive smoke tests) lives in [`Tests/ElementaryPinesTests/`](./Tests/ElementaryPinesTests/).
+The full test suite (130 snapshot and integration tests, including Alpine directive smoke tests) lives in [`Tests/ElementaryPinesTests/`](./Tests/ElementaryPinesTests/).
 
 ## Why this exists
 
@@ -441,9 +490,9 @@ The [Pines UI](https://devdojo.com/pines) library is a collection of pre-built A
 
 ## Current state (v0.1.100+)
 
-18 component functions are implemented and tested:
+22 component functions are implemented and tested:
 
-- `setupPines`, `PinesColor`, `.pinesButtonStyle`, `.pinesBadgeStyle`, `pinesCard`, `pinesIcon`, `pinesAlert`, `pinesProgress`, `pinesQuote`, `pinesRating`, `pinesRangeSlider`, `pinesBreadcrumb`, `pinesBanner`, `pinesInput`, `pinesTextarea`, `pinesSelect`, `pinesCheckbox`, `pinesRadioGroup`, `pinesSwitch`, `pinesDatePicker`
+- `setupPines`, `PinesColor`, `.pinesButtonStyle`, `.pinesBadgeStyle`, `pinesCard`, `pinesIcon`, `pinesAlert`, `pinesProgress`, `pinesQuote`, `pinesRating`, `pinesRangeSlider`, `pinesBreadcrumb`, `pinesBanner`, `pinesInput`, `pinesTextarea`, `pinesSelect`, `pinesCheckbox`, `pinesRadioGroup`, `pinesSwitch`, `pinesDatePicker`, `pinesAccordion`, `pinesTabs`, `pinesToast`, `pinesTooltip`
 
 Alpine directive compatibility is verified by a dedicated smoke suite covering `x-text`, `x-model`, `x-on:click`, `x-data`, `x-show`, and modifiers.
 
@@ -461,7 +510,8 @@ Only classes with no typed `ElementaryTailwind` token are raw:
 
 - `ring-offset-background`, `text-foreground` — CSS-variable theme tokens. `TWColor.arbitrary(...)` would add brackets (`ring-offset-[background]`), changing the class name.
 - `shadow-outline`, `active-breadcrumb` — custom component classes with no token case.
-- `peer`, `group` — marker classes; `TWVariant` only defines `group-*`/`peer-*` *variants*, not the marker itself.
+
+(`divide-*`, `group`/`peer` markers, and `inset-1/2` style fractions gained typed tokens in `elementary-tailwind` 0.3.700.)
 
 **Why do some Alpine directives on SVGs use raw `SVGAttribute(name: "x-show", ...)`?**
 
@@ -470,7 +520,7 @@ SVG elements don't conform to `HTMLTrait.Attributes.Global`, and `ElementaryAlpi
 ## Future directions
 
 - v0.1.200 form components are done (Textarea auto-resize, Copy to Clipboard remaining).
-- v0.1.300 overlay and navigation: modal, slide-over, popover, dropdown, tabs, accordion, toast, tooltip, command, context-menu, hover-card, navigation-menu, image-gallery.
+- v0.1.300 overlay and navigation — done: tabs, accordion, toast, tooltip. Remaining: modal, slide-over, popover, dropdown, command, context-menu, hover-card, navigation-menu, image-gallery.
 - v0.1.400+ data and media: table, pagination, menu bar, video.
 - v0.1.500+ effects: marquee, retro grid, text animation, typing effect.
 - Example apps showing real integration in Vapor and Hummingbird.
