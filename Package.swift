@@ -46,6 +46,7 @@ let package = Package(
                 .target(name: "TestUtilities"),
             ],
             exclude: [
+                "Accordion/SnapshotFixtures",
                 "Alert/SnapshotFixtures",
                 "Alpine/SnapshotFixtures",
                 "Badge/SnapshotFixtures",
