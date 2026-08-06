@@ -377,11 +377,23 @@ pinesTooltip(text: "More info") {
 pinesTooltip(text: "Left side", position: .left, arrow: false) {
     span { "Hover me" }
 }
+
+// dropdown — anchored menu with trigger button
+pinesDropdown(color: .blue) {
+    img(.src("avatar.jpg"), .width(.size(8)), .height(.size(8)), .borderRadius(.full))
+} items: {
+    [
+        pinesDropdownItem(.init(title: "Profile", icon: .user, shortcut: "⇧⌘P")),
+        pinesDropdownItem(.init(title: "Billing", icon: .billing, shortcut: "⌘B")),
+        pinesDropdownSeparator(),
+        pinesDropdownItem(.init(title: "Log out", icon: .lock, danger: true)),
+    ]
+}
 ```
 
 ## Components
 
-The package ships 22 component functions. Each wraps the matching Pines UI element with type-safe parameters.
+The package ships 23 component functions. Each wraps the matching Pines UI element with type-safe parameters.
 
 | Function                        | Variants                                                                                       | Notes                                                    |
 | ------------------------------- | ---------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
@@ -407,6 +419,7 @@ The package ships 22 component functions. Each wraps the matching Pines UI eleme
 | `pinesSwitch(labelText:color:size:name:id:checked:disabled:attributes:)` | `PinesSwitchSize`: `.default` (h-6 w-10), `.small` (h-4 w-6); 11 colors; `checked`/`disabled` | Alpine-driven — hidden checkbox, button toggle, label click. Requires `setupAlpine()` in `<head>`. |
 | `pinesDatePicker(labelText:placeholder:format:width:disabled:)` | `PinesDatePickerFormat`: `.monthDayYear` (default), `.mmDdYyyy`, `.ddMmYyyy`, `.yyyMmDd`, `.dayMonthShortYear`; typed `TWTWidth` | Alpine-driven — full calendar dropdown with month/year navigation, day-of-week headers, day grid, and `x-transition`. Requires `setupAlpine()` in `<head>`. |
 | `pinesAccordion(items:)` | `[PinesAccordionItem]` (`Sendable`, `Equatable`, with `title`/`body` strings) | Alpine-driven — the `activeAccordion` state toggles each item open/closed. The collapse animation uses `x-collapse`, so it requires `setupAlpine(plugins: [.collapse])` in `<head>`. |
+| `pinesDropdown(color:position:width:attributes:trigger:items:)` | `PinesDropdownPosition`: `.belowCenter` (default), `.belowStart`, `.belowEnd`, `.aboveStart`, `.aboveCenter`, `.aboveEnd`; `PinesDropdownItem` (`Sendable`, `title`/`icon`/`shortcut`/`disabled`/`href`/`action`/`closeOnSelect`/`danger`) + `pinesDropdownSeparator()`; `color` tints trigger/panel text and item hover | Alpine-driven — styled trigger button toggles a panel anchored by `position` that closes on outside click; arrow-key navigation; items render as `<a>` (with `href`) or `<div>`, disabled items use `data-disabled`, `danger` items override the color with red. Requires `setupAlpine()` in `<head>`. |
 | `pinesTabs(tabs:)` | `[PinesTab]` with `title` + `@ContentBuilder` content closure | Alpine-driven — animated sliding marker, `$id`-scoped ids, `x-show` content panels. Requires `setupAlpine()` in `<head>`. |
 | `pinesToast()` | — | Alpine-driven — teleported toast stack (`x-teleport` to `body`; core Alpine, no plugin). Listens for `toast-show` window events; dispatch with `toast('message', { type:, position:, description: })` from your own Alpine code. Types: `default`, `success`, `info`, `warning`, `danger`; positions: `top-left`, `top-center`, `top-right`, `bottom-right`, `bottom-center`, `bottom-left`. Requires `setupAlpine()` in `<head>`. |
 | `pinesTooltip(text:position:arrow:content:)` | `PinesTooltipPosition`: `.top` (default), `.left`, `.bottom`, `.right`; `arrow:` defaults to `true` | Alpine-driven — the `@ContentBuilder` content is the hover trigger; the tooltip shows on mouseenter/mouseleave. Requires `setupAlpine()` in `<head>`. |
@@ -491,9 +504,9 @@ The [Pines UI](https://devdojo.com/pines) library is a collection of pre-built A
 
 ## Current state (v0.1.100+)
 
-22 component functions are implemented and tested:
+23 component functions are implemented and tested:
 
-- `setupPines`, `PinesColor`, `.pinesButtonStyle`, `.pinesBadgeStyle`, `pinesCard`, `pinesIcon`, `pinesAlert`, `pinesProgress`, `pinesQuote`, `pinesRating`, `pinesRangeSlider`, `pinesBreadcrumb`, `pinesBanner`, `pinesInput`, `pinesTextarea`, `pinesSelect`, `pinesCheckbox`, `pinesRadioGroup`, `pinesSwitch`, `pinesDatePicker`, `pinesAccordion`, `pinesTabs`, `pinesToast`, `pinesTooltip`
+- `setupPines`, `PinesColor`, `.pinesButtonStyle`, `.pinesBadgeStyle`, `pinesCard`, `pinesIcon`, `pinesAlert`, `pinesProgress`, `pinesQuote`, `pinesRating`, `pinesRangeSlider`, `pinesBreadcrumb`, `pinesBanner`, `pinesInput`, `pinesTextarea`, `pinesSelect`, `pinesCheckbox`, `pinesRadioGroup`, `pinesSwitch`, `pinesDatePicker`, `pinesAccordion`, `pinesTabs`, `pinesToast`, `pinesTooltip`, `pinesDropdown`
 
 Alpine directive compatibility is verified by a dedicated smoke suite covering `x-text`, `x-model`, `x-on:click`, `x-data`, `x-show`, and modifiers.
 
@@ -520,10 +533,15 @@ SVG elements don't conform to `HTMLTrait.Attributes.Global`, and `ElementaryAlpi
 
 ## Future directions
 
-- v0.1.200 form components are done (Textarea auto-resize, Copy to Clipboard remaining).
-- v0.1.300 overlay and navigation — done: tabs, accordion, toast, tooltip. Remaining: modal, slide-over, popover, dropdown, command, context-menu, hover-card, navigation-menu, image-gallery.
-- v0.1.400+ data and media: table, pagination, menu bar, video.
-- v0.1.500+ effects: marquee, retro grid, text animation, typing effect.
+## Future directions
+
+- **Phase 1 — Core UI primitives** — shipped in 0.1.100: alert, badge, banner, breadcrumb, button, card, icon, progress, quote.
+- **Phase 2 — Form & control components** — shipped in 0.2.000: checkbox, date picker, input, radio group, range slider, rating, select, switch, textarea.
+- **Phase 3 — Overlay & navigation (part 1)** — shipped in 0.2.100: accordion, tabs, toast, tooltip.
+- **Phase 4 — Overlay & navigation (part 2)** — in progress: dropdown, modal, slide-over, popover, command, context-menu, hover-card, navigation-menu, image-gallery.
+- **Phase 5 — Data & media**: table, pagination, menu bar, video.
+- **Phase 6 — Effects**: marquee, retro grid, text animation, typing effect.
+- Quick wins: textarea auto-resize, copy to clipboard.
 - Example apps showing real integration in Vapor and Hummingbird.
 
 PRs welcome.
