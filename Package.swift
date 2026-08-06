@@ -56,6 +56,7 @@ let package = Package(
                 "Card/SnapshotFixtures",
                 "Checkbox/SnapshotFixtures",
                 "DatePicker/SnapshotFixtures",
+                "Dropdown/SnapshotFixtures",
                 "Icons/SnapshotFixtures",
                 "Input/SnapshotFixtures",
                 "Progress/SnapshotFixtures",
