@@ -97,7 +97,6 @@ enum PinesSelectState {
                 selectScrollToActiveItem();
             }, 10);
             selectPositionUpdate();
-            window.addEventListener('resize', (event) => { selectPositionUpdate(); });
         });
         """
     }

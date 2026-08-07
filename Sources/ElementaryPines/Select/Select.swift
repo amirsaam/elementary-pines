@@ -62,7 +62,8 @@ public func pinesSelect(
             modifiers: [.up]
         ),
         .x.on("keydown", "selectedItem=selectableItemActive; selectOpen=false;", modifiers: [.enter]),
-        .x.on("keydown", "selectKeydown($event);")
+        .x.on("keydown", "selectKeydown($event);"),
+        .x.on("resize", "selectPositionUpdate()", modifiers: [.window])
     ) {
         button(
             .x.ref("selectButton"),
