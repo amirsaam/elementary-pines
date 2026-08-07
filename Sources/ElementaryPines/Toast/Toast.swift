@@ -73,10 +73,18 @@ private func pinesToastIcon(_ type: String, _ path: String, fillRule: Bool = tru
 }
 
 /// Renders the global Pines UI toast notification stack.
-public func pinesToast() -> some HTML {
+///
+/// Pass a `name` to scope this stack to a specific container. The stack then
+/// only shows toasts dispatched with a matching `container` detail:
+/// `toast('message', { container: 'errors' })`. An unnamed stack shows every
+/// toast dispatched without a `container`. This lets you place several
+/// independent stacks on one page (e.g. one top-right, one bottom-left).
+public func pinesToast(name: String? = nil) -> some HTML {
     let descriptionClass = pinesAlpineBindClass([
         (className: twValue(.paddingLeft(.size(5))), condition: "toast.type!='default'")
     ])
+    let nameCondition =
+        name.map { "event.detail.container == \(pinesJavaScriptStringLiteral($0))" } ?? "!event.detail.container"
     let html = div(.position(.relative), .width(.auto), .height(.auto), .x.data("")) {
         template(.x.teleport("body")) {
             ul(
@@ -88,7 +96,7 @@ public func pinesToast() -> some HTML {
                 ),
                 .x.on(
                     "toast-show",
-                    "event.stopPropagation(); if(event.detail.position){ position = event.detail.position; } toasts.unshift({ id: 'toast-' + Math.random().toString(16).slice(2), show: false, message: event.detail.message, description: event.detail.description, type: event.detail.type, html: event.detail.html });",
+                    "event.stopPropagation(); if(\(nameCondition)){ if(event.detail.position){ position = event.detail.position; } toasts.unshift({ id: 'toast-' + Math.random().toString(16).slice(2), show: false, message: event.detail.message, description: event.detail.description, type: event.detail.type, html: event.detail.html }); }",
                     modifiers: [.window]
                 ),
                 .x.on("mouseenter", "toastsHovered=true;"),

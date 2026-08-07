@@ -14,4 +14,15 @@ final class ToastTests: XCTestCase {
             expected
         )
     }
+
+    func testToastWithName() throws {
+        let expected = try String(
+            contentsOf: fixtureURL("toast-errors.html"),
+            encoding: .utf8
+        )
+        HTMLAssertEqual(
+            pinesToast(name: "errors"),
+            expected
+        )
+    }
 }
