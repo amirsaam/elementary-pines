@@ -79,7 +79,8 @@ This package requires Swift 6.1 with `StrictConcurrency=complete` and targets ma
 
 ```swift
 // call `setupPines()` once in your document head — emits the [x-cloak] rule
-// that hides elements before Alpine.js hydrates them
+// that hides elements before Alpine.js hydrates them, plus the theme tokens
+// that color every component surface (light/dark via prefers-color-scheme)
 import ElementaryPines
 
 var head: some HTML {
@@ -405,7 +406,7 @@ The package ships 24 component functions. Each wraps the matching Pines UI eleme
 
 | Function                        | Variants                                                                                       | Notes                                                    |
 | ------------------------------- | ---------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
-| `setupPines()`                 | —                                                                                              | Emits the `<style>[x-cloak]…` rule. Call once in `<head>`. |
+| `setupPines(accent:bgLight:bgDark:)` | `accent` default `.neutral`; `bgLight`/`bgDark` default white/black | Emits the `[x-cloak]` rule plus semantic color tokens (light/dark via `prefers-color-scheme`). Call once in `<head>`. |
 | `PinesColor`                   | 11 cases: `amber, blue, gray, green, indigo, neutral, orange, pink, purple, red, yellow`     | Shared enum used by every color-accepting component.       |
 | `.pinesButtonStyle(_:color:)`  | 3 styles × 11 colors = 33 variants                                                              | Modifier on `button`.                                    |
 | `.pinesBadgeStyle(_:color:)`   | 5 styles × 11 colors = 55 variants                                                              | Modifier on `span`.                                      |
@@ -462,7 +463,7 @@ div(.x.data("{ progress: 0 }")) {
 
 ## Setup
 
-The `setupPines()` function emits a single `<style>` block. Call it once in the document `<head>` — every Pines component that supports animation emits `x-cloak` and breaks visibly without this rule in place.
+The `setupPines()` function emits a `<style>` block. Call it once in the document `<head>` — every Pines component that supports animation emits `x-cloak` and breaks visibly without this rule in place.
 
 ```swift
 var head: some HTML {
@@ -478,6 +479,44 @@ var head: some HTML {
 ```html
 <style>[x-cloak] { display: none !important; }</style>
 ```
+
+### Theming
+
+`setupPines()` also emits the semantic color tokens that theme every component surface, driven by `prefers-color-scheme`:
+
+```swift
+setupPines(accent: .neutral, bgLight: .white, bgDark: .neutral.shade(950))
+```
+
+- `accent:` seeds the brand tokens (`--color-ring`, `--color-primary`), default `.neutral`.
+- `bgLight:`/`bgDark:` set `--color-background` in light/dark mode, default white / near-black (`neutral-950`).
+- `foreground`, `border`, `muted`, `muted-foreground` derive from neutral pairs.
+
+The emitted variables chain to Tailwind v4's own palette (`var(--color-neutral-400)`, …), so overriding your Tailwind palette re-themes the components automatically, and the unlayered `<style>` wins over Tailwind's `@layer theme` defaults:
+
+```css
+:root {
+  --color-background: var(--color-white);
+  --color-foreground: var(--color-neutral-950);
+  --color-border: var(--color-neutral-200);
+  --color-muted: var(--color-neutral-100);
+  --color-muted-foreground: var(--color-neutral-500);
+  --color-ring: var(--color-neutral-400);
+  --color-primary: var(--color-neutral-600);
+  --color-primary-foreground: var(--color-white);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: var(--color-neutral-950);
+    --color-foreground: var(--color-neutral-50);
+    --color-border: var(--color-neutral-800);
+    --color-muted: var(--color-neutral-900);
+    --color-muted-foreground: var(--color-neutral-400);
+  }
+}
+```
+
+`bgLight`/`bgDark` accept any `TWColor` — `.white`, `.black`, `.neutral.shade(100)`, or `.arbitrary("#fafafa")`. The default dark surface is near-black (`neutral-950`) rather than pure black — softer on the eyes and leaves room for elevated surfaces; pass `bgDark: .black` for true OLED black. The accent still applies per-component via each component's `color:` parameter; the theme accent sets the global ring/primary tokens.
 
 Plugin requirements: `pinesAccordion` animates with `x-collapse`, so load the Collapse plugin — `setupAlpine(plugins: [.collapse])`. `pinesToast` teleports with `x-teleport`, which ships in Alpine core and needs no plugin.
 
