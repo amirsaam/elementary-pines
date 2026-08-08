@@ -63,14 +63,15 @@ public func pinesInput(
             .paddingX(.size(3)),
             .paddingY(.size(2)),
             .fontSize(.sm),
-            .backgroundColor(.white),
+            .class(PinesSurface.background),
             .borderWidth(.bare),
             .borderRadius(.md),
         ]
         + pinesTextFieldAttributes(
             borderColor: borderColor,
             placeholderColor: PinesColor.neutral.shade(.base),
-            focusRingColor: focusRingColor
+            focusRingColor: focusRingColor,
+            surface: color == nil
         )
     if let placeholder { inputAttributes.append(.placeholder(placeholder)) }
     if let name { inputAttributes.append(.name(name)) }

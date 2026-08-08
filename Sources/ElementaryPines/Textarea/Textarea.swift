@@ -61,7 +61,7 @@ public func pinesTextarea(
             .paddingX(.size(3)),
             .paddingY(.size(2)),
             .fontSize(.sm),
-            .backgroundColor(.white),
+            .class(PinesSurface.background),
             .borderWidth(.bare),
             .borderRadius(.md),
         ]
@@ -69,7 +69,8 @@ public func pinesTextarea(
             borderColor: borderColor,
             placeholderColor: placeholderColor,
             focusRingColor: focusRingColor,
-            includeRingOffset: false
+            includeRingOffset: false,
+            surface: color == nil
         )
     if let placeholder { textareaAttributes.append(.placeholder(placeholder)) }
     if let name { textareaAttributes.append(.name(name)) }

@@ -52,15 +52,16 @@ public func pinesDatePicker(
             .width(.full),
             .height(.size(10)),
             .fontSize(.sm),
-            .backgroundColor(.white),
+            .class(PinesSurface.background),
             .borderRadius(.md),
             .borderWidth(.bare),
-            .textColor(PinesColor.neutral.shade(.strong)),
+            .class(PinesSurface.foreground),
         ]
         + pinesTextFieldAttributes(
             borderColor: PinesColor.neutral.shade(.light),
             placeholderColor: PinesColor.neutral.shade(.accent),
-            focusRingColor: PinesColor.neutral.shade(.accent)
+            focusRingColor: PinesColor.neutral.shade(.accent),
+            surface: true
         ) + [
             .placeholder(placeholder),
             HTMLAttribute(name: "readonly", value: ""),
@@ -85,7 +86,7 @@ public func pinesDatePicker(
             .display(.block),
             .fontSize(.sm),
             .fontWeight(.medium),
-            .textColor(PinesColor.neutral.shade(.base))
+            .class(PinesSurface.mutedForeground)
         ) {
             labelText
         }
@@ -123,12 +124,12 @@ public func pinesDatePicker(
                 .padding(.size(4)),
                 .marginTop(.size(12)),
                 .fontSmoothing(.antialiased),
-                .backgroundColor(.white),
+                .class(PinesSurface.background),
                 .borderWidth(.bare),
                 .borderRadius(.lg),
                 .boxShadow(.sm),
                 .width(.arbitrary("17rem")),
-                .borderColor(PinesColor.neutral.shade(.subtle), opacity: 70)
+                .class(PinesSurface.borderSubtle)
             ) {
                 // Month/year header with navigation
                 div(

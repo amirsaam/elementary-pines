@@ -138,7 +138,7 @@ public func pinesToast(name: String? = nil) -> some HTML {
                             .transition(.all),
                             .transitionDuration(.ms(300)),
                             .transitionTimingFunction(.easeOut),
-                            .backgroundColor(.white),
+                            .class(PinesSurface.background),
                             .borderWidth(.bare),
                             .borderColor(PinesColor.gray.shade(.tint1)),
                             .boxShadow(.arbitrary("0_5px_15px_-3px_rgb(0_0_0_/_0.08)")),

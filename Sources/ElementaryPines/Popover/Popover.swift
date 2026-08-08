@@ -79,7 +79,7 @@ public func pinesPopover<Trigger: HTML>(
             .justify(.center),
             .width(.size(10)),
             .height(.size(10)),
-            .backgroundColor(.white),
+            .class(PinesSurface.background),
             .borderWidth(.bare),
             .borderRadius(.full),
             .boxShadow(.xs),
@@ -90,7 +90,7 @@ public func pinesPopover<Trigger: HTML>(
             .ringColor(color.shade(.accent), variants: [.focusVisible]),
             .outlineStyle(.hidden, variants: [.focusVisible]),
             .backgroundColor(.white, variants: [.active]),
-            .borderColor(PinesColor.neutral.shade(.subtle), opacity: 70)
+            .class(PinesSurface.borderSubtle)
         ) {
             trigger()
         }
@@ -119,11 +119,11 @@ public func pinesPopover<Trigger: HTML>(
                 .x.transition(),
                 .width(.full),
                 .padding(.size(4)),
-                .backgroundColor(.white),
+                .class(PinesSurface.background),
                 .borderRadius(.md),
                 .borderWidth(.bare),
                 .boxShadow(.xs),
-                .borderColor(PinesColor.neutral.shade(.subtle), opacity: 70),
+                .class(PinesSurface.borderSubtle),
                 .textColor(color.shade(.bold))
             ) {
                 if arrow {
@@ -166,7 +166,7 @@ private func pinesPopoverArrow(_ position: PinesPopoverPosition) -> some HTML {
                 .height(.size(2.5)),
                 .transformOrigin(.bottomLeft),
                 .rotate(.all(45)),
-                .backgroundColor(.white),
+                .class(PinesSurface.background),
                 .class("border-t border-l"),
                 .borderRadius(.xs)
             ) {}
@@ -189,7 +189,7 @@ private func pinesPopoverArrow(_ position: PinesPopoverPosition) -> some HTML {
                 .height(.size(2.5)),
                 .transformOrigin(.topLeft),
                 .rotate(.all(45), negative: true),
-                .backgroundColor(.white),
+                .class(PinesSurface.background),
                 .class("border-b border-l"),
                 .borderRadius(.xs)
             ) {}

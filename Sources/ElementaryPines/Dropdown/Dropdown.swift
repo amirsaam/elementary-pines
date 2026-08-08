@@ -159,7 +159,7 @@ public func pinesDropdown<Trigger: HTML>(
             .height(.size(12)),
             .fontSize(.sm),
             .fontWeight(.medium),
-            .backgroundColor(.white),
+            .class(PinesSurface.background),
             .borderRadius(.md),
             .borderWidth(.bare),
             .transition(.colors),
@@ -192,11 +192,11 @@ public func pinesDropdown<Trigger: HTML>(
             div(
                 .padding(.size(1)),
                 .marginTop(.size(1)),
-                .backgroundColor(.white),
+                .class(PinesSurface.background),
                 .borderRadius(.md),
                 .borderWidth(.bare),
                 .boxShadow(.md),
-                .borderColor(PinesColor.neutral.shade(.subtle), opacity: 70),
+                .class(PinesSurface.borderSubtle),
                 .textColor(color.shade(.bold))
             ) {
                 for content in items() {

@@ -38,7 +38,7 @@ public func pinesBreadcrumb(
         .paddingX(.size(3.5)),
         .paddingY(.size(1)),
         .borderWidth(.bare),
-        .borderColor(PinesColor.neutral.shade(.subtle), opacity: 60),
+        .class(PinesSurface.borderSubtle60),
         .borderRadius(.md),
         HTMLAttribute(name: "aria-label", value: "Breadcrumb")
     ) {
@@ -50,8 +50,8 @@ public func pinesBreadcrumb(
             .marginBottom(.size(0), variants: [.sm]),
             .spaceX(.size(1)),
             .fontSize(.xs),
-            .textColor(PinesColor.neutral.shade(.base)),
-            .textColor(PinesColor.neutral.shade(.strong), variants: activeCrumb),
+            .class(PinesSurface.mutedForeground),
+            .class(PinesSurface.foreground, variants: activeCrumb),
             .fontWeight(.medium, variants: activeCrumb)
         ) {
             for (index, item) in items.enumerated() {
@@ -82,7 +82,7 @@ public func pinesBreadcrumb(
                             .items(.center),
                             .paddingY(.size(1)),
                             .fontWeight(.normal),
-                            .textColor(PinesColor.neutral.shade(.dark), variants: [.hover]),
+                            .class(PinesSurface.foreground, variants: [.hover]),
                             .outlineStyle(.hidden, variants: [.focus]),
                             HTMLAttribute(name: "href", value: item.href ?? "#")
                         ) {
@@ -93,7 +93,7 @@ public func pinesBreadcrumb(
                     li(.display(.flex), .items(.center), .height(.full)) {
                         a(
                             .paddingY(.size(1)),
-                            .textColor(PinesColor.neutral.shade(.dark), variants: [.hover]),
+                            .class(PinesSurface.foreground, variants: [.hover]),
                             HTMLAttribute(name: "href", value: item.href ?? "#")
                         ) {
                             breadcrumbHomeContent(homeIcon)
@@ -106,7 +106,7 @@ public func pinesBreadcrumb(
                             .items(.center),
                             .paddingY(.size(1)),
                             .fontWeight(.normal),
-                            .textColor(PinesColor.neutral.shade(.dark), variants: [.hover]),
+                            .class(PinesSurface.foreground, variants: [.hover]),
                             .outlineStyle(.hidden, variants: [.focus]),
                             HTMLAttribute(name: "href", value: item.href ?? "#")
                         ) {

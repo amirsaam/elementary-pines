@@ -51,9 +51,9 @@ public func pinesCard<Content: HTML>(
             .borderRadius(.lg),
             .overflow(.hidden),
             .borderWidth(.bare),
-            .borderColor(PinesColor.neutral.shade(.subtle), opacity: 60),
-            .backgroundColor(.white),
-            .textColor(PinesColor.neutral.shade(.bold)),
+            .class(PinesSurface.borderSubtle60),
+            .class(PinesSurface.background),
+            .class(PinesSurface.foreground),
             .boxShadow(.xs),
         ] + variant.outerAttributes
 

@@ -75,7 +75,7 @@ public func pinesSelect(
                         twValue(
                             .ringWidth(.size(2), variants: [.focus]),
                             .ringOffsetWidth(.size(2), variants: [.focus]),
-                            .ringColor(PinesColor.neutral.shade(.accent), variants: [.focus])
+                            .class(PinesSurface.ring, variants: [.focus])
                         ),
                         "!selectOpen"
                     )
@@ -91,12 +91,12 @@ public func pinesSelect(
             .paddingLeft(.size(3)),
             .paddingRight(.size(10)),
             .textAlign(.left),
-            .backgroundColor(.white),
+            .class(PinesSurface.background),
             .borderWidth(.bare),
             .borderRadius(.md),
             .boxShadow(.xs),
             .cursor(.default),
-            .borderColor(PinesColor.neutral.shade(.subtle), opacity: 70),
+            .class(PinesSurface.borderSubtle),
             .outlineStyle(.hidden, variants: [.focus]),
             .fontSize(.sm)
         ) {
@@ -144,7 +144,7 @@ public func pinesSelect(
             .marginTop(.size(1)),
             .overflow(.auto),
             .fontSize(.sm),
-            .backgroundColor(.white),
+            .class(PinesSurface.background),
             .borderRadius(.md),
             .boxShadow(.md),
             .maxHeight(.size(56)),
@@ -161,8 +161,8 @@ public func pinesSelect(
                         pinesAlpineBindClass([
                             (
                                 twValue(
-                                    .backgroundColor(PinesColor.neutral.shade(.tint2)),
-                                    .textColor(PinesColor.gray.shade(.dark))
+                                    .class(PinesSurface.muted),
+                                    .class(PinesSurface.foreground)
                                 ),
                                 "selectableItemIsActive(item)"
                             ),
@@ -176,7 +176,7 @@ public func pinesSelect(
                     .height(.full),
                     .paddingY(.size(2)),
                     .paddingLeft(.size(8)),
-                    .textColor(PinesColor.gray.shade(.bold)),
+                    .class(PinesSurface.foreground),
                     .cursor(.default),
                     .userSelect(.none),
                     .opacity(.value(50), variants: [.arbitrary("data-[disabled]")]),

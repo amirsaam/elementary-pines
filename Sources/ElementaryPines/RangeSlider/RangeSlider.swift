@@ -84,12 +84,12 @@ public func pinesRangeSlider(
         .height(.size(2.5), variants: msThumb),
         .appearance(.none, variants: msThumb),
         // Track styles
-        .backgroundColor(PinesColor.neutral.shade(.subtle), variants: webkitTrack),
+        .class(PinesSurface.muted, variants: webkitTrack),
         .borderRadius(.full, variants: webkitTrack),
         .overflow(.hidden, variants: webkitTrack),
-        .backgroundColor(PinesColor.neutral.shade(.subtle), variants: mozTrack),
+        .class(PinesSurface.muted, variants: mozTrack),
         .borderRadius(.full, variants: mozTrack),
-        .backgroundColor(PinesColor.neutral.shade(.subtle), variants: msTrack),
+        .class(PinesSurface.muted, variants: msTrack),
         .borderRadius(.full, variants: msTrack),
         // Color-based styles
         .backgroundColor(resolvedColor.shade(.strong), variants: webkitThumb),
