@@ -69,6 +69,7 @@ let package = Package(
                 "RangeSlider/SnapshotFixtures",
                 "Rating/SnapshotFixtures",
                 "Select/SnapshotFixtures",
+                "SlideOver/SnapshotFixtures",
                 "Switch/SnapshotFixtures",
                 "Tabs/SnapshotFixtures",
                 "Textarea/SnapshotFixtures",
