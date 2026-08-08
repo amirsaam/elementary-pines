@@ -2,15 +2,6 @@ import Elementary
 import ElementaryAlpine
 import ElementaryTailwind
 
-/// Where the `pinesPopover` panel prefers to open relative to the trigger.
-///
-/// The panel auto-flips to the other side when there is not enough viewport
-/// space, mirroring Pines UI. Defaults to `.bottom`.
-public enum PinesPopoverPosition: String, Sendable {
-    case top
-    case bottom
-}
-
 /// Renders a Pines UI popover: a trigger button that toggles an anchored
 /// panel with arbitrary content.
 ///

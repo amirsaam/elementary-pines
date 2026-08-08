@@ -2,44 +2,6 @@ import Elementary
 import ElementaryAlpine
 import ElementaryTailwind
 
-/// A single selectable row in a `pinesMenuBar` menu.
-public struct PinesMenuBarItem: Sendable {
-    /// The row label.
-    public let title: String
-    /// An optional keyboard-shortcut hint rendered right-aligned.
-    public let shortcut: String?
-    /// When `true`, the row is inert (`data-disabled`) and faded.
-    public let disabled: Bool
-    /// An optional Alpine expression run on click, after the menu closes.
-    public let action: String?
-
-    public init(title: String, shortcut: String? = nil, disabled: Bool = false, action: String? = nil) {
-        self.title = title
-        self.shortcut = shortcut
-        self.disabled = disabled
-        self.action = action
-    }
-}
-
-/// An entry inside a `PinesMenuBarMenu` — either an item or a separator.
-public enum PinesMenuBarContent: Sendable {
-    case item(PinesMenuBarItem)
-    case separator
-}
-
-/// A named menu (File, Edit, …) inside a `pinesMenuBar`.
-public struct PinesMenuBarMenu: Sendable {
-    /// The menu's button label and the key used in the Alpine state.
-    public let title: String
-    /// The rows shown when the menu is open.
-    public let items: [PinesMenuBarContent]
-
-    public init(title: String, items: [PinesMenuBarContent]) {
-        self.title = title
-        self.items = items
-    }
-}
-
 /// Renders the Pines menu bar: a bordered bar of menu buttons, each opening a
 /// dropdown panel. Clicking a menu opens it; hovering switches menus while
 /// open; clicking away closes. Selecting an item closes the bar.
