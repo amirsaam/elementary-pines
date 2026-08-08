@@ -421,9 +421,17 @@ pinesModal {
 }
 ```
 
+// slide-over — a right-side drawer teleported to <body> with a titled header
+pinesSlideOver(title: "Settings") {
+    p(.fontWeight(.medium)) { "Open settings" }
+} content: {
+    p(.fontSize(.sm), .opacity(.value(60))) { "Configure your workspace." }
+}
+```
+
 ## Components
 
-The package ships 26 component functions. Each wraps the matching Pines UI element with type-safe parameters.
+The package ships 27 component functions. Each wraps the matching Pines UI element with type-safe parameters.
 
 | Function                        | Variants                                                                                       | Notes                                                    |
 | ------------------------------- | ---------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
@@ -453,6 +461,7 @@ The package ships 26 component functions. Each wraps the matching Pines UI eleme
 | `pinesPopover(color:position:arrow:width:attributes:trigger:content:)` | `PinesPopoverPosition`: `.bottom` (default), `.top`; `arrow:` defaults to `true`; `color` tints trigger text/hover, focus ring, and panel text; typed `TWTWidth` | Alpine-driven — trigger button toggles an anchored panel with arbitrary content; panel auto-flips top/bottom to fit the viewport; click-outside and Escape close; focus is trapped via `x-trap`, so it requires `setupAlpine(plugins: [.focus])` in `<head>`. |
 | `pinesMenuBar(color:attributes:menus:)` | `color` default `.neutral`; `PinesMenuBarMenu` (`title` + `items`); `PinesMenuBarItem` (`title`/`shortcut`/`disabled`/`action`); `PinesMenuBarContent` (`.item`/`.separator`) | Alpine-driven — a bar of menu buttons; clicking opens a menu, hovering switches menus while open, clicking away closes, selecting an item runs its `action` and closes. Surfaces follow the theme; `color` tints the menu-button/item hover washes (`.neutral` keeps the theme `bg-muted`). |
 | `pinesModal(color:attributes:trigger:content:)` | `color` default `.neutral` (tints trigger text/hover/focus ring) | Alpine-driven — a trigger button opens a centered dialog teleported to `<body>` with backdrop and built-in close button; Escape, backdrop, or close dismisses; focus is trapped and scroll locked via `x-trap.inert.noscroll`, so it requires `setupAlpine(plugins: [.focus])` in `<head>`. |
+| `pinesSlideOver(size:title:color:attributes:trigger:content:)` | `size` `.default` (Pines `max-w-md`) / `.half` (`max-w-1/2`, half the viewport) / `.full` (`max-w-full`); `title` empty hides the header; `color` default `.neutral` (tints trigger) | Alpine-driven — a right-side drawer teleported to `<body>` that slides in (`translate-x-full` → `translate-x-0`); backdrop, Escape, `click.away`, or the labeled Close button dismisses; titled header with built-in Close button when `title` is non-empty. No focus plugin required. |
 | `pinesTabs(tabs:)` | `[PinesTab]` with `title` + `@ContentBuilder` content closure | Alpine-driven — animated sliding marker, `$id`-scoped ids, `x-show` content panels. Requires `setupAlpine()` in `<head>`. |
 | `pinesToast(name:)` | `name:` scopes the stack to a container (optional) | Alpine-driven — teleported toast stack (`x-teleport` to `body`; core Alpine, no plugin). Listens for `toast-show` window events; dispatch with `toast('message', { type:, position:, description: })` from your own Alpine code. An unnamed stack shows every toast dispatched without a `container`; a named stack only shows toasts dispatched with `{ container: <name> }` — so multiple stacks can coexist on one page. Types: `default`, `success`, `info`, `warning`, `danger`; positions: `top-left`, `top-center`, `top-right`, `bottom-right`, `bottom-center`, `bottom-left`. Requires `setupAlpine()` in `<head>`. |
 | `pinesTooltip(text:position:arrow:content:)` | `PinesTooltipPosition`: `.top` (default), `.left`, `.bottom`, `.right`; `arrow:` defaults to `true` | Alpine-driven — the `@ContentBuilder` content is the hover trigger; the tooltip shows on mouseenter/mouseleave. Requires `setupAlpine()` in `<head>`. |
@@ -575,9 +584,9 @@ The [Pines UI](https://devdojo.com/pines) library is a collection of pre-built A
 
 ## Current state (v0.1.100+)
 
-26 component functions are implemented and tested:
+27 component functions are implemented and tested:
 
-- `setupPines`, `PinesColor`, `.pinesButtonStyle`, `.pinesBadgeStyle`, `pinesCard`, `pinesIcon`, `pinesAlert`, `pinesProgress`, `pinesQuote`, `pinesRating`, `pinesRangeSlider`, `pinesBreadcrumb`, `pinesBanner`, `pinesInput`, `pinesTextarea`, `pinesSelect`, `pinesCheckbox`, `pinesRadioGroup`, `pinesSwitch`, `pinesDatePicker`, `pinesAccordion`, `pinesTabs`, `pinesToast`, `pinesTooltip`, `pinesDropdown`, `pinesPopover`, `pinesMenuBar`, `pinesModal`
+- `setupPines`, `PinesColor`, `.pinesButtonStyle`, `.pinesBadgeStyle`, `pinesCard`, `pinesIcon`, `pinesAlert`, `pinesProgress`, `pinesQuote`, `pinesRating`, `pinesRangeSlider`, `pinesBreadcrumb`, `pinesBanner`, `pinesInput`, `pinesTextarea`, `pinesSelect`, `pinesCheckbox`, `pinesRadioGroup`, `pinesSwitch`, `pinesDatePicker`, `pinesAccordion`, `pinesTabs`, `pinesToast`, `pinesTooltip`, `pinesDropdown`, `pinesPopover`, `pinesMenuBar`, `pinesModal`, `pinesSlideOver`
 
 Alpine directive compatibility is verified by a dedicated smoke suite covering `x-text`, `x-model`, `x-on:click`, `x-data`, `x-show`, and modifiers.
 
@@ -607,7 +616,7 @@ SVG elements don't conform to `HTMLTrait.Attributes.Global`, and `ElementaryAlpi
 - **Phase 1 — Core UI primitives** — shipped in 0.1.100: alert, badge, banner, breadcrumb, button, card, icon, progress, quote.
 - **Phase 2 — Form & control components** — shipped in 0.2.000: checkbox, date picker, input, radio group, range slider, rating, select, switch, textarea.
 - **Phase 3 — Overlay & navigation (part 1)** — shipped in 0.2.100: accordion, tabs, toast, tooltip.
-- **Phase 4 — Overlay & navigation (part 2)** — in progress: dropdown, popover, menu-bar, modal done; remaining: slide-over, command, context-menu, hover-card, navigation-menu, image-gallery.
+- **Phase 4 — Overlay & navigation (part 2)** — in progress: dropdown, popover, menu-bar, modal, slide-over done; remaining: command, context-menu, hover-card, navigation-menu, image-gallery.
 - **Phase 5 — Data & media**: table, pagination, menu bar, video.
 - **Phase 6 — Effects**: marquee, retro grid, text animation, typing effect.
 - Quick wins: textarea auto-resize, copy to clipboard.
