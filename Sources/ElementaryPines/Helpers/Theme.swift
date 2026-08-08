@@ -12,6 +12,7 @@ enum PinesSurface {
     static let foreground = "text-foreground"
     static let border = "border-border"
     static let borderSubtle = "border-border/70"
+    static let borderSubtle80 = "border-border/80"
     static let borderSubtle60 = "border-border/60"
     static let muted = "bg-muted"
     static let mutedForeground = "text-muted-foreground"
