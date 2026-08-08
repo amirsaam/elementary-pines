@@ -142,7 +142,7 @@ private func pinesMenuBarButtonView(_ menu: PinesMenuBarMenu, color: PinesColor)
             .x.on("mouseover", "menuBarMenu=\(name)"),
             .x.bindClass(
                 pinesAlpineBindClass([
-                    (pinesMenuBarHoverClass(color), "menuBarOpen && menuBarMenu == \(name)")
+                    (PinesSurface.accentHoverClass(color), "menuBarOpen && menuBarMenu == \(name)")
                 ])
             ),
             .borderRadius(.md),
@@ -155,7 +155,7 @@ private func pinesMenuBarButtonView(_ menu: PinesMenuBarMenu, color: PinesColor)
             .paddingX(.size(3)),
             .paddingY(.size(1.5)),
             .height(.full),
-            pinesMenuBarHoverBackground(color, variants: [.hover])
+            PinesSurface.accentHover(color, variants: [.hover])
         ) {
             menu.title
         }
@@ -201,7 +201,7 @@ private func pinesMenuBarItemView(_ item: PinesMenuBarItem, color: PinesColor) -
         .position(.relative), .display(.flex), .justify(.between), .width(.full),
         .cursor(.default), .userSelect(.none), .borderRadius(.md),
         .paddingX(.size(2)), .paddingY(.size(1.5)),
-        pinesMenuBarHoverBackground(color, variants: [.hover]),
+        PinesSurface.accentHover(color, variants: [.hover]),
         .class(PinesSurface.foreground, variants: [.hover]),
         .outlineStyle(.hidden),
         .opacity(.value(50), variants: [.arbitrary("[data-disabled]")]),
@@ -244,18 +244,4 @@ private extension PinesMenuBarItem {
         }
         return "menuBarOpen=false"
     }
-}
-
-private func pinesMenuBarHoverBackground<Tag: HTMLTagDefinition>(_ color: PinesColor, variants: [TWVariant] = []) -> HTMLAttribute<Tag> {
-    if color == .neutral {
-        return .class(PinesSurface.muted, variants: variants)
-    }
-    return .backgroundColor(color.shade(.tint2), variants: variants)
-}
-
-private func pinesMenuBarHoverClass(_ color: PinesColor) -> String {
-    if color == .neutral {
-        return PinesSurface.muted
-    }
-    return twValue(.backgroundColor(color.shade(.tint2)))
 }
