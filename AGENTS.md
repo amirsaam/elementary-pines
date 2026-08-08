@@ -63,6 +63,8 @@ Use `fix(scope):` for bug fixes and `chore(scope):` for maintenance tasks (depen
 - `Helpers/Color.swift` — `PinesColor` enum (shared color palette)
 - `Helpers/Alpine.swift` — internal Alpine `x-bind:class` builder
 - `Helpers/Field.swift` — shared text-field Tailwind attributes
+- `Theme/Theme+Surface.swift` — `PinesSurface` semantic theme tokens (resolved by `setupPines()`)
+- `Theme/Theme+Overlay.swift` — shared overlay trigger button attributes (modal, slide-over)
 
 ### Tests (`Tests/`)
 

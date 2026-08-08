@@ -53,7 +53,7 @@ public func pinesModal(
     ) {
         let triggerAttrs =
             [HTMLAttribute<HTMLTag.button>.type(.button), .x.on("click", "modalOpen=true")]
-            + pinesModalTriggerAttributes(color: color)
+            + PinesSurface.overlayTriggerAttributes(color: color)
         button(attributes: triggerAttrs) {
             trigger()
         }
@@ -142,34 +142,4 @@ public func pinesModal(
         }
     }
     return HTMLRaw(html.render())
-}
-
-private func pinesModalTriggerAttributes<Tag: HTMLTagDefinition>(color: PinesColor) -> [HTMLAttribute<Tag>] {
-    [
-        .display(.inlineFlex), .justify(.center), .items(.center),
-        .paddingX(.size(4)), .paddingY(.size(2)), .height(.size(10)),
-        .fontSize(.sm), .fontWeight(.medium),
-        pinesModalTriggerText(color),
-        .class(PinesSurface.background), .borderRadius(.md), .borderWidth(.bare),
-        .class(PinesSurface.borderSubtle), .transition(.colors),
-        PinesSurface.accentHover(color, variants: [.hover]),
-        .class(PinesSurface.background, variants: [.active, .focus]),
-        .outlineStyle(.hidden, variants: [.focus]),
-        .ringWidth(.size(2), variants: [.focus]), .ringOffsetWidth(.size(2), variants: [.focus]),
-        pinesModalTriggerRing(color),
-    ]
-}
-
-private func pinesModalTriggerRing<Tag: HTMLTagDefinition>(_ color: PinesColor) -> HTMLAttribute<Tag> {
-    if color == .neutral {
-        return .class(PinesSurface.ring, variants: [.focus])
-    }
-    return .ringColor(color.shade(.accent), variants: [.focus])
-}
-
-private func pinesModalTriggerText<Tag: HTMLTagDefinition>(_ color: PinesColor) -> HTMLAttribute<Tag> {
-    if color == .neutral {
-        return .class(PinesSurface.foreground)
-    }
-    return .textColor(color.shade(.bold))
 }
