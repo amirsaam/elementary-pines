@@ -398,11 +398,24 @@ pinesPopover(position: .bottom, arrow: true) {
     p(.fontWeight(.medium)) { "Dimensions" }
     p(.fontSize(.sm), .opacity(.value(60))) { "Set the dimensions for the layer." }
 }
+
+// menu bar — a bar of menu buttons, each opening a dropdown panel
+pinesMenuBar(menus: [
+    .init(title: "File", items: [
+        .item(.init(title: "New Tab", shortcut: "⌘T", action: "newTab()")),
+        .separator,
+        .item(.init(title: "Print", shortcut: "⌘P")),
+    ]),
+    .init(title: "Edit", items: [
+        .item(.init(title: "Undo", shortcut: "⌘Z")),
+        .item(.init(title: "Redo", shortcut: "⇧⌘Z", disabled: true)),
+    ]),
+])
 ```
 
 ## Components
 
-The package ships 24 component functions. Each wraps the matching Pines UI element with type-safe parameters.
+The package ships 25 component functions. Each wraps the matching Pines UI element with type-safe parameters.
 
 | Function                        | Variants                                                                                       | Notes                                                    |
 | ------------------------------- | ---------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
@@ -430,6 +443,7 @@ The package ships 24 component functions. Each wraps the matching Pines UI eleme
 | `pinesAccordion(items:)` | `[PinesAccordionItem]` (`Sendable`, `Equatable`, with `title`/`body` strings) | Alpine-driven — the `activeAccordion` state toggles each item open/closed. The collapse animation uses `x-collapse`, so it requires `setupAlpine(plugins: [.collapse])` in `<head>`. |
 | `pinesDropdown(color:position:width:attributes:trigger:items:)` | `PinesDropdownPosition`: `.belowCenter` (default), `.belowStart`, `.belowEnd`, `.aboveStart`, `.aboveCenter`, `.aboveEnd`; `PinesDropdownItem` (`Sendable`, `title`/`icon`/`shortcut`/`disabled`/`href`/`action`/`closeOnSelect`/`danger`) + `pinesDropdownSeparator()`; `color` tints trigger/panel text and item hover | Alpine-driven — styled trigger button toggles a panel anchored by `position` that closes on outside click; arrow-key navigation; items render as `<a>` (with `href`) or `<div>`, disabled items use `data-disabled`, `danger` items override the color with red. Requires `setupAlpine()` in `<head>`. |
 | `pinesPopover(color:position:arrow:width:attributes:trigger:content:)` | `PinesPopoverPosition`: `.bottom` (default), `.top`; `arrow:` defaults to `true`; `color` tints trigger text/hover, focus ring, and panel text; typed `TWTWidth` | Alpine-driven — trigger button toggles an anchored panel with arbitrary content; panel auto-flips top/bottom to fit the viewport; click-outside and Escape close; focus is trapped via `x-trap`, so it requires `setupAlpine(plugins: [.focus])` in `<head>`. |
+| `pinesMenuBar(color:attributes:menus:)` | `color` default `.neutral`; `PinesMenuBarMenu` (`title` + `items`); `PinesMenuBarItem` (`title`/`shortcut`/`disabled`/`action`); `PinesMenuBarContent` (`.item`/`.separator`) | Alpine-driven — a bar of menu buttons; clicking opens a menu, hovering switches menus while open, clicking away closes, selecting an item runs its `action` and closes. Surfaces follow the theme; `color` tints the menu-button/item hover washes (`.neutral` keeps the theme `bg-muted`). |
 | `pinesTabs(tabs:)` | `[PinesTab]` with `title` + `@ContentBuilder` content closure | Alpine-driven — animated sliding marker, `$id`-scoped ids, `x-show` content panels. Requires `setupAlpine()` in `<head>`. |
 | `pinesToast(name:)` | `name:` scopes the stack to a container (optional) | Alpine-driven — teleported toast stack (`x-teleport` to `body`; core Alpine, no plugin). Listens for `toast-show` window events; dispatch with `toast('message', { type:, position:, description: })` from your own Alpine code. An unnamed stack shows every toast dispatched without a `container`; a named stack only shows toasts dispatched with `{ container: <name> }` — so multiple stacks can coexist on one page. Types: `default`, `success`, `info`, `warning`, `danger`; positions: `top-left`, `top-center`, `top-right`, `bottom-right`, `bottom-center`, `bottom-left`. Requires `setupAlpine()` in `<head>`. |
 | `pinesTooltip(text:position:arrow:content:)` | `PinesTooltipPosition`: `.top` (default), `.left`, `.bottom`, `.right`; `arrow:` defaults to `true` | Alpine-driven — the `@ContentBuilder` content is the hover trigger; the tooltip shows on mouseenter/mouseleave. Requires `setupAlpine()` in `<head>`. |
@@ -552,9 +566,9 @@ The [Pines UI](https://devdojo.com/pines) library is a collection of pre-built A
 
 ## Current state (v0.1.100+)
 
-24 component functions are implemented and tested:
+25 component functions are implemented and tested:
 
-- `setupPines`, `PinesColor`, `.pinesButtonStyle`, `.pinesBadgeStyle`, `pinesCard`, `pinesIcon`, `pinesAlert`, `pinesProgress`, `pinesQuote`, `pinesRating`, `pinesRangeSlider`, `pinesBreadcrumb`, `pinesBanner`, `pinesInput`, `pinesTextarea`, `pinesSelect`, `pinesCheckbox`, `pinesRadioGroup`, `pinesSwitch`, `pinesDatePicker`, `pinesAccordion`, `pinesTabs`, `pinesToast`, `pinesTooltip`, `pinesDropdown`, `pinesPopover`
+- `setupPines`, `PinesColor`, `.pinesButtonStyle`, `.pinesBadgeStyle`, `pinesCard`, `pinesIcon`, `pinesAlert`, `pinesProgress`, `pinesQuote`, `pinesRating`, `pinesRangeSlider`, `pinesBreadcrumb`, `pinesBanner`, `pinesInput`, `pinesTextarea`, `pinesSelect`, `pinesCheckbox`, `pinesRadioGroup`, `pinesSwitch`, `pinesDatePicker`, `pinesAccordion`, `pinesTabs`, `pinesToast`, `pinesTooltip`, `pinesDropdown`, `pinesPopover`, `pinesMenuBar`
 
 Alpine directive compatibility is verified by a dedicated smoke suite covering `x-text`, `x-model`, `x-on:click`, `x-data`, `x-show`, and modifiers.
 
@@ -584,7 +598,7 @@ SVG elements don't conform to `HTMLTrait.Attributes.Global`, and `ElementaryAlpi
 - **Phase 1 — Core UI primitives** — shipped in 0.1.100: alert, badge, banner, breadcrumb, button, card, icon, progress, quote.
 - **Phase 2 — Form & control components** — shipped in 0.2.000: checkbox, date picker, input, radio group, range slider, rating, select, switch, textarea.
 - **Phase 3 — Overlay & navigation (part 1)** — shipped in 0.2.100: accordion, tabs, toast, tooltip.
-- **Phase 4 — Overlay & navigation (part 2)** — in progress: dropdown, popover done; remaining: modal, slide-over, command, context-menu, hover-card, navigation-menu, image-gallery.
+- **Phase 4 — Overlay & navigation (part 2)** — in progress: dropdown, popover, menu-bar done; remaining: modal, slide-over, command, context-menu, hover-card, navigation-menu, image-gallery.
 - **Phase 5 — Data & media**: table, pagination, menu bar, video.
 - **Phase 6 — Effects**: marquee, retro grid, text animation, typing effect.
 - Quick wins: textarea auto-resize, copy to clipboard.

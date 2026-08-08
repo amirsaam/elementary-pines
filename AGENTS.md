@@ -6,7 +6,7 @@ AI contribution guidelines for `elementary-pines`.
 
 `elementary-pines` is a server-side Swift wrapper for [Pines UI](https://devdojo.com/pines) — a collection of pre-built Alpine.js + Tailwind CSS components. It renders those same components type-safely via [Elementary](https://github.com/elementary-swift/elementary), with full snapshot test coverage.
 
-- `ElementaryPines` — 24 UI components (Accordion, Alert, Badge, Banner, Breadcrumb, Button, Card, Checkbox, DatePicker, Dropdown, Icons, Input, Popover, Progress, Quote, RadioGroup, RangeSlider, Rating, Select, Switch, Tabs, Textarea, Toast, Tooltip) + `PinesColor` color system
+- `ElementaryPines` — 25 UI components (Accordion, Alert, Badge, Banner, Breadcrumb, Button, Card, Checkbox, DatePicker, Dropdown, Icons, Input, MenuBar, Popover, Progress, Quote, RadioGroup, RangeSlider, Rating, Select, Switch, Tabs, Textarea, Toast, Tooltip) + `PinesColor` color system
 - `Pines.swift` — `setupPines()` entry point (emits `[x-cloak]` style for Alpine.js animations)
 
 ## Dependency chain
@@ -56,7 +56,7 @@ Use `fix(scope):` for bug fixes and `chore(scope):` for maintenance tasks (depen
 
 ### Source (`Sources/ElementaryPines/`)
 
-- One directory per component: Accordion, Alert, Badge, Banner, Breadcrumb, Button, Card, Checkbox, DatePicker, Dropdown, Icons, Input, Popover, Progress, Quote, RadioGroup, RangeSlider, Rating, Select, Switch, Tabs, Textarea, Toast, Tooltip
+- One directory per component: Accordion, Alert, Badge, Banner, Breadcrumb, Button, Card, Checkbox, DatePicker, Dropdown, Icons, Input, MenuBar, Popover, Progress, Quote, RadioGroup, RangeSlider, Rating, Select, Switch, Tabs, Textarea, Toast, Tooltip
 - `Pines.swift` — `setupPines()` entry point (emits `[x-cloak]` style)
 - `Icons/Icons.swift` — `pinesIcon()` with 35 Heroicon kinds
 - `Icons/Icon+Special.swift` — `PinesSpecialIcon` enum + `pinesSpecialIcon()` for multi-path SVGs (wand, quoteMark)
