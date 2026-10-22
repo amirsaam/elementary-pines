@@ -4,18 +4,18 @@ import ElementaryTailwind
 /// Renders a styled `<textarea>` element matching the Pines UI textarea design.
 ///
 /// The class string matches the original `pines/elements/textarea.html`
-/// layout. The `color` parameter swaps the neutral border/placeholder/ring
-/// classes for the color's 300/400 shade pair. The element itself holds
+/// layout. The `color` parameter changes only the focus ring; the field border
+/// and placeholder remain neutral. The element itself holds
 /// no Alpine.js state — pass `x-data`/`x-model` on the call site (e.g. via
 /// `elementary-alpine`) for dynamic behavior.
 ///
 /// Layout:
 /// ```html
 /// <textarea placeholder="Type your message here."
-///          class="flex w-full h-auto min-h-[80px] px-3 py-2 text-sm bg-white
-///                 border rounded-md border-neutral-300 placeholder:text-neutral-400
-///                 focus:border-neutral-300 focus:outline-hidden focus:ring-2
-///                 focus:ring-offset-2 focus:ring-neutral-400
+///          class="flex w-full h-auto min-h-[80px] px-3 py-2 text-sm bg-background
+///                 border rounded-md border-border placeholder:text-muted-foreground
+///                 focus:outline-hidden focus:ring-2
+///                 focus:ring-offset-2 focus:ring-ring
 ///                 disabled:opacity-50 disabled:cursor-not-allowed"></textarea>
 /// ```
 ///
@@ -29,9 +29,8 @@ import ElementaryTailwind
 /// ```
 ///
 /// - Parameters:
-///   - color: Optional color for border, placeholder, and focus ring
-///     (300/400 shade pair). When `nil`, uses neutral-300/400 (the
-///     original Pines default).
+///   - color: Optional color for the focus ring (accent/400 shade). When `nil`, uses semantic field tokens from
+///     `setupPines()`.
 ///   - placeholder: Optional placeholder text.
 ///   - name: Optional `name` attribute for form submission.
 ///   - id: Optional `id` attribute (for label association via `for=`).
@@ -47,9 +46,9 @@ public func pinesTextarea(
     disabled: Bool = false,
     attributes: [HTMLAttribute<HTMLTag.textarea>] = []
 ) -> some HTML {
+    let borderColor = PinesColor.neutral.shade(.light)
+    let placeholderColor = PinesColor.neutral.shade(.base)
     let resolvedColor = color ?? .neutral
-    let borderColor = resolvedColor.shade(.light)
-    let placeholderColor = resolvedColor.shade(.accent)
     let focusRingColor = resolvedColor.shade(.accent)
 
     var textareaAttributes: [HTMLAttribute<HTMLTag.textarea>] =
@@ -69,8 +68,9 @@ public func pinesTextarea(
             borderColor: borderColor,
             placeholderColor: placeholderColor,
             focusRingColor: focusRingColor,
-            includeRingOffset: false,
-            surface: color == nil
+            includeRingOffset: true,
+            surface: color == nil,
+            darkBorderColor: PinesColor.neutral.shade(.deep)
         )
     if let placeholder { textareaAttributes.append(.placeholder(placeholder)) }
     if let name { textareaAttributes.append(.name(name)) }

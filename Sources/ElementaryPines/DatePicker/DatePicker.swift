@@ -37,6 +37,8 @@ public func pinesDatePicker(
 ) -> some HTML {
     let xData = PinesDatePickerState.xData(format: format.rawValue)
     let xInit = PinesDatePickerState.xInit
+    let roundedFull = twValue(.borderRadius(.full))
+    let hoverRoundedFull = twValue(.borderRadius(.full, variants: [.hover]))
 
     var inputAttributes: [HTMLAttribute<HTMLTag.input>] =
         [
@@ -106,8 +108,8 @@ public func pinesDatePicker(
                 .paddingX(.size(3)),
                 .paddingY(.size(2)),
                 .cursor(.pointer),
-                .textColor(PinesColor.neutral.shade(.accent)),
-                .textColor(PinesColor.neutral.shade(.base), variants: [.hover])
+                .class(PinesTheme.mutedForeground),
+                .class(PinesTheme.foreground, variants: [.hover])
             ) {
                 pinesIcon(.calendar, size: .lg)
             }
@@ -120,6 +122,7 @@ public func pinesDatePicker(
                 .position(.absolute),
                 .insetTop(.zero),
                 .insetLeft(.zero),
+                .zIndex(.number(50)),
                 .maxWidth(.lg),
                 .padding(.size(4)),
                 .marginTop(.size(12)),
@@ -143,7 +146,7 @@ public func pinesDatePicker(
                             .x.text("datePickerMonthNames[datePickerMonth]"),
                             .fontSize(.lg),
                             .fontWeight(.bold),
-                            .textColor(PinesColor.gray.shade(.deep))
+                            .class(PinesTheme.foreground)
                         ) {
                             ""
                         }
@@ -152,7 +155,7 @@ public func pinesDatePicker(
                             .marginLeft(.size(1)),
                             .fontSize(.lg),
                             .fontWeight(.normal),
-                            .textColor(PinesColor.gray.shade(.strong))
+                            .class(PinesTheme.mutedForeground)
                         ) {
                             ""
                         }
@@ -169,11 +172,9 @@ public func pinesDatePicker(
                             .transitionTimingFunction(.easeInOut),
                             .cursor(.pointer),
                             .outlineStyle(.hidden, variants: [.focus]),
-                            .class("shadow-outline", variants: [.focus]),
-                            .backgroundColor(
-                                PinesColor.gray.shade(.tint2),
-                                variants: [.hover]
-                            )
+                            .ringWidth(.size(2), variants: [.focus]),
+                            .class(PinesTheme.ring, variants: [.focus]),
+                            .class(PinesTheme.muted, variants: [.hover])
                         ) {
                             pinesIcon(.chevronLeft, size: .md)
                         }
@@ -188,11 +189,9 @@ public func pinesDatePicker(
                             .transitionTimingFunction(.easeInOut),
                             .cursor(.pointer),
                             .outlineStyle(.hidden, variants: [.focus]),
-                            .class("shadow-outline", variants: [.focus]),
-                            .backgroundColor(
-                                PinesColor.gray.shade(.tint2),
-                                variants: [.hover]
-                            )
+                            .ringWidth(.size(2), variants: [.focus]),
+                            .class(PinesTheme.ring, variants: [.focus]),
+                            .class(PinesTheme.muted, variants: [.hover])
                         ) {
                             pinesIcon(.chevronRight, size: .md)
                         }
@@ -216,7 +215,7 @@ public func pinesDatePicker(
                                 .fontSize(.xs),
                                 .fontWeight(.medium),
                                 .textAlign(.center),
-                                .textColor(PinesColor.gray.shade(.deep))
+                                .class(PinesTheme.mutedForeground)
                             ) {
                                 ""
                             }
@@ -254,22 +253,15 @@ public func pinesDatePicker(
                                 .x.bindClass(
                                     pinesAlpineBindClass([
                                         (
-                                            twValue(.backgroundColor(PinesColor.neutral.shade(.subtle))),
-                                            "datePickerIsToday(day) == true"
+                                            "\(PinesTheme.utility(PinesTheme.primary, opacity: 10)) \(roundedFull)",
+                                            "datePickerIsToday(day) == true && datePickerIsSelectedDate(day) == false"
                                         ),
                                         (
-                                            twValue(
-                                                .textColor(PinesColor.gray.shade(.strong)),
-                                                .backgroundColor(PinesColor.neutral.shade(.subtle), variants: [.hover])
-                                            ),
+                                            "\(PinesTheme.mutedForeground) \(PinesTheme.utility(PinesTheme.muted, variants: [.hover])) \(hoverRoundedFull)",
                                             "datePickerIsToday(day) == false && datePickerIsSelectedDate(day) == false"
                                         ),
                                         (
-                                            twValue(
-                                                .backgroundColor(PinesColor.neutral.shade(.deep)),
-                                                .textColor(.white),
-                                                .backgroundColor(PinesColor.neutral.shade(.deep), opacity: 70, variants: [.hover])
-                                            ),
+                                            "\(PinesTheme.primary) \(PinesTheme.primaryForeground) \(roundedFull) \(PinesTheme.utility(PinesTheme.primary, opacity: 90, variants: [.hover]))",
                                             "datePickerIsSelectedDate(day) == true"
                                         ),
                                     ])
@@ -282,7 +274,6 @@ public func pinesDatePicker(
                                 .fontSize(.sm),
                                 .lineHeight(.none),
                                 .textAlign(.center),
-                                .borderRadius(.full),
                                 .cursor(.pointer)
                             ) {
                                 ""

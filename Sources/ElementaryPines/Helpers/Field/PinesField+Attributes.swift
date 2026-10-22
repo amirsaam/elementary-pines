@@ -6,13 +6,17 @@ func pinesTextFieldAttributes<Tag: HTMLTagDefinition>(
     placeholderColor: TWColor,
     focusRingColor: TWColor,
     includeRingOffset: Bool = true,
-    surface: Bool = false
+    surface: Bool = false,
+    darkBorderColor: TWColor? = nil
 ) -> [HTMLAttribute<Tag>] {
     var attributes: [HTMLAttribute<Tag>] = []
     if surface {
         attributes.append(.class(PinesTheme.border))
     } else {
         attributes.append(.borderColor(borderColor))
+        if let darkBorderColor {
+            attributes.append(.borderColor(darkBorderColor, variants: [.dark]))
+        }
     }
     if includeRingOffset {
         attributes.append(.class("ring-offset-background"))
@@ -20,7 +24,6 @@ func pinesTextFieldAttributes<Tag: HTMLTagDefinition>(
     if surface {
         attributes += [
             .class(PinesTheme.mutedForeground, variants: [.placeholder]),
-            .class(PinesTheme.border, variants: [.focus]),
             .outlineStyle(.hidden, variants: [.focus]),
             .ringWidth(.size(2), variants: [.focus]),
             .ringOffsetWidth(.size(2), variants: [.focus]),

@@ -4,19 +4,19 @@ import ElementaryTailwind
 /// Renders a styled text input element matching the Pines UI input design.
 ///
 /// The class string matches the original `pines/elements/text-input.html`
-/// layout. The `color` parameter swaps the neutral border/ring classes for
-/// the color's 300/400 shade pair. The element itself holds no Alpine.js
+/// layout. The `color` parameter changes only the focus ring; the field
+/// border and placeholder remain neutral. The element itself holds no Alpine.js
 /// state — pass `x-data`/`x-model` on the call site (e.g. via
 /// `elementary-alpine`) for dynamic behavior.
 ///
 /// Layout:
 /// ```html
 /// <input type="text" placeholder="Name"
-///        class="flex w-full h-10 px-3 py-2 text-sm bg-white border rounded-md
-///               border-neutral-300 ring-offset-background
-///               placeholder:text-neutral-500
-///               focus:border-neutral-300 focus:outline-hidden focus:ring-2
-///               focus:ring-offset-2 focus:ring-neutral-400
+///        class="flex w-full h-10 px-3 py-2 text-sm bg-background border rounded-md
+///               border-border ring-offset-background
+///               placeholder:text-muted-foreground
+///               focus:border-border focus:outline-hidden focus:ring-2
+///               focus:ring-offset-2 focus:ring-ring
 ///               disabled:opacity-50 disabled:cursor-not-allowed" />
 /// ```
 ///
@@ -32,8 +32,8 @@ import ElementaryTailwind
 /// - Parameters:
 ///   - type: The HTML input type (`"text"`, `"email"`, `"password"`, etc.).
 ///     Defaults to `"text"`.
-///   - color: Optional color for border and focus ring (300/400 shades).
-///     When `nil`, uses neutral-300/400 (the original Pines default).
+///   - color: Optional color for the focus ring (accent/400 shade).
+///     When `nil`, uses semantic field tokens from `setupPines()`.
 ///   - placeholder: Optional placeholder text.
 ///   - name: Optional `name` attribute for form submission.
 ///   - value: Optional initial value.
@@ -50,8 +50,8 @@ public func pinesInput(
     disabled: Bool = false,
     attributes: [HTMLAttribute<HTMLTag.input>] = []
 ) -> some HTML {
+    let borderColor = PinesColor.neutral.shade(.light)
     let resolvedColor = color ?? .neutral
-    let borderColor = resolvedColor.shade(.light)
     let focusRingColor = resolvedColor.shade(.accent)
 
     var inputAttributes: [HTMLAttribute<HTMLTag.input>] =
@@ -71,7 +71,8 @@ public func pinesInput(
             borderColor: borderColor,
             placeholderColor: PinesColor.neutral.shade(.base),
             focusRingColor: focusRingColor,
-            surface: color == nil
+            surface: color == nil,
+            darkBorderColor: PinesColor.neutral.shade(.deep)
         )
     if let placeholder { inputAttributes.append(.placeholder(placeholder)) }
     if let name { inputAttributes.append(.name(name)) }

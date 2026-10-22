@@ -22,9 +22,10 @@ enum PinesDatePickerState {
             datePickerPreviousMonth(){
                 if (this.datePickerMonth == 0) {
                     this.datePickerYear--;
-                    this.datePickerMonth = 12;
+                    this.datePickerMonth = 11;
+                } else {
+                    this.datePickerMonth--;
                 }
-                this.datePickerMonth--;
                 this.datePickerCalculateDays();
             },
             datePickerNextMonth(){
@@ -95,7 +96,7 @@ enum PinesDatePickerState {
         }
         datePickerMonth = currentDate.getMonth();
         datePickerYear = currentDate.getFullYear();
-        datePickerDay = currentDate.getDay();
+        datePickerDay = currentDate.getDate();
         datePickerValue = datePickerFormatDate( currentDate );
         datePickerCalculateDays();
         """
