@@ -1,14 +1,13 @@
-<style>[x-cloak] { display: none !important; }
-:root {
-  --color-background: var(--color-white);
+<style type="text/tailwindcss">@theme {
+  --color-background: #fff;
   --color-foreground: var(--color-neutral-950);
   --color-border: var(--color-neutral-200);
   --color-muted: var(--color-neutral-100);
   --color-muted-foreground: var(--color-neutral-500);
   --color-ring: var(--color-neutral-400);
-  --color-primary: var(--color-neutral-600);
-  --color-primary-foreground: var(--color-white);
-}
+  --color-primary: var(--color-neutral-950);
+  --color-primary-foreground: #fff;
+}</style><style>[x-cloak] { display: none !important; }
 @media (prefers-color-scheme: dark) {
   :root {
     --color-background: var(--color-neutral-950);
@@ -17,7 +16,7 @@
     --color-muted: var(--color-neutral-900);
     --color-muted-foreground: var(--color-neutral-400);
     --color-ring: var(--color-neutral-400);
-    --color-primary: var(--color-neutral-600);
-    --color-primary-foreground: var(--color-white);
+    --color-primary: var(--color-neutral-50);
+    --color-primary-foreground: var(--color-neutral-950);
   }
 }</style>

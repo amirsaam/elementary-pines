@@ -1,5 +1,4 @@
-<style>[x-cloak] { display: none !important; }
-:root {
+<style type="text/tailwindcss">@theme {
   --color-background: var(--color-neutral-100);
   --color-foreground: var(--color-neutral-950);
   --color-border: var(--color-neutral-200);
@@ -7,8 +6,8 @@
   --color-muted-foreground: var(--color-neutral-500);
   --color-ring: var(--color-green-400);
   --color-primary: var(--color-green-600);
-  --color-primary-foreground: var(--color-white);
-}
+  --color-primary-foreground: #fff;
+}</style><style>[x-cloak] { display: none !important; }
 @media (prefers-color-scheme: dark) {
   :root {
     --color-background: var(--color-neutral-950);
@@ -18,6 +17,6 @@
     --color-muted-foreground: var(--color-neutral-400);
     --color-ring: var(--color-green-400);
     --color-primary: var(--color-green-600);
-    --color-primary-foreground: var(--color-white);
+    --color-primary-foreground: #fff;
   }
 }</style>
