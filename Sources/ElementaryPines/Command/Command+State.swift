@@ -1,5 +1,3 @@
-import Elementary
-
 /// Alpine state and search/keyboard logic for `pinesCommand`.
 enum PinesCommandState {
     static func xData(items: [PinesCommandItem]) -> String {
@@ -19,7 +17,7 @@ enum PinesCommandState {
             commandItemActivePrevious(){ let index = this.commandItemsFiltered.indexOf(this.commandItemActive); if (index > 0) { this.commandItemActive = this.commandItemsFiltered[index - 1]; this.commandScrollToActiveItem(); } },
             commandScrollToActiveItem(){ if (this.commandItemActive) { let el = document.getElementById(this.commandItemActive.value + '-' + this.commandId); if (!el) { return; } let newScrollPos = (el.offsetTop + el.offsetHeight) - this.$refs.commandItemsList.offsetHeight; this.$refs.commandItemsList.scrollTop = newScrollPos > 0 ? newScrollPos : 0; } },
             commandSearchItems(){ if (!this.commandSearchIsEmpty()) { let term = this.commandSearch.replace(/\\*/g, '').toLowerCase(); this.commandItemsFiltered = this.commandItems.filter(item => item.title.toLowerCase().startsWith(term)); this.commandScrollToActiveItem(); } else { this.commandItemsFiltered = this.commandItems.filter(item => item.default); } this.commandItemActive = this.commandItemsFiltered[0]; },
-            commandShowCategory(item, index){ if (index == 0) { return true; } if (typeof this.commandItems[index - 1] === 'undefined') { return false; } return item.category != this.commandItems[index - 1].category; },
+            commandShowCategory(item, index){ if (index == 0) { return true; } if (typeof this.commandItemsFiltered[index - 1] === 'undefined') { return false; } return item.category != this.commandItemsFiltered[index - 1].category; },
             commandCategoryCapitalize(string){ return string.charAt(0).toUpperCase() + string.slice(1); },
             commandSelect(item){ if (item.disabled) { return; } this.commandItemSelected = item; if (item.action) { eval(item.action); } }
             }

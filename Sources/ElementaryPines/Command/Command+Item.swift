@@ -1,5 +1,3 @@
-import Foundation
-
 /// A single selectable entry in a `pinesCommand` palette.
 ///
 /// `icon` is a Heroicon rendered inside the row; `shortcut` is a right-aligned

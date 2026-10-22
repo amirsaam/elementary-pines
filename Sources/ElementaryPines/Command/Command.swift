@@ -12,8 +12,8 @@ import ElementaryTailwind
 /// **Generated HTML:**
 /// ```html
 /// <div x-data="{ commandItems: [...], ... }" @keydown.down="event.preventDefault(); commandItemActiveNext();" class="flex min-h-[370px] justify-center w-full max-w-xl items-start" x-cloak>
-///   <div class="flex flex-col w-full h-full overflow-hidden bg-background border border-border rounded-lg shadow-md">
-///     <div class="flex items-center px-3 border-b-1 border-border text-muted-foreground">…</div>
+///   <div class="flex flex-col w-full h-full overflow-hidden bg-background border border-border rounded-lg shadow">
+///     <div class="flex items-center px-3 border-b border-border text-muted-foreground">…</div>
 ///     <div x-ref="commandItemsList" class="max-h-[320px] overflow-y-auto overflow-x-hidden">…</div>
 ///   </div>
 /// </div>
@@ -29,24 +29,24 @@ import ElementaryTailwind
 /// ```
 ///
 /// - Parameters:
-///   - color: The accent used for the active row. Defaults to `.neutral`,
-///     which keeps the theme `bg-muted`/`text-foreground` highlight.
+///   - color: The accent used for the active row. When omitted, the semantic
+///     theme accent emitted by `setupPines()` is used.
 ///   - items: The selectable commands.
 ///   - placeholder: The search input placeholder text.
 ///   - attributes: Extra attributes merged onto the root element.
 public func pinesCommand(
-    color: PinesColor = .neutral,
+    color: PinesColor? = nil,
     items: [PinesCommandItem],
     placeholder: String = "Type a command or search...",
     attributes: [HTMLAttribute<HTMLTag.div>] = []
 ) -> some HTML {
     let xData = PinesCommandState.xData(items: items)
     let activeClassName: String
-    if color == .neutral {
-        activeClassName = "\(PinesTheme.muted) \(PinesTheme.foreground)"
+    if color == nil {
+        activeClassName = "\(PinesTheme.utility(PinesTheme.primary, opacity: 10)) \(PinesTheme.foreground)"
     } else {
         activeClassName =
-            "\(twValue(.backgroundColor(color.shade(.tint2)))) \(twValue(.textColor(color.shade(.dark))))"
+            "\(twValue(.backgroundColor(color!.shade(.tint2)))) \(twValue(.backgroundColor(color!.shade(.deep), variants: [.dark]))) \(PinesTheme.foreground)"
     }
     let activeClass = pinesAlpineBindClass([
         (
@@ -59,10 +59,11 @@ public func pinesCommand(
         .display(.flex), .width(.full), .paddingX(.size(2)), .paddingY(.size(3)),
         .fontSize(.sm), .backgroundColor(.transparent), .borderWidth(.size(0)),
         .borderRadius(.md), .outlineStyle(.hidden),
-        .outlineStyle(.hidden, variants: [.focus]),
         .ringWidth(.size(0), variants: [.focus]),
         .borderWidth(.size(0), variants: [.focus]),
         .class(PinesTheme.mutedForeground, variants: [.placeholder]),
+        .cursor(.notAllowed, variants: [.disabled]),
+        .opacity(.value(50), variants: [.disabled]),
         .height(.size(11)),
         HTMLAttribute(name: "placeholder", value: placeholder),
         HTMLAttribute(name: "autocomplete", value: "off"),
@@ -76,7 +77,7 @@ public func pinesCommand(
         .x.bind("data-disabled", "item.disabled"),
         .x.bindClass(activeClass),
         .position(.relative), .display(.flex), .cursor(.default),
-        .userSelect(.none), .items(.center), .borderRadius(.sm),
+        .userSelect(.none), .items(.center), .borderRadius(.xs),
         .paddingX(.size(2)), .paddingY(.size(1.5)), .fontSize(.sm),
         .outlineStyle(.hidden),
         .pointerEvents(.none, variants: [.arbitrary("data-[disabled=true]")]),
@@ -110,7 +111,7 @@ public func pinesCommand(
                 .display(.flex),
                 .items(.center),
                 .paddingX(.size(3)),
-                .borderWidth(.b(1)),
+                .class("border-b"),
                 .class(PinesTheme.border),
                 .class(PinesTheme.mutedForeground)
             ) {
