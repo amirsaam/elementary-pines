@@ -9,7 +9,7 @@ public func pinesTabs(tabs: [PinesTab]) -> some HTML {
         .position(.relative),
         .width(.full),
         .x.data(PinesTabsState.xData),
-        .x.setup("tabRepositionMarker($refs.tabButtons.firstElementChild);")
+        .x.setup(PinesTabsState.xInit)
     ) {
         div(
             .x.ref("tabButtons"),
@@ -20,8 +20,8 @@ public func pinesTabs(tabs: [PinesTab]) -> some HTML {
             .width(.full),
             .height(.size(10)),
             .padding(.size(1)),
-            .textColor(PinesColor.gray.shade(.base)),
-            .backgroundColor(PinesColor.gray.shade(.tint2)),
+            .class(PinesTheme.mutedForeground),
+            .class(PinesTheme.muted),
             .borderRadius(.lg),
             .userSelect(.none),
             .gridTemplateColumns(columns)
@@ -41,10 +41,15 @@ public func pinesTabs(tabs: [PinesTab]) -> some HTML {
                     .paddingX(.size(3)),
                     .fontSize(.sm),
                     .fontWeight(.medium),
-                    .transition(.all),
+                    .class("transition-all"),
                     .borderRadius(.md),
                     .cursor(.pointer),
-                    .whitespace(.nowrap)
+                    .whitespace(.nowrap),
+                    .x.bindClass(
+                        pinesAlpineBindClass([
+                            (PinesTheme.primaryForeground, "tabSelected == $el.id.replace(tabId + '-', '')")
+                        ])
+                    )
                 ) { tab.title }
             }
             div(
@@ -58,17 +63,32 @@ public func pinesTabs(tabs: [PinesTab]) -> some HTML {
                 .transitionTimingFunction(.easeOut),
                 .x.cloak
             ) {
-                div(.width(.full), .height(.full), .backgroundColor(.white), .borderRadius(.md), .boxShadow(.xs)) {}
+                div(.width(.full), .height(.full), .class(PinesTheme.primary), .borderRadius(.md), .boxShadow(.xs)) {}
             }
         }
-        for (index, tab) in tabs.enumerated() {
-            if index == 0 {
-                div(.x.bind("id", "$id(tabId + '-content')"), .x.show("tabContentActive($el)"), .position(.relative)) {
-                    tab.content()
-                }
-            } else {
-                div(.x.bind("id", "$id(tabId + '-content')"), .x.show("tabContentActive($el)"), .position(.relative), .x.cloak) {
-                    tab.content()
+        div(
+            .position(.relative),
+            .display(.flex),
+            .items(.center),
+            .justify(.center),
+            .width(.full),
+            .marginTop(.size(2)),
+            .padding(.size(5)),
+            .fontSize(.xs),
+            .class(PinesTheme.mutedForeground),
+            .borderWidth(.bare),
+            .borderRadius(.md),
+            .class(PinesTheme.border)
+        ) {
+            for (index, tab) in tabs.enumerated() {
+                if index == 0 {
+                    div(.x.bind("id", "$id(tabId + '-content')"), .x.show("tabContentActive($el)"), .position(.relative)) {
+                        tab.content()
+                    }
+                } else {
+                    div(.x.bind("id", "$id(tabId + '-content')"), .x.show("tabContentActive($el)"), .position(.relative), .x.cloak) {
+                        tab.content()
+                    }
                 }
             }
         }
