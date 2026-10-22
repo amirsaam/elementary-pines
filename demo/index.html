@@ -83,6 +83,7 @@
       --color-primary-foreground: #000;
     }
     body[data-demo-theme="dark"] > header,
+    body[data-demo-theme="dark"] > footer,
     body[data-demo-theme="dark"] section,
     body[data-demo-theme="dark"] article > header,
     body[data-demo-theme="dark"] article > .grid-dots,
@@ -104,6 +105,9 @@
     body[data-demo-theme="dark"] .text-neutral-500,
     body[data-demo-theme="dark"] .text-gray-500 { color: var(--color-muted-foreground) !important; }
     body[data-demo-theme="dark"] .grid-dots { --grid-dot: #404040; }
+    /* The demo pins its footer to the bottom of the viewport, so the page
+       needs room for it. */
+    body { padding-bottom: var(--demo-footer-h, 0px); }
     /* The demo has a sticky top bar that Pines components know nothing
        about. Keep their top-positioned overlays (banner, toast) below it. */
     body [data-demo-overlay="top"] {
@@ -1827,7 +1831,7 @@
   </section>
 
   <!-- ============================== FOOTER (Ft4) ============================== -->
-  <footer class="border-t border-neutral-200 bg-white">
+  <footer id="demo-footer" class="fixed inset-x-0 bottom-0 z-30 border-t border-neutral-200 bg-white/90 backdrop-blur">
     <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-6 text-xs text-neutral-500 sm:flex-row sm:px-6">
       <p>ElementaryPines &middot; MIT License &copy; 2026</p>
       <div class="flex items-center gap-4">
@@ -1920,6 +1924,7 @@
              installComponentControls();
              this.setAccent();
              this.syncHeaderHeight();
+             this.syncFooterHeight();
            });
         },
         syncMeasuredComponents() {
@@ -1941,6 +1946,16 @@
           apply();
           window.addEventListener('resize', apply);
           if (typeof ResizeObserver !== 'undefined') { new ResizeObserver(apply).observe(header); }
+        },
+        syncFooterHeight() {
+          const footer = document.getElementById('demo-footer');
+          if (!footer) { return; }
+          const apply = () => {
+            document.documentElement.style.setProperty('--demo-footer-h', footer.offsetHeight + 'px');
+          };
+          apply();
+          window.addEventListener('resize', apply);
+          if (typeof ResizeObserver !== 'undefined') { new ResizeObserver(apply).observe(footer); }
         },
         setAccent() {
            document.querySelectorAll('[x-data]').forEach(scope => {
