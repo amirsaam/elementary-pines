@@ -13,6 +13,7 @@ public func pinesTooltip(
         "{ tooltipVisible: false, tooltipText: \(pinesJavaScriptStringLiteral(text)), tooltipArrow: \(arrow), tooltipPosition: '\(position.rawValue)' }"
     let html = div(
         .position(.relative),
+        .display(.inlineBlock),
         .x.data(xData),
         .x.setup(
             "$refs.content.addEventListener('mouseenter', () => { tooltipVisible = true; }); $refs.content.addEventListener('mouseleave', () => { tooltipVisible = false; });"
@@ -24,6 +25,7 @@ public func pinesTooltip(
             .x.bindClass(PinesTooltipState.positionBinding()),
             .position(.absolute),
             .width(.auto),
+            .zIndex(.number(50)),
             .fontSize(.sm),
             .x.cloak
         ) {
@@ -33,9 +35,9 @@ public func pinesTooltip(
                 .position(.relative),
                 .paddingX(.size(2)),
                 .paddingY(.size(1)),
-                .textColor(.white),
+                .class(PinesTheme.primaryForeground),
                 .borderRadius(.sm),
-                .backgroundColor(.black, opacity: 90)
+                .class(PinesTheme.primary)
             ) {
                 p(.x.text("tooltipText"), .display(.block), .flexShrink(.shrink0), .fontSize(.xs), .whitespace(.nowrap)) {}
                 if arrow {
@@ -53,7 +55,7 @@ public func pinesTooltip(
                             .x.bindClass(PinesTooltipState.arrowSquareBinding()),
                             .width(.size(1.5)),
                             .height(.size(1.5)),
-                            .backgroundColor(.black, opacity: 90),
+                            .class(PinesTheme.primary),
                         ) {}
                     }
                 }

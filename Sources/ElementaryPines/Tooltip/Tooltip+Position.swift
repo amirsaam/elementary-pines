@@ -1,5 +1,3 @@
-import Foundation
-
 /// The placement of a Pines tooltip relative to its trigger.
 public enum PinesTooltipPosition: String, Sendable {
     /// Places the tooltip above the trigger.
