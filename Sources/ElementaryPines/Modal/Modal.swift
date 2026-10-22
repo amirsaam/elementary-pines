@@ -9,7 +9,8 @@ import ElementaryTailwind
 ///
 /// The trigger and panel use the theme surfaces (`bg-background`,
 /// `hover:bg-muted`, `ring-ring`). `color:` tints the trigger's text, hover
-/// wash, and focus ring (default `.neutral` keeps the theme tokens).
+/// wash, and focus ring. When omitted, `color` follows the accent emitted by
+/// `setupPines()`.
 ///
 /// Requires `setupAlpine(plugins: [.focus])` for the `x-trap` focus trap.
 ///
@@ -39,7 +40,7 @@ import ElementaryTailwind
 /// }
 /// ```
 public func pinesModal(
-    color: PinesColor = .neutral,
+    color: PinesColor? = nil,
     attributes: [HTMLAttribute<HTMLTag.div>] = [],
     @ContentBuilder trigger: () -> some HTML,
     @ContentBuilder content: () -> some HTML
