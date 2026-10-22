@@ -35,14 +35,14 @@ import ElementaryTailwind
 ///   - size: The panel width — `.default`, `.half`, or `.full`. Defaults to `.default`.
 ///   - title: The panel title shown in the header. An empty string hides the header.
 ///   - color: The accent tint for the trigger (label text, hover wash, focus ring).
-///     Defaults to `.neutral`, which keeps the theme surfaces.
+///     When omitted, uses the accent emitted by `setupPines()`.
 ///   - attributes: Extra attributes merged onto the root element.
 ///   - trigger: The button label content.
 ///   - content: The slide-over body content.
 public func pinesSlideOver(
     size: PinesSlideOverSize = .default,
     title: String = "",
-    color: PinesColor = .neutral,
+    color: PinesColor? = nil,
     attributes: [HTMLAttribute<HTMLTag.div>] = [],
     @ContentBuilder trigger: () -> some HTML,
     @ContentBuilder content: () -> some HTML
@@ -55,7 +55,7 @@ public func pinesSlideOver(
         )
     let slideIn = twValue(.translate(.x("0")))
     let slideOut = twValue(.translate(.x("full")))
-    let panelAttrs: [HTMLAttribute<HTMLTag.div>] = [
+    var panelAttrs: [HTMLAttribute<HTMLTag.div>] = [
         .x.show("slideOverOpen"),
         .x.on("click", "slideOverOpen=false", modifiers: [.outside]),
         .x.transitionEnter(enterLeave),
@@ -64,9 +64,11 @@ public func pinesSlideOver(
         .x.transitionLeave(enterLeave),
         .x.transitionLeaveStart(slideIn),
         .x.transitionLeaveEnd(slideOut),
-        .width(.screen),
-        .maxWidth(size.maxWidth),
+        .width(size.width),
     ]
+    if let maxWidth = size.maxWidth {
+        panelAttrs.append(.maxWidth(maxWidth))
+    }
     let panelInnerAttrs: [HTMLAttribute<HTMLTag.div>] = [
         .display(.flex),
         .overflowY(.scroll),
@@ -74,7 +76,7 @@ public func pinesSlideOver(
         .paddingY(.size(5)),
         .height(.full),
         .class(PinesTheme.background),
-        .borderWidth(.l(1)),
+        .class("border-l"),
         .class(PinesTheme.utility(PinesTheme.border, opacity: 70)),
         .boxShadow(.lg),
         .position(.relative),
@@ -84,6 +86,7 @@ public func pinesSlideOver(
         .x.on("click", "slideOverOpen=false"),
         .display(.flex),
         .position(.absolute),
+        .insetTop(.zero),
         .insetRight(.zero),
         .zIndex(.number(30)),
         .justify(.center),

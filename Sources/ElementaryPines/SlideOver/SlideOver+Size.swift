@@ -3,20 +3,34 @@ import ElementaryTailwind
 /// The panel width of a slide-over.
 ///
 /// `.default` matches the Pines slide-over's `max-w-md`, `.half` is half the
-/// viewport width (`max-w-1/2`), and `.full` spans the viewport (`max-w-full`).
+/// viewport width, and `.full` uses ninety percent of the viewport.
+///
+/// The widths are viewport-relative rather than percentages: the panel sits
+/// inside a right-anchored, shrink-to-fit container, so a percentage
+/// `max-width` would resolve against an indefinite width, collapse to none
+/// and let the panel span the whole viewport from the leading edge.
 public enum PinesSlideOverSize: String, Sendable, Equatable, CaseIterable {
     /// `max-w-md` — the Pines default width.
     case `default`
-    /// `max-w-1/2` — half the viewport width.
+    /// Half the viewport width.
     case half
-    /// `max-w-full` — spans the viewport.
+    /// Ninety percent of the viewport width.
     case full
 
-    var maxWidth: TWTMaxWidth {
+    /// The width utility applied to the panel.
+    var width: TWTWidth {
+        switch self {
+        case .default: .screen
+        case .half: .arbitrary("50vw")
+        case .full: .arbitrary("90vw")
+        }
+    }
+
+    /// The `max-width` utility applied to the panel, when it has one.
+    var maxWidth: TWTMaxWidth? {
         switch self {
         case .default: .md
-        case .half: .fraction("1/2")
-        case .full: .full
+        case .half, .full: nil
         }
     }
 }
