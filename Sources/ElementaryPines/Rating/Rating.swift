@@ -27,7 +27,8 @@ import ElementaryTailwind
 ///
 /// - Parameters:
 ///   - icon: The icon shape for rating. Defaults to `.star`.
-///   - color: The accent color for filled icons. Defaults to yellow.
+///   - color: The accent color for filled icons. When omitted, the semantic
+///     theme accent emitted by `setupPines()` is used.
 ///   - emptyStyle: How unfilled icons are rendered. Defaults to `.outlined`.
 ///   - maxStars: The maximum number of icons. Defaults to 5.
 ///   - value: The initial rating value. Defaults to 0.
@@ -37,7 +38,7 @@ import ElementaryTailwind
 ///   - attributes: Extra HTML attributes merged into the root element.
 public func pinesRating(
     icon: PinesRatingIcon = .star,
-    color: PinesColor = .yellow,
+    color: PinesColor? = nil,
     emptyStyle: PinesRatingEmptyStyle = .outlined,
     maxStars: Int = 5,
     value: Int = 0,
@@ -63,25 +64,23 @@ public func pinesRating(
             .x.setup("this.stars = this.value"),
         ] + attributes
     ) {
-        ratedTextView(
-            compactReset: compactReset,
-            color: color,
-            suffix: classes.ratedSuffix
-        )
-
-        let listAttributes: [HTMLAttribute<HTMLTag.ul>] =
-            compactReset
-            ? [.display(.flex)]
-            : [.display(.flex), .items(.center)]
-        ul(attributes: listAttributes) {
-            ratingStars(
-                emptyPath: paths.empty,
-                filledPath: paths.filled,
-                emptyColor: classes.emptyColor,
-                emptyStyle: emptyStyle,
-                filledColor: classes.filledColor,
-                compactReset: compactReset
+        div(attributes: classes.wrapperAttributes) {
+            ratedTextView(
+                compactReset: compactReset,
+                color: color,
+                suffix: classes.ratedSuffix
             )
+
+            ul(attributes: [.display(.flex)]) {
+                ratingStars(
+                    emptyPath: paths.empty,
+                    filledPath: paths.filled,
+                    emptyColor: classes.emptyColor,
+                    emptyStyle: emptyStyle,
+                    filledColor: classes.filledColor,
+                    compactReset: compactReset
+                )
+            }
 
             if compactReset {
                 compactResetButton(color: color)
@@ -113,19 +112,21 @@ private func ratingXData(
     if (this.disabled) { return; } \
     this.stars = this.value; \
     }, \
+    showRated: false, \
     rate(star){ \
     if (this.disabled) { return; } \
     this.stars = star; \
     this.value = star; \
-    $refs.rated.classList.remove('opacity-0'); \
+    this.showRated = true; \
     setTimeout(function(){ \
-    $refs.rated.classList.add('opacity-0'); \
-    }, 2000); \
+    this.showRated = false; \
+    }.bind(this), 2000); \
     }, \
     reset(){ \
     if (this.disabled) { return; } \
     this.value = 0; \
     this.stars = 0; \
+    this.showRated = false; \
     } \
     }
     """
@@ -133,6 +134,7 @@ private func ratingXData(
 
 private struct RatingClasses {
     let containerAttributes: [HTMLAttribute<HTMLTag.div>]
+    let wrapperAttributes: [HTMLAttribute<HTMLTag.div>]
     let emptyColor: String
     let emptyStyle: PinesRatingEmptyStyle
     let filledColor: String
@@ -140,57 +142,69 @@ private struct RatingClasses {
 }
 
 private func ratingClasses(
-    color: PinesColor,
+    color: PinesColor?,
     emptyStyle: PinesRatingEmptyStyle,
     compactReset: Bool
 ) -> RatingClasses {
     let emptyColor: String = {
-        if compactReset {
-            return twValue(.textColor(color.shade(.strong)), .fillCurrent())
+        if color == nil || color == .neutral {
+            return emptyStyle == .outlined
+                ? PinesTheme.mutedForeground
+                : "\(PinesTheme.mutedForeground) fill-current"
         }
         switch emptyStyle {
         case .outlined: return twValue(.textColor(PinesColor.gray.shade(.dark)))
-        case .filled: return twValue(.textColor(PinesColor.gray.shade(.light)), .fillCurrent())
+        case .filled:
+            return twValue(.textColor(PinesColor.gray.shade(.light)), .fillCurrent())
+                + " " + twValue(.textColor(PinesColor.gray.shade(.base), variants: [.dark]))
         }
     }()
 
     let filledColor: String = {
+        if color == nil {
+            return "\(PinesTheme.primaryText) fill-current"
+        }
+        if color == .neutral {
+            return "\(PinesTheme.foreground) fill-current"
+        }
         if compactReset {
-            return twValue(.textColor(color.shade(.strong)), .fillCurrent())
+            return twValue(.textColor(color!.shade(.strong)), .fillCurrent())
         }
         guard color == .yellow else {
-            return twValue(.textColor(color.shade(.strong)), .fillCurrent())
+            return twValue(.textColor(color!.shade(.strong)), .fillCurrent())
         }
         return twValue(.textColor(PinesColor.yellow.shade(.accent)), .fillCurrent())
     }()
 
-    let containerAttributes: [HTMLAttribute<HTMLTag.div>] = {
-        var attrs: [HTMLAttribute<HTMLTag.div>] = [
+    let containerAttributes: [HTMLAttribute<HTMLTag.div>]
+    let wrapperAttributes: [HTMLAttribute<HTMLTag.div>]
+    if compactReset {
+        containerAttributes = []
+        wrapperAttributes = [
             .position(.relative),
             .display(.flex),
             .items(.center),
+            .width(.auto),
+            .marginX(.auto),
+            .justify(.center),
         ]
-        if compactReset {
-            attrs += [
-                .width(.auto),
-                .marginX(.auto),
-                .justify(.center),
-            ]
-        } else {
-            attrs += [
-                .flexDirection(.column),
-                .maxWidth(.sixxl),
-                .marginX(.auto),
-                .justify(.center),
-            ]
-        }
-        return attrs
-    }()
+    } else {
+        containerAttributes = [
+            .display(.flex),
+            .items(.center),
+            .flexDirection(.column),
+            .maxWidth(.sixxl),
+            .marginX(.auto),
+            .justify(.center),
+        ]
+        wrapperAttributes = [.position(.relative)]
+    }
 
     let ratedSuffix = compactReset ? "" : " Stars"
 
     return RatingClasses(
         containerAttributes: containerAttributes,
+        wrapperAttributes: wrapperAttributes,
         emptyColor: emptyColor,
         emptyStyle: emptyStyle,
         filledColor: filledColor,
@@ -200,16 +214,19 @@ private func ratingClasses(
 
 private func ratedTextView(
     compactReset: Bool,
-    color: PinesColor,
+    color: PinesColor?,
     suffix: String
 ) -> some HTML {
     let textTWColor: TWColor = {
+        if color == nil { return PinesColor.gray.shade(.dark) }
         if color == .yellow { return PinesColor.gray.shade(.dark) }
-        return compactReset ? color.shade(.base) : PinesColor.gray.shade(.accent)
+        return compactReset ? color!.shade(.base) : PinesColor.gray.shade(.dark)
     }()
 
+    let textClass =
+        color == .neutral ? PinesTheme.mutedForeground : twValue(.textColor(textTWColor))
     var attrs: [HTMLAttribute<HTMLTag.div>] = [
-        .x.ref("rated"),
+        .x.show("showRated"),
         .position(.absolute),
     ]
     if compactReset {
@@ -219,22 +236,29 @@ private func ratedTextView(
             .paddingLeft(.size(1)),
             .marginTop(.size(2), negative: true),
             .fontSize(.sm),
-            .textColor(textTWColor),
+            .class(textClass),
         ]
     } else {
         attrs += [
-            .marginTop(.size(6), negative: true),
+            .insetBottom(.full),
+            .marginBottom(.size(2)),
+            .insetLeft(.zero),
+            .width(.full),
+            .textAlign(.center),
+            .zIndex(.number(10)),
             .fontSize(.xs),
             .fontWeight(.medium),
-            .textColor(textTWColor),
+            .class(textClass),
         ]
     }
     attrs += [
-        .transitionDuration(.ms(300)),
-        .transitionTimingFunction(.easeOut),
-        .translate(.y("full"), negative: true),
-        .opacity(.value(0)),
+        .x.transition(modifiers: [.opacity])
     ]
+    if compactReset {
+        attrs += [
+            .translate(.y("full"), negative: true)
+        ]
+    }
 
     return div(attributes: attrs) {
         HTMLRaw("Rated ")
@@ -353,11 +377,6 @@ private func ratingStars(
                 xmlns,
                 viewBox
             ) {
-                SVG.rect(
-                    .width(256),
-                    .height(256),
-                    .fill(.none)
-                )
                 ratingEmptyPath(path: emptyPath, style: emptyStyle)
             }
             SVG.svg(
@@ -368,7 +387,6 @@ private func ratingStars(
                 xmlns,
                 viewBox
             ) {
-                SVG.rect(.width(256), .height(256), .fill(.none))
                 if compactReset {
                     SVG.path(
                         .d(filledPath),
@@ -391,10 +409,12 @@ private func ratingStars(
 }
 
 @ContentBuilder
-private func compactResetButton(color: PinesColor) -> some HTML {
-    let twColor: TWColor = color == .yellow ? PinesColor.yellow.shade(.strong) : color.shade(.strong)
-    let twBg: TWColor = color == .yellow ? PinesColor.yellow.shade(.tint2) : color.shade(.tint2)
-    let twHoverBg: TWColor = color == .yellow ? PinesColor.yellow.shade(.accent) : color.shade(.accent)
+private func compactResetButton(color: PinesColor?) -> some HTML {
+    let isSemantic = color == nil
+    let isNeutral = color == .neutral
+    let twColor: TWColor? = color.map { $0.shade(.strong) }
+    let twBg: TWColor? = color.map { $0.shade(.tint2) }
+    let twHoverBg: TWColor? = color.map { $0.shade(.accent) }
 
     button(
         .x.show("value"),
@@ -412,10 +432,15 @@ private func compactResetButton(color: PinesColor) -> some HTML {
         .fontSize(.xs),
         .borderRadius(.full),
         .transition(.colors),
-        .textColor(twColor),
-        .backgroundColor(twBg),
-        .backgroundColor(twHoverBg, variants: [.hover]),
-        .textColor(.white, variants: [.hover]),
+        isSemantic ? .class(PinesTheme.primaryText) : isNeutral ? .class(PinesTheme.foreground) : .textColor(twColor!),
+        isSemantic
+            ? .class(PinesTheme.utility(PinesTheme.primary, opacity: 10)) : isNeutral ? .class(PinesTheme.muted) : .backgroundColor(twBg!),
+        isSemantic
+            ? .class(PinesTheme.primary, variants: [.hover])
+            : isNeutral ? .class(PinesTheme.foreground, variants: [.hover]) : .backgroundColor(twHoverBg!, variants: [.hover]),
+        isSemantic
+            ? .class(PinesTheme.primaryForeground, variants: [.hover])
+            : isNeutral ? .class(PinesTheme.background, variants: [.hover]) : .textColor(.white, variants: [.hover]),
         .x.bindClass(
             pinesAlpineBindClass([
                 (twValue(.opacity(.value(50)), .cursor(.notAllowed)), "disabled")
@@ -464,11 +489,11 @@ private func fullResetButton() -> some HTML {
         .paddingY(.size(1)),
         .marginTop(.size(3)),
         .fontSize(.xs),
-        .textColor(PinesColor.gray.shade(.strong)),
-        .backgroundColor(PinesColor.gray.range(200)),
+        .class("text-background"),
+        .class("bg-foreground"),
         .borderRadius(.full),
-        .backgroundColor(.black, variants: [.hover]),
-        .textColor(.white, variants: [.hover]),
+        .class(PinesTheme.muted, variants: [.hover]),
+        .class(PinesTheme.foreground, variants: [.hover]),
         .x.bindClass(
             pinesAlpineBindClass([
                 (twValue(.opacity(.value(50)), .cursor(.notAllowed)), "disabled")
