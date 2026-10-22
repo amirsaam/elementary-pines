@@ -156,7 +156,7 @@ pinesBanner(
     href: "#"
 )
 
-// black banner fixed to the bottom
+// banner fixed to the bottom
 pinesBanner(
     label: "New Feature",
     message: "Click here to learn about our latest feature",
@@ -454,7 +454,7 @@ The package ships 28 component functions. Each wraps the matching Pines UI eleme
 | `pinesQuote(quote:author:role:avatar:)` | Quote text, author name, role, optional avatar image URL.                                     | `avatar:` omitted to render the quote without an avatar.  |
 | `pinesBreadcrumb(_:separator:homeIcon:)` | `separator:` `.chevron` (default), `.slash`, `.arrow`; `homeIcon:` `.icon(PinesIconKind)` (default `.home`), `.custom(path:)`, `.none` | See also `pinesBreadcrumbItems(for:in:root:)` for data-driven derivation. |
 | `pinesBreadcrumbItems(for:in:root:)` | —                                                                                         | Derives items from a flat `(path, label)` site map and a current path. |
-| `pinesBanner(label:message:href:icon:dismissible:position:)` | `PinesBannerPosition` `.top` (white) / `.bottom` (black). `icon:` defaults to `.wand`; pass `nil` to omit. | Alpine-driven fixed banner with show/hide transitions and a dismiss button. |
+| `pinesBanner(label:message:href:icon:dismissible:position:)` | `PinesBannerPosition` `.top` (default) / `.bottom` — the placement is purely positional, both render the theme surface. `icon:` defaults to `.wand`; pass `nil` to omit. | Alpine-driven fixed banner with show/hide transitions and a dismiss button. |
 | `pinesInput(type:color:placeholder:name:value:id:disabled:attributes:)` | `String` type (e.g. `"text"`, `"email"`, `"password"`); color overrides the 300/400 border + ring pair | Tailwind-only — users add `x-data`/`x-model` on the call site for dynamic behavior. |
 | `pinesTextarea(color:placeholder:name:id:rows:disabled:attributes:)` | `String?` placeholder; color overrides the 300/400 border + placeholder + ring pair | Tailwind-only — no built-in auto-resize; users add `x-data`/`x-model` on the call site. |
 | `pinesSelect(items:placeholder:width:)` | `[PinesSelectItem]` (Codable, Sendable, with `title`/`value`/`disabled`); typed `TWTWidth` | Alpine-driven — emits full `x-data` state, `x-init` (`$watch`), 5 `@keydown.*` handlers, `x-transition`, `x-cloak`, `x-for` template. Requires `setupAlpine()` in `<head>`. |
@@ -467,10 +467,10 @@ The package ships 28 component functions. Each wraps the matching Pines UI eleme
 | `pinesAccordion(items:)` | `[PinesAccordionItem]` (`Sendable`, `Equatable`, with `title`/`body` strings) | Alpine-driven — the `activeAccordion` state toggles each item open/closed. The collapse animation uses `x-collapse`, so it requires `setupAlpine(plugins: [.collapse])` in `<head>`. |
 | `pinesDropdown(color:position:width:attributes:trigger:items:)` | `PinesDropdownPosition`: `.belowCenter` (default), `.belowStart`, `.belowEnd`, `.aboveStart`, `.aboveCenter`, `.aboveEnd`; `PinesDropdownItem` (`Sendable`, `title`/`icon`/`shortcut`/`disabled`/`href`/`action`/`closeOnSelect`/`danger`) + `pinesDropdownSeparator()`; `color` tints trigger/panel text and item hover | Alpine-driven — styled trigger button toggles a panel anchored by `position` that closes on outside click; arrow-key navigation; items render as `<a>` (with `href`) or `<div>`, disabled items use `data-disabled`, `danger` items override the color with red. Requires `setupAlpine()` in `<head>`. |
 | `pinesPopover(color:position:arrow:width:attributes:trigger:content:)` | `PinesPopoverPosition`: `.bottom` (default), `.top`; `arrow:` defaults to `true`; `color` tints trigger text/hover, focus ring, and panel text; typed `TWTWidth` | Alpine-driven — trigger button toggles an anchored panel with arbitrary content; panel auto-flips top/bottom to fit the viewport; click-outside and Escape close; focus is trapped via `x-trap`, so it requires `setupAlpine(plugins: [.focus])` in `<head>`. |
-| `pinesMenuBar(color:attributes:menus:)` | `color` default `.neutral`; `PinesMenuBarMenu` (`title` + `items`); `PinesMenuBarItem` (`title`/`shortcut`/`disabled`/`action`); `PinesMenuBarContent` (`.item`/`.separator`) | Alpine-driven — a bar of menu buttons; clicking opens a menu, hovering switches menus while open, clicking away closes, selecting an item runs its `action` and closes. Surfaces follow the theme; `color` tints the menu-button/item hover washes (`.neutral` keeps the theme `bg-muted`). |
-| `pinesModal(color:attributes:trigger:content:)` | `color` default `.neutral` (tints trigger text/hover/focus ring) | Alpine-driven — a trigger button opens a centered dialog teleported to `<body>` with backdrop and built-in close button; Escape, backdrop, or close dismisses; focus is trapped and scroll locked via `x-trap.inert.noscroll`, so it requires `setupAlpine(plugins: [.focus])` in `<head>`. |
-| `pinesSlideOver(size:title:color:attributes:trigger:content:)` | `size` `.default` (Pines `max-w-md`) / `.half` (`max-w-1/2`, half the viewport) / `.full` (`max-w-full`); `title` empty hides the header; `color` default `.neutral` (tints trigger) | Alpine-driven — a right-side drawer teleported to `<body>` that slides in (`translate-x-full` → `translate-x-0`); backdrop, Escape, `click.away`, or the labeled Close button dismisses; titled header with built-in Close button when `title` is non-empty. No focus plugin required. |
-| `pinesCommand(color:items:placeholder:attributes:)` | `color` default `.neutral` (tints the active-row highlight; `.neutral` keeps the theme `bg-muted`); `PinesCommandItem` (`title`/`value`/`icon`/`shortcut`/`category`/`isDefault`/`disabled`/`action`) | Alpine-driven — a Spotlight-style palette panel: live `title` filtering, arrow-key navigation with auto-scroll, Enter selects the active row and runs its `action`, categorized headings, disabled rows are skipped. Place it inside your own overlay/modal. |
+| `pinesMenuBar(color:attributes:menus:)` | `color` optional; `PinesMenuBarMenu` (`title` + `items`); `PinesMenuBarItem` (`title`/`shortcut`/`disabled`/`action`); `PinesMenuBarContent` (`.item`/`.separator`) | Alpine-driven — a bar of menu buttons; clicking opens a menu, hovering switches menus while open, clicking away closes, selecting an item runs its `action` and closes. Surfaces follow the theme; omitted `color` uses the `setupPines()` accent for menu-button/item hover washes. |
+| `pinesModal(color:attributes:trigger:content:)` | `color` optional; omitted `color` tints the trigger with the `setupPines()` accent | Alpine-driven — a trigger button opens a centered dialog teleported to `<body>` with backdrop and built-in close button; Escape, backdrop, or close dismisses; focus is trapped and scroll locked via `x-trap.inert.noscroll`, so it requires `setupAlpine(plugins: [.focus])` in `<head>`. |
+| `pinesSlideOver(size:title:color:attributes:trigger:content:)` | `size` `.default` (Pines `max-w-md`) / `.half` (`max-w-1/2`, half the viewport) / `.full` (`max-w-full`); `title` empty hides the header; `color` optional and omitted `color` tints the trigger with the `setupPines()` accent | Alpine-driven — a right-side drawer teleported to `<body>` that slides in (`translate-x-full` → `translate-x-0`); backdrop, Escape, `click.away`, or the labeled Close button dismisses; titled header with built-in Close button when `title` is non-empty. No focus plugin required. |
+| `pinesCommand(color:items:placeholder:attributes:)` | `color` optional; omitted `color` uses the `setupPines()` accent for the active-row highlight; `PinesCommandItem` (`title`/`value`/`icon`/`shortcut`/`category`/`isDefault`/`disabled`/`action`) | Alpine-driven — a Spotlight-style palette panel: live `title` filtering, arrow-key navigation with auto-scroll, Enter selects the active row and runs its `action`, categorized headings, disabled rows are skipped. Place it inside your own overlay/modal. |
 | `pinesTabs(tabs:)` | `[PinesTab]` with `title` + `@ContentBuilder` content closure | Alpine-driven — animated sliding marker, `$id`-scoped ids, `x-show` content panels. Requires `setupAlpine()` in `<head>`. |
 | `pinesToast(name:)` | `name:` scopes the stack to a container (optional) | Alpine-driven — teleported toast stack (`x-teleport` to `body`; core Alpine, no plugin). Listens for `toast-show` window events; dispatch with `toast('message', { type:, position:, description: })` from your own Alpine code. An unnamed stack shows every toast dispatched without a `container`; a named stack only shows toasts dispatched with `{ container: <name> }` — so multiple stacks can coexist on one page. Types: `default`, `success`, `info`, `warning`, `danger`; positions: `top-left`, `top-center`, `top-right`, `bottom-right`, `bottom-center`, `bottom-left`. Requires `setupAlpine()` in `<head>`. |
 | `pinesTooltip(text:position:arrow:content:)` | `PinesTooltipPosition`: `.top` (default), `.left`, `.bottom`, `.right`; `arrow:` defaults to `true` | Alpine-driven — the `@ContentBuilder` content is the hover trigger; the tooltip shows on mouseenter/mouseleave. Requires `setupAlpine()` in `<head>`. |
@@ -533,7 +533,7 @@ setupPines(accent: .neutral, bgLight: .white, bgDark: .neutral.shade(950))
 - `bgLight:`/`bgDark:` set `--color-background` in light/dark mode, default white / near-black (`neutral-950`).
 - `foreground`, `border`, `muted`, `muted-foreground` derive from neutral pairs.
 
-The emitted variables chain to Tailwind v4's own palette (`var(--color-neutral-400)`, …), so overriding your Tailwind palette re-themes the components automatically, and the unlayered `<style>` wins over Tailwind's `@layer theme` defaults:
+The emitted variables reference the supported `PinesColor` palettes, and the unlayered `<style>` wins over Tailwind's `@layer theme` defaults:
 
 ```css
 :root {
@@ -557,7 +557,7 @@ The emitted variables chain to Tailwind v4's own palette (`var(--color-neutral-4
 }
 ```
 
-`bgLight`/`bgDark` accept any `TWColor` — `.white`, `.black`, `.neutral.shade(100)`, or `.arbitrary("#fafafa")`. The default dark surface is near-black (`neutral-950`) rather than pure black — softer on the eyes and leaves room for elevated surfaces; pass `bgDark: .black` for true OLED black. The accent still applies per-component via each component's `color:` parameter; the theme accent sets the global ring/primary tokens.
+`bgLight`/`bgDark` accept white, black, or shades from the supported `PinesColor` palettes, such as `.white`, `.black`, and `.neutral.shade(100)`. The default dark surface is near-black (`neutral-950`) rather than pure black — softer on the eyes and leaves room for elevated surfaces; pass `bgDark: .black` for true OLED black. The accent still applies per-component via each component's `color:` parameter; the theme accent sets the global ring/primary tokens.
 
 Plugin requirements: `pinesAccordion` animates with `x-collapse`, so load the Collapse plugin — `setupAlpine(plugins: [.collapse])`. `pinesToast` teleports with `x-teleport`, which ships in Alpine core and needs no plugin.
 
@@ -574,7 +574,7 @@ The `PinesColor` enum's 11 cases map to Tailwind's default color palette. Each c
 | 700 / 800 (gray)    | `gray`                                            |
 | 950 / 900 (neutral) | `neutral`                                         |
 
-`.pinesButtonStyle(.solid, color: .neutral)` renders `bg-neutral-950` (the neutral dark end of the palette). `.pinesBadgeStyle(.solid, color: .neutral)` and `.icon, color: .neutral` render `bg-black` (per the original Pines badge source).
+`.pinesButtonStyle(.solid, color: .neutral)` explicitly renders `bg-neutral-950` (the neutral dark end of the palette). Omitting `color` uses the semantic accent from `setupPines()`. `.pinesBadgeStyle(.solid, color: .neutral)` and `.icon, color: .neutral` likewise explicitly select the neutral palette.
 
 ## Documentation
 
