@@ -46,12 +46,18 @@ public func pinesBreadcrumbItems(
         ? String(withLeading.dropLast())
         : withLeading
 
+    // The site map's root entry (path "/") is an ancestor of every other path.
+    let siteMapRoot = siteMap.first(where: { $0.path == "/" })
+
     // Find every entry whose path equals `normalized` or is a strict prefix
     // of it. Sorted shortest-first so the trail reads root → leaf.
     let matching =
         siteMap
         .filter { entry in
-            normalized == entry.path
+            if entry.path == "/" {
+                return normalized != "/"
+            }
+            return normalized == entry.path
                 || normalized.hasPrefix(entry.path + "/")
         }
         .sorted { $0.path.count < $1.path.count }
@@ -61,23 +67,24 @@ public func pinesBreadcrumbItems(
     // and a label is derived from the last URL segment below.
     let currentEntry = matching.last(where: { $0.path == normalized })
 
-    // All other matching entries are ancestors (the first one is the root).
-    let ancestors = matching.filter { $0.path != currentEntry?.path }
+    // The site map's "/" entry is the root when present; otherwise the
+    // caller-supplied `root` entry is used.
+    let rootItem = siteMapRoot ?? root
+
+    // All other matching entries are ancestors (the root is handled separately).
+    let ancestors = matching.filter { $0.path != currentEntry?.path && $0.path != rootItem.path }
 
     // If the current page is the root, the trail is just the root as
     // `.current`. Otherwise build root + ancestors + current.
     var items: [PinesBreadcrumbItem] = []
-    if normalized == root.path {
-        items.append(.current(root.label))
+    if normalized == rootItem.path {
+        items.append(.current(rootItem.label))
         return items
     }
 
-    let rootItem =
-        ancestors.first(where: { $0.path == root.path })
-        ?? root
     items.append(.link(rootItem.label, href: rootItem.path))
 
-    for ancestor in ancestors where ancestor.path != rootItem.path {
+    for ancestor in ancestors {
         items.append(.link(ancestor.label, href: ancestor.path))
     }
 

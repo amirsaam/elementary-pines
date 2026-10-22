@@ -18,6 +18,11 @@ public struct PinesSiteMapEntry: Sendable {
     /// The display label for this entry (e.g. `"Getting Started"`).
     public let label: String
 
+    /// Creates a site map entry.
+    ///
+    /// - Parameters:
+    ///   - path: The URL path this entry represents.
+    ///   - label: The display label for this entry.
     public init(path: String, label: String) {
         self.path = path
         self.label = label

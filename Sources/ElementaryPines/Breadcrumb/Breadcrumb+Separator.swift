@@ -1,5 +1,3 @@
-import Elementary
-
 /// Separator style for `pinesBreadcrumb(_:separator:homeIcon:)`.
 public enum PinesBreadcrumbSeparator: Sendable {
     /// Right chevron (`pinesIcon(.chevronRight)`).

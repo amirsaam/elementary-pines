@@ -153,6 +153,46 @@ final class BreadcrumbTests: XCTestCase {
         }
     }
 
+    func testBreadcrumbItemsUsesSiteMapRootEntry() {
+        // A "/" entry in the site map becomes the root, overriding the
+        // `root:` fallback label.
+        let customRootMap: [PinesSiteMapEntry] = [
+            .init(path: "/", label: "Dashboard"),
+            .init(path: "/docs", label: "Docs"),
+        ]
+        let items = pinesBreadcrumbItems(for: "/docs", in: customRootMap)
+        XCTAssertEqual(items.map(text(of:)), ["Dashboard", "Docs"])
+        guard case .link("Dashboard", let rootHref) = items[0] else {
+            return XCTFail("expected root .link, got \(items[0])")
+        }
+        XCTAssertEqual(rootHref, "/")
+    }
+
+    func testBreadcrumbItemsAtRootUsesSiteMapRootEntry() {
+        let customRootMap: [PinesSiteMapEntry] = [
+            .init(path: "/", label: "Dashboard"),
+            .init(path: "/docs", label: "Docs"),
+        ]
+        let items = pinesBreadcrumbItems(for: "/", in: customRootMap)
+        XCTAssertEqual(items.count, 1)
+        guard case .current("Dashboard") = items[0] else {
+            return XCTFail("expected .current(\"Dashboard\"), got \(items[0])")
+        }
+    }
+
+    func testBreadcrumbItemsFallsBackToRootWhenSiteMapHasNoRootEntry() {
+        // Without a "/" entry the `root:` parameter supplies the root.
+        let noRootMap: [PinesSiteMapEntry] = [
+            .init(path: "/docs", label: "Docs")
+        ]
+        let items = pinesBreadcrumbItems(
+            for: "/docs",
+            in: noRootMap,
+            root: .init(path: "/", label: "Start")
+        )
+        XCTAssertEqual(items.map(text(of:)), ["Start", "Docs"])
+    }
+
     /// Extracts `.text` from an item regardless of `.link` vs `.current`.
     private func text(of item: PinesBreadcrumbItem) -> String {
         switch item {

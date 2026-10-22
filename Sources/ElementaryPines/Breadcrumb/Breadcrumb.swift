@@ -160,7 +160,9 @@ private func breadcrumbHomeContent(
     case .icon(.home):
         return HTMLRaw(breadcrumbFilledHomeIcon().render())
     case .icon(let kind):
-        let icon = pinesIcon(kind, size: .xs, attributes: [.width(.size(3.5)), .height(.size(3.5))])
+        // 3.5 isn't a `PinesIconSize` preset, so the dimensions come from
+        // explicit width/height attributes instead.
+        let icon = pinesIcon(kind, attributes: [.width(.size(3.5)), .height(.size(3.5))])
         return HTMLRaw(icon.render())
     case .custom(let path):
         return HTMLRaw(img(.src(path), .width(.size(3.5)), .height(.size(3.5))).render())
