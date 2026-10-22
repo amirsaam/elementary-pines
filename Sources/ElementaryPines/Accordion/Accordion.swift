@@ -13,9 +13,9 @@ public func pinesAccordion(items: [PinesAccordionItem]) -> some HTML {
         .fontWeight(.normal),
         .class(PinesTheme.background),
         .borderWidth(.bare),
-        .borderColor(PinesColor.gray.shade(.subtle)),
+        .class(PinesTheme.border),
         .divideY(.bare),
-        .divideColor(PinesColor.gray.shade(.subtle)),
+        .class("divide-border"),
         .borderRadius(.md),
         .x.data(PinesAccordionState.xData)
     ) {

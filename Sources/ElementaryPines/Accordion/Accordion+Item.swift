@@ -1,5 +1,3 @@
-import Foundation
-
 /// A title and body pair rendered by `pinesAccordion`.
 public struct PinesAccordionItem: Sendable, Equatable {
     /// The visible accordion heading.
