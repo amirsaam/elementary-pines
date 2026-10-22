@@ -10,8 +10,8 @@ public extension HTMLElement where Tag == HTMLTag.button {
     ///
     /// - Parameters:
     ///   - style: The layout style — `.solid`, `.tonal`, or `.outline`.
-    ///   - color: The Tailwind color palette. Defaults to `.neutral` (the Pines
-    ///     default, matching the `button.html` source).
+    ///   - color: The Tailwind color palette. When omitted, the semantic theme
+    ///     accent emitted by `setupPines()` is used.
     ///
     /// **Generated HTML:**
     /// ```html
@@ -21,10 +21,10 @@ public extension HTMLElement where Tag == HTMLTag.button {
     /// **Example:**
     /// ```swift
     /// button { "Save" }.pinesButtonStyle(.solid, color: .blue)
-    /// button { "Cancel" }.pinesButtonStyle(.tonal, color: .neutral)
+    /// button { "Cancel" }.pinesButtonStyle(.tonal)
     /// button { "Delete" }.pinesButtonStyle(.outline, color: .red)
     /// ```
-    func pinesButtonStyle(_ style: PinesButtonStyle, color: PinesColor = .neutral) -> Self {
+    func pinesButtonStyle(_ style: PinesButtonStyle, color: PinesColor? = nil) -> Self {
         self.attributes(contentsOf: style.attributes(color))
     }
 }
