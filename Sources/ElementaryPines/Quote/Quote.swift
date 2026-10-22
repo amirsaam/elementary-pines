@@ -5,19 +5,19 @@ import ElementaryTailwind
 /// the quote text, and a footer with the author's avatar, name, and role.
 ///
 /// The structure is a relative `<blockquote>` containing an
-/// absolutely positioned gray-100 quote-mark SVG, the italic quote text in a
+/// absolutely positioned muted quote-mark SVG, the italic quote text in a
 /// `relative z-10` wrapper, and a `<footer>` with a 10×10 rounded-full avatar
 /// next to the author name (semibold) and role (muted, extra small).
 ///
 /// Pass `avatar:` to include the author's avatar image; when `nil`, the
-/// avatar column is omitted and the remaining markup is unchanged.
+/// avatar column and its spacing are omitted.
 ///
 /// **Generated HTML:**
 /// ```html
 /// <blockquote class="relative w-full max-w-2xl mx-auto">
-///     <svg class="w-16 h-16 text-gray-100 -translate-x-6 -translate-y-8 absolute top-0 left-0" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="…" fill="currentColor"/></svg>
+///     <svg class="w-16 h-16 text-muted-foreground/20 -translate-x-6 -translate-y-8 absolute top-0 left-0" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="…" fill="currentColor"/></svg>
 ///     <div class="relative z-10">
-///         <p class="text-gray-800 sm:text-xl"><em>Quote text</em></p>
+///         <p class="text-foreground sm:text-xl"><em>Quote text</em></p>
 ///     </div>
 ///     <footer class="mt-6">
 ///         <div class="flex items-center">
@@ -25,8 +25,8 @@ import ElementaryTailwind
 ///                 <img class="w-10 h-10 rounded-full" src="avatar.jpg" alt="Author Name">
 ///             </div>
 ///             <div class="ml-4">
-///                 <div class="text-base font-semibold text-gray-800">Author Name</div>
-///                 <div class="text-xs text-gray-500">Author Role</div>
+///                 <div class="text-base font-semibold text-foreground">Author Name</div>
+///                 <div class="text-xs text-muted-foreground">Author Role</div>
 ///             </div>
 ///         </div>
 ///     </footer>
@@ -64,7 +64,7 @@ public func pinesQuote(
         )
         div(.position(.relative), .zIndex(.number(10))) {
             p(
-                .textColor(PinesColor.gray.shade(.deep)),
+                .class(PinesTheme.foreground),
                 .fontSize(.xl, variants: [.sm])
             ) {
                 em { quote }
@@ -88,15 +88,15 @@ public func pinesQuote(
                         )
                     }
                 }
-                div(.marginLeft(.size(4))) {
+                div(attributes: avatar == nil ? [] : [.marginLeft(.size(4))]) {
                     div(
                         .fontSize(.base),
                         .fontWeight(.semibold),
-                        .textColor(PinesColor.gray.shade(.deep))
+                        .class(PinesTheme.foreground)
                     ) { author }
                     div(
                         .fontSize(.xs),
-                        .textColor(PinesColor.gray.shade(.base))
+                        .class(PinesTheme.mutedForeground)
                     ) { role }
                 }
             }
