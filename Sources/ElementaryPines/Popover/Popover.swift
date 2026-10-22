@@ -18,15 +18,15 @@ import ElementaryTailwind
 ///
 /// **Generated HTML:**
 /// ```html
-/// <div class="relative" x-data="{ popoverOpen: false, ... }" x-init="...">
+/// <div class="relative inline-block" x-data="{ popoverOpen: false, ... }" x-init="...">
 ///     <button type="button" x-ref="popoverButton" x-on:click="popoverOpen=!popoverOpen"
-///             class="flex items-center justify-center w-10 h-10 bg-white border rounded-full ...">
+///             class="flex items-center justify-center w-10 h-10 bg-background border rounded-full ...">
 ///         <!-- trigger content -->
 ///     </button>
 ///     <div x-ref="popover" x-show="popoverOpen" x-trap.inert="popoverOpen"
 ///          x-on:click.outside="popoverOpen=false" x-on:keydown.escape.window="popoverOpen=false"
 ///          class="absolute w-[300px] max-w-lg -translate-x-1/2 left-1/2" x-cloak>
-///         <div x-ref="popoverInner" class="w-full p-4 bg-white border rounded-md shadow-xs ...">
+///         <div x-ref="popoverInner" class="w-full p-4 bg-background border rounded-md shadow-xs ...">
 ///             <!-- arrow -->
 ///             <!-- panel content -->
 ///         </div>
@@ -44,7 +44,7 @@ import ElementaryTailwind
 /// }
 /// ```
 public func pinesPopover<Trigger: HTML>(
-    color: PinesColor = .neutral,
+    color: PinesColor? = nil,
     position: PinesPopoverPosition = .bottom,
     arrow: Bool = true,
     width: TWTWidth = .arbitrary("300px"),
@@ -55,12 +55,31 @@ public func pinesPopover<Trigger: HTML>(
     let rootAttributes: [HTMLAttribute<HTMLTag.div>] =
         [
             .position(.relative),
+            .display(.inlineBlock),
             .x.data(PinesPopoverState.xData(arrow: arrow, position: position.rawValue)),
             .x.setup(PinesPopoverState.rootInit),
             .x.on("resize", "popoverPositionCalculate()", modifiers: [.window]),
         ] + attributes
 
     let html = div(attributes: rootAttributes) {
+        let background: HTMLAttribute<HTMLTag.button> =
+            color == nil
+            ? .class(PinesTheme.primary)
+            : color == .neutral
+                ? .class(PinesTheme.background)
+                : .backgroundColor(color!.shade(.tint1))
+        let foreground: HTMLAttribute<HTMLTag.button> =
+            color == nil
+            ? .class(PinesTheme.primaryForeground)
+            : color == .neutral
+                ? .class(PinesTheme.foreground)
+                : .textColor(color!.shade(.deep))
+        let hover: HTMLAttribute<HTMLTag.button> =
+            color == nil
+            ? .class(PinesTheme.utility(PinesTheme.primary, opacity: 90), variants: [.hover])
+            : color == .neutral
+                ? .class(PinesTheme.muted, variants: [.hover])
+                : .backgroundColor(color!.shade(.tint2), variants: [.hover])
         button(
             .x.ref("popoverButton"),
             .type(.button),
@@ -70,17 +89,25 @@ public func pinesPopover<Trigger: HTML>(
             .justify(.center),
             .width(.size(10)),
             .height(.size(10)),
-            .class(PinesTheme.background),
+            background,
             .borderWidth(.bare),
             .borderRadius(.full),
             .boxShadow(.xs),
             .cursor(.pointer),
-            .textColor(color.shade(.bold)),
-            .backgroundColor(color.shade(.tint2), variants: [.hover]),
+            foreground,
+            hover,
             .ringWidth(.size(2), variants: [.focusVisible]),
-            .ringColor(color.shade(.accent), variants: [.focusVisible]),
+            color == nil
+                ? .class(PinesTheme.ring, variants: [.focusVisible])
+                : color == .neutral
+                    ? .class(PinesTheme.ring, variants: [.focusVisible])
+                    : .ringColor(color!.shade(.accent), variants: [.focusVisible]),
             .outlineStyle(.hidden, variants: [.focusVisible]),
-            .backgroundColor(.white, variants: [.active]),
+            color == nil
+                ? .class(PinesTheme.primary, variants: [.active])
+                : color == .neutral
+                    ? .class(PinesTheme.background, variants: [.active])
+                    : .backgroundColor(color!.shade(.tint1), variants: [.active]),
             .class(PinesTheme.utility(PinesTheme.border, opacity: 70))
         ) {
             trigger()
@@ -100,6 +127,7 @@ public func pinesPopover<Trigger: HTML>(
                 .maxWidth(.lg),
                 .insetLeft(.fraction("1/2")),
                 .translate(.x("1/2"), negative: true),
+                .zIndex(.number(50)),
                 .x.cloak,
             ]
 
@@ -115,7 +143,7 @@ public func pinesPopover<Trigger: HTML>(
                 .borderWidth(.bare),
                 .boxShadow(.xs),
                 .class(PinesTheme.utility(PinesTheme.border, opacity: 70)),
-                .textColor(color.shade(.bold))
+                .class(PinesTheme.foreground)
             ) {
                 if arrow {
                     pinesPopoverArrow(.bottom)
@@ -158,7 +186,7 @@ private func pinesPopoverArrow(_ position: PinesPopoverPosition) -> some HTML {
                 .transformOrigin(.bottomLeft),
                 .rotate(.all(45)),
                 .class(PinesTheme.background),
-                .class("border-t border-l"),
+                .class("border-t border-l border-t-border border-l-border"),
                 .borderRadius(.xs)
             ) {}
         }
@@ -181,7 +209,7 @@ private func pinesPopoverArrow(_ position: PinesPopoverPosition) -> some HTML {
                 .transformOrigin(.topLeft),
                 .rotate(.all(45), negative: true),
                 .class(PinesTheme.background),
-                .class("border-b border-l"),
+                .class("border-b border-l border-b-border border-l-border"),
                 .borderRadius(.xs)
             ) {}
         }

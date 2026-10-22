@@ -1,5 +1,3 @@
-import Foundation
-
 enum PinesPopoverState {
     /// Alpine state for `pinesPopover`, seeded with the `arrow` and `position`
     /// parameters. The panel auto-flips between top/bottom based on the
