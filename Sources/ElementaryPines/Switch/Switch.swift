@@ -14,7 +14,7 @@ import ElementaryTailwind
 ///     <button x-ref="switchButton" type="button" x-on:click="switchOn = !switchOn"
 ///             x-bind:class="{ 'bg-blue-600' : switchOn, 'bg-neutral-200' : !switchOn }"
 ///             class="relative inline-flex h-6 py-0.5 ml-4 focus:outline-hidden rounded-full w-10" x-cloak>
-///         <span class="w-5 h-5 duration-200 ease-in-out bg-white rounded-full shadow-md"
+///         <span class="w-5 h-5 duration-200 ease-in-out bg-white rounded-full shadow"
 ///               x-bind:class="{ 'translate-x-[18px]' : switchOn, 'translate-x-0.5' : !switchOn }"></span>
 ///     </button>
 ///     <label x-on:click="$refs.switchButton.click(); $refs.switchButton.focus()"
@@ -35,7 +35,8 @@ import ElementaryTailwind
 ///
 /// - Parameters:
 ///   - labelText: The text displayed next to the switch.
-///   - color: The accent color of the switch when on. Defaults to blue.
+///   - color: The accent color of the switch when on. When omitted, uses the
+///     accent emitted by `setupPines()`.
 ///   - size: The size of the switch. Defaults to `.default`.
 ///   - name: The name of the checkbox input.
 ///   - id: The id of the checkbox input.
@@ -56,26 +57,35 @@ public func pinesSwitch(
 
     let knobTranslateOn: String
     let labelTextClasses: String
-    let resolvedColor = color ?? .blue
+    let resolvedColor = color ?? .neutral
+    let usesSemanticColor = color == nil || resolvedColor == .neutral
     switch size {
     case .default:
         knobTranslateOn = twValue(.translate(.x("[18px]")))
-        labelTextClasses = twValue(.textColor(resolvedColor.shade(.strong)))
+        labelTextClasses =
+            color == nil
+            ? PinesTheme.primaryText : usesSemanticColor ? PinesTheme.foreground : twValue(.textColor(resolvedColor.shade(.strong)))
     case .small:
         knobTranslateOn = twValue(.translate(.x("[10px]")))
-        labelTextClasses = twValue(.textColor(resolvedColor.shade(.dark)))
+        labelTextClasses =
+            color == nil
+            ? PinesTheme.primaryText : usesSemanticColor ? PinesTheme.foreground : twValue(.textColor(resolvedColor.shade(.dark)))
     }
 
     let isSmall = size == .small
 
     let buttonBgClass = pinesAlpineBindClass([
-        (twValue(.backgroundColor(resolvedColor.shade(.strong))), "switchOn"),
-        (twValue(.backgroundColor(PinesColor.neutral.shade(.subtle))), "!switchOn"),
+        (
+            color == nil
+                ? PinesTheme.primary : usesSemanticColor ? PinesTheme.foreground : twValue(.backgroundColor(resolvedColor.shade(.strong))),
+            "switchOn"
+        ),
+        (PinesTheme.muted, "!switchOn"),
     ])
 
     let labelColorClass = pinesAlpineBindClass([
         (labelTextClasses, "switchOn"),
-        (twValue(.textColor(PinesColor.gray.shade(.accent))), "!switchOn"),
+        (PinesTheme.mutedForeground, "!switchOn"),
     ])
 
     let knobPositionClass = pinesAlpineBindClass([
@@ -134,7 +144,7 @@ public func pinesSwitch(
                 .height(isSmall ? .size(3) : .size(5)),
                 .transitionDuration(.ms(200)),
                 .transitionTimingFunction(.easeInOut),
-                .backgroundColor(.white),
+                .class(PinesTheme.background),
                 .borderRadius(.full),
                 .boxShadow(.md),
                 .x.bindClass(knobPositionClass)
