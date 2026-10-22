@@ -91,7 +91,7 @@ private func pinesSpecialQuoteMarkIcon(
     let defaultClass = twValue(
         .width(.size(16)),
         .height(.size(16)),
-        .textColor(PinesColor.gray.shade(.tint2)),
+        .class("text-muted-foreground/20"),
         .translate(.x("6"), negative: true),
         .translate(.y("8"), negative: true)
     )

@@ -4,6 +4,7 @@
 public enum PinesIconKind: Sendable, CaseIterable {
     // Navigation
     case chevronDown
+    case chevronUpDown
     case chevronUp
     case chevronLeft
     case chevronRight
@@ -62,6 +63,7 @@ public enum PinesIconKind: Sendable, CaseIterable {
         switch self {
         // Navigation
         case .chevronDown: "m19.5 8.25-7.5 7.5-7.5-7.5"
+        case .chevronUpDown: "M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"
         case .chevronUp: "m4.5 15.75 7.5-7.5 7.5 7.5"
         case .chevronLeft: "M15.75 19.5L8.25 12l7.5-7.5"
         case .chevronRight: "m8.25 4.5 7.5 7.5-7.5 7.5"
