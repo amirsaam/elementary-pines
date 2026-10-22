@@ -11,7 +11,7 @@ import ElementaryTailwind
 ///
 /// **Generated HTML:**
 /// ```html
-/// <div class="rounded-lg overflow-hidden border border-neutral-200/60 bg-white text-neutral-700 shadow-xs">
+/// <div class="rounded-lg overflow-hidden border border-border/60 bg-background text-foreground shadow-xs">
 ///     <!-- user content -->
 /// </div>
 /// ```
@@ -60,7 +60,10 @@ public func pinesCard<Content: HTML>(
     let imageURL: String? = {
         switch variant {
         case .image, .horizontal:
-            guard let image else { fatalError("pinesCard(\(variant)) requires the image: parameter") }
+            guard let image else {
+                assertionFailure("pinesCard(\(variant)) requires the image: parameter")
+                return nil
+            }
             return image
         case .basic, .stat:
             return nil
