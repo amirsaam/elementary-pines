@@ -13,7 +13,7 @@
 /// Use `.auto` for the variant's default icon. Use `.none` to omit the
 /// icon entirely. Use `.custom(path:)` to render a user-provided SVG file
 /// (via `<img src="path" class="w-4 h-4">`).
-public enum PinesAlertIcon: Sendable {
+public enum PinesAlertIcon: Sendable, Equatable {
     /// Use the default icon for the variant
     /// (info→`.info`, success→`.check`, warning→`.warning`, danger→`.x`).
     case auto

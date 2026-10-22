@@ -9,7 +9,6 @@ let pinesAlertBaseAttributes: [HTMLAttribute<HTMLTag.div>] = [
     .borderWidth(.bare), .class(PinesTheme.background), .padding(.size(4)),
     .position(.absolute, variants: [.arbitrary("[&>svg]")]),
     .position(.absolute, variants: [.arbitrary("[&>img]")]),
-    .class(PinesTheme.foreground, variants: [.arbitrary("[&>svg]")]),
     .insetLeft(.size(4), variants: [.arbitrary("[&>svg]")]),
     .insetLeft(.size(4), variants: [.arbitrary("[&>img]")]),
     .insetTop(.size(4), variants: [.arbitrary("[&>svg]")]),
@@ -29,16 +28,16 @@ let pinesAlertBaseAttributes: [HTMLAttribute<HTMLTag.div>] = [
 /// `PinesAlertVariant` to apply a colored background, or layer `.class(...)`
 /// on the result for custom styling.
 ///
-/// The canonical styling matches `pines/elements/alert.html` — white
-/// background, neutral text, opacity-70 on the body for a subtle look.
+/// The canonical styling matches `pines/elements/alert.html` while using the
+/// package's semantic background and foreground theme tokens.
 ///
 /// **Generated HTML:**
 /// ```html
-/// <div class="relative w-full rounded-lg border bg-white p-4
-///            [&>svg]:absolute [&>img]:absolute [&>svg]:text-foreground
+/// <div class="relative w-full rounded-lg border border-border bg-background p-4
+///            [&>svg]:absolute [&>img]:absolute
 ///            [&>svg]:left-4 [&>img]:left-4 [&>svg]:top-4 [&>img]:top-4
 ///            [&>svg+div]:translate-y-[-3px] [&>img+div]:translate-y-[-3px]
-///            [&:has(svg),&:has(img)]:pl-11 text-neutral-900">
+///            [&:has(svg),&:has(img)]:pl-11 text-foreground">
 ///     <!-- user content -->
 /// </div>
 /// ```
@@ -47,14 +46,17 @@ let pinesAlertBaseAttributes: [HTMLAttribute<HTMLTag.div>] = [
 /// ```swift
 /// pinesAlert {
 ///     pinesIcon(.info)
-///     h5 { "Alert Title" }
+///     h5(.class("mb-1 font-medium leading-none tracking-tight")) { "Alert Title" }
 ///     div(.fontSize(.sm), .opacity(.value(70))) { "Body text" }
 /// }
 /// ```
 public func pinesAlert<Content: HTML>(
     @ContentBuilder content: () -> Content
 ) -> some HTML {
-    div(attributes: pinesAlertBaseAttributes) {
+    // The border color is explicit: a bare `border` resolves to
+    // `currentColor` in Tailwind v4, which would paint the border in the
+    // text color instead of the theme's border color.
+    div(attributes: pinesAlertBaseAttributes + [.class(PinesTheme.border)]) {
         content()
     }
 }
