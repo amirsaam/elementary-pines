@@ -1,19 +1,5 @@
-import Elementary
-import ElementaryAlpine
-import Foundation
-
-func pinesAlpineBindClass(
-    _ branches: [(className: String, condition: String)]
-) -> HTMLAttributeValue.Alpine.BindClass {
-    let value =
-        branches
-        .map { "'\($0.className)' : \($0.condition)" }
-        .joined(separator: ", ")
-    return .init(rawValue: "{ \(value) }")
-}
-
 func pinesJavaScriptStringLiteral(_ value: String) -> String {
-    let escaped =
+    let e =
         value
         .replacingOccurrences(of: "\\", with: "\\\\")
         .replacingOccurrences(of: "'", with: "\\'")
@@ -22,5 +8,5 @@ func pinesJavaScriptStringLiteral(_ value: String) -> String {
         .replacingOccurrences(of: "\t", with: "\\t")
         .replacingOccurrences(of: "\u{2028}", with: "\\u2028")
         .replacingOccurrences(of: "\u{2029}", with: "\\u2029")
-    return "'\(escaped)'"
+    return "'\(e)'"
 }
