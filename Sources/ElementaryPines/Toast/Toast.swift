@@ -50,15 +50,9 @@ private func pinesToastPositionBinding() -> HTMLAttributeValue.Alpine.BindClass 
 private func pinesToastIcon(_ type: String, _ path: String, fillRule: Bool = true) -> some HTML {
     SVG.svg(
         SVGAttribute(name: "x-show", value: "toast.type=='\(type)'"),
-        SVGAttribute(
-            name: "class",
-            value: twValue(
-                .width(.arbitrary("18px")),
-                .height(.arbitrary("18px")),
-                .marginRight(.size(1.5)),
-                .marginLeft(.size(1), negative: true)
-            )
-        ),
+        SVGAttribute(name: "width", value: "18"),
+        SVGAttribute(name: "height", value: "18"),
+        SVGAttribute(name: "class", value: twValue(.marginRight(.size(1.5)), .marginLeft(.size(1), negative: true))),
         SVGAttribute(name: "viewBox", value: "0 0 24 24"),
         SVGAttribute(name: "fill", value: "none"),
         SVGAttribute(name: "xmlns", value: "http://www.w3.org/2000/svg")
@@ -96,7 +90,7 @@ public func pinesToast(name: String? = nil) -> some HTML {
                 ),
                 .x.on(
                     "toast-show",
-                    "event.stopPropagation(); if(\(nameCondition)){ if(event.detail.position){ position = event.detail.position; } toasts.unshift({ id: 'toast-' + Math.random().toString(16).slice(2), show: false, message: event.detail.message, description: event.detail.description, type: event.detail.type, html: event.detail.html }); }",
+                    "event.stopPropagation(); if(\(nameCondition)){ if(event.detail.position){ position = event.detail.position; } toasts.unshift({ id: 'toast-' + Math.random().toString(16).slice(2), show: false, message: event.detail.message, description: event.detail.description, type: event.detail.type, html: event.detail.html }); setTimeout(function(){ stackToasts(); }, 10); }",
                     modifiers: [.window]
                 ),
                 .x.on("mouseenter", "toastsHovered=true;"),
@@ -140,7 +134,7 @@ public func pinesToast(name: String? = nil) -> some HTML {
                             .transitionTimingFunction(.easeOut),
                             .class(PinesTheme.background),
                             .borderWidth(.bare),
-                            .borderColor(PinesColor.gray.shade(.tint1)),
+                            .class(PinesTheme.utility(PinesTheme.border, opacity: 70)),
                             .boxShadow(.arbitrary("0_5px_15px_-3px_rgb(0_0_0_/_0.08)")),
                             .borderRadius(.md, variants: [.sm]),
                             .maxWidth(.xs, variants: [.sm]),
@@ -186,7 +180,7 @@ public func pinesToast(name: String? = nil) -> some HTML {
                                             .fontSize(.arbitrary("13px")),
                                             .fontWeight(.medium),
                                             .lineHeight(.none),
-                                            .textColor(PinesColor.gray.shade(.dark))
+                                            .class(PinesTheme.foreground)
                                         ) {}
                                     }
                                     p(
@@ -207,14 +201,14 @@ public func pinesToast(name: String? = nil) -> some HTML {
                                 .insetRight(.zero),
                                 .padding(.size(1.5)),
                                 .marginRight(.size(2.5)),
-                                .textColor(PinesColor.gray.shade(.accent)),
+                                .class(PinesTheme.mutedForeground),
                                 .transitionDuration(.ms(100)),
                                 .transitionTimingFunction(.easeInOut),
                                 .opacity(.value(0)),
                                 .cursor(.pointer),
                                 .borderRadius(.full),
-                                .backgroundColor(PinesColor.gray.shade(.tint1), variants: [.hover]),
-                                .textColor(PinesColor.gray.shade(.base), variants: [.hover]),
+                                .class(PinesTheme.muted, variants: [.hover]),
+                                .class(PinesTheme.foreground, variants: [.hover]),
                                 .x.bindClass(
                                     pinesAlpineBindClass([
                                         (

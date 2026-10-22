@@ -1,5 +1,3 @@
-import Foundation
-
 enum PinesToastState {
     static let xData = #"""
         { 
@@ -31,7 +29,6 @@ enum PinesToastState {
                             } else {
                                 burnToastElement.classList.add('-translate-y-full');
                             }
-                            burnToastElement.classList.add('-translate-y-full');
                         }
                         burnToastElement.classList.add('opacity-0');
                         let that = this;
@@ -60,87 +57,57 @@ enum PinesToastState {
                 },
                 positionToasts(){
                     if(this.toasts.length == 0) return;
-                    let topToast = document.getElementById( this.toasts[0].id );
-                    topToast.style.zIndex = 100;
-                    if(this.expanded){
-                        if(this.position.includes('bottom')){
-                            topToast.style.top = 'auto';
-                            topToast.style.bottom = '0px';
-                        } else {
-                            topToast.style.top = '0px';
-                        }
-                    }
-                    let bottomPositionOfFirstToast = this.getBottomPositionOfElement(topToast);
-                    if(this.toasts.length == 1) return;
-                    let middleToast = document.getElementById( this.toasts[1].id );
-                    middleToast.style.zIndex = 90;
-                    if(this.expanded){
-                        middleToastPosition = topToast.getBoundingClientRect().height + this.paddingBetweenToasts + 'px';
-                        if(this.position.includes('bottom')){
-                            middleToast.style.top = 'auto';
-                            middleToast.style.bottom = middleToastPosition;
-                        } else {
-                            middleToast.style.top = middleToastPosition;
-                        }
-                        middleToast.style.scale = '100%';
-                        middleToast.style.transform = 'translateY(0px)';
-                    } else {
-                        middleToast.style.scale = '94%';
-                        if(this.position.includes('bottom')){
-                            middleToast.style.transform = 'translateY(-16px)';
-                        } else {
-                            this.alignBottom(topToast, middleToast);
-                            middleToast.style.transform = 'translateY(16px)';
-                        }
-                    }
-                    if(this.toasts.length == 2) return;
-                    let bottomToast = document.getElementById( this.toasts[2].id );
-                    bottomToast.style.zIndex = 80;
-                    if(this.expanded){
-                        bottomToastPosition = topToast.getBoundingClientRect().height + this.paddingBetweenToasts + middleToast.getBoundingClientRect().height + this.paddingBetweenToasts + 'px';
-                        if(this.position.includes('bottom')){
-                            bottomToast.style.top = 'auto';
-                            bottomToast.style.bottom = bottomToastPosition;
-                        } else {
-                            bottomToast.style.top = bottomToastPosition;
-                        }
-                        bottomToast.style.scale = '100%';
-                        bottomToast.style.transform = 'translateY(0px)';
-                    } else {
-                        bottomToast.style.scale = '88%';
-                        if(this.position.includes('bottom')){
-                            bottomToast.style.transform = 'translateY(-32px)';
-                        } else {
-                            this.alignBottom(topToast, bottomToast);
-                            bottomToast.style.transform = 'translateY(32px)';
-                        }
-                    }
-                    if(this.toasts.length == 3) return;
-                    let burnToast = document.getElementById( this.toasts[3].id );
-                    burnToast.style.zIndex = 70;
-                    if(this.expanded){
-                        burnToastPosition = topToast.getBoundingClientRect().height + this.paddingBetweenToasts + middleToast.getBoundingClientRect().height + this.paddingBetweenToasts + bottomToast.getBoundingClientRect().height + this.paddingBetweenToasts + 'px';
-                        if(this.position.includes('bottom')){
-                            burnToast.style.top = 'auto';
-                            burnToast.style.bottom = burnToastPosition;
-                        } else {
-                            burnToast.style.top = burnToastPosition;
-                        }
-                        burnToast.style.scale = '100%';
-                        burnToast.style.transform = 'translateY(0px)';
-                    } else {
-                        burnToast.style.scale = '82%';
-                        this.alignBottom(topToast, burnToast);
-                        burnToast.style.transform = 'translateY(48px)';
-                    }
-                    burnToast.firstElementChild.classList.remove('opacity-100');
-                    burnToast.firstElementChild.classList.add('opacity-0');
                     let that = this;
-                    setTimeout(function(){ that.toasts.pop(); }, 300);
-                    if(this.position.includes('bottom')){
-                        middleToast.style.top = 'auto';
+                    let scales = ['100%', '94%', '88%', '82%', '76%'];
+                    let zIndices = [100, 90, 80, 70, 60];
+                    let offsets = [0, 16, 32, 48, 64];
+                    let isBottom = this.position.includes('bottom');
+                    for(let i = 0; i < this.toasts.length; i++){
+                        let el = document.getElementById(this.toasts[i].id);
+                        if(!el) continue;
+                        el.style.zIndex = zIndices[i] || 60;
+                        if(i >= 4){
+                            el.style.opacity = '0';
+                            let idx = i;
+                            setTimeout(function(){ that.toasts.splice(idx, 1); }, 300);
+                            continue;
+                        }
+                        if(this.expanded){
+                            let offset = 0;
+                            for(let j = 0; j < i; j++){
+                                let prevEl = document.getElementById(this.toasts[j].id);
+                                if(prevEl){
+                                    offset += prevEl.offsetHeight + this.paddingBetweenToasts;
+                                }
+                            }
+                            el.style.scale = '100%';
+                            el.style.transform = 'translateY(0px)';
+                            if(isBottom){
+                                el.style.top = 'auto';
+                                el.style.bottom = offset + 'px';
+                            } else {
+                                el.style.bottom = 'auto';
+                                el.style.top = offset + 'px';
+                            }
+                        } else {
+                            let scaleVal = scales[i] !== undefined ? scales[i] : '76%';
+                            let offsetVal = offsets[i] !== undefined ? offsets[i] : 64;
+                            el.style.scale = scaleVal;
+                            if(isBottom){
+                                el.style.top = 'auto';
+                                el.style.bottom = '0px';
+                                el.style.transform = 'translateY(-' + offsetVal + 'px)';
+                            } else {
+                                let topEl = document.getElementById(this.toasts[0].id);
+                                if(topEl){
+                                    topEl.style.top = '0px';
+                                    topEl.style.bottom = 'auto';
+                                    this.alignBottom(topEl, el);
+                                }
+                                el.style.transform = 'translateY(' + offsetVal + 'px)';
+                            }
+                        }
                     }
-                    return;
                 },
                 alignBottom(element1, element2) {
                     let top1 = element1.offsetTop;
