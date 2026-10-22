@@ -49,7 +49,7 @@ final class DropdownTests: XCTestCase {
             encoding: .utf8
         )
         HTMLAssertEqual(
-            pinesDropdown {
+            pinesDropdown(showChevron: false) {
                 pinesIcon(.settings, size: .sm)
                 span(.marginLeft(.size(2))) { "Options" }
                 pinesIcon(.chevronDown, size: .sm, attributes: [.marginLeft(.size(2))])

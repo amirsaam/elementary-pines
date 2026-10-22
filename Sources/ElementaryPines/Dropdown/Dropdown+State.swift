@@ -1,5 +1,3 @@
-import Elementary
-
 /// Alpine state and keyboard navigation for `pinesDropdown`.
 enum PinesDropdownState {
     static let xData =

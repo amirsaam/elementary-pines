@@ -1,5 +1,3 @@
-import Foundation
-
 /// An entry in a `pinesDropdown` menu: either an item or a separator.
 public enum PinesDropdownContent: Sendable {
     case item(PinesDropdownItem)

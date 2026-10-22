@@ -12,24 +12,15 @@ public enum PinesDropdownPosition: Sendable {
 
     /// Positional Tailwind attributes for the panel.
     var attributes: [HTMLAttribute<HTMLTag.div>] {
-        let above = self == .aboveStart || self == .aboveCenter || self == .aboveEnd
-        var attrs: [HTMLAttribute<HTMLTag.div>] = []
-        if above {
-            attrs.append(.insetBottom(.full))
-            attrs.append(.marginBottom(.size(12)))
-        } else {
-            attrs.append(.insetTop(.zero))
-            attrs.append(.marginTop(.size(12)))
-        }
-        switch self {
-        case .belowStart, .aboveStart:
-            attrs.append(.insetLeft(.zero))
-        case .belowCenter, .aboveCenter:
-            attrs.append(.insetLeft(.fraction("1/2")))
-            attrs.append(.translate(.x("1/2"), negative: true))
-        case .belowEnd, .aboveEnd:
-            attrs.append(.insetRight(.zero))
-        }
+        let isAbove = self == .aboveStart || self == .aboveCenter || self == .aboveEnd
+        var attrs = pinesOverlayVerticalAttributes(isAbove: isAbove)
+        let alignment: PinesOverlayHorizontalAlignment =
+            switch self {
+            case .belowStart, .aboveStart: .start
+            case .belowCenter, .aboveCenter: .center
+            case .belowEnd, .aboveEnd: .end
+            }
+        attrs += pinesOverlayHorizontalAttributes(for: alignment)
         return attrs
     }
 }

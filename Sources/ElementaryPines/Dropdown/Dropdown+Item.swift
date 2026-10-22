@@ -1,5 +1,3 @@
-import Foundation
-
 /// A single entry in a `pinesDropdown` menu.
 ///
 /// Renders a `<a>` when `href` is provided, otherwise a `<div>`. `icon` is a

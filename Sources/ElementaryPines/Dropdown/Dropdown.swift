@@ -4,27 +4,30 @@ import ElementaryTailwind
 
 /// Renders a Pines dropdown menu.
 ///
-/// A styled trigger `<button>` (which the user fills with avatar/name/chevron
-/// content) toggles a dropdown panel anchored by `position`. Clicking outside
+/// A styled trigger `<button>` (which the user fills with avatar/name content)
+/// toggles a dropdown panel anchored by `position`. The standard chevron is
+/// generated automatically; set `showChevron` to `false` for a custom trigger.
+/// Clicking outside
 /// closes it; the panel supports arrow-key navigation (Up/Down to move, Enter
 /// to activate, Escape to close). Menu contents are supplied via the
 /// `items:` closure — use ``pinesDropdownItem(_:)`` and
 /// ``pinesDropdownSeparator()`` and wrap them in an array.
 ///
 /// `color` tints the trigger text, the panel text, and the menu-item hover
-/// background. Defaults to `.neutral`, which reproduces the Pines palette.
+/// background. When omitted, uses the accent emitted by `setupPines()`;
+/// explicit colors retain their palette styling.
 /// ``PinesDropdownItem``s with `danger: true` override the color with red.
 ///
 /// **Generated HTML:**
 /// ```html
-/// <div class="relative" x-data="{ dropdownOpen: false, ... }">
+/// <div class="relative inline-block" x-data="{ dropdownOpen: false, ... }">
 ///     <button type="button" x-on:click="openDropdown()"
 ///             class="inline-flex justify-center items-center py-2 pr-12 pl-3 h-12 ...">
 ///         <!-- trigger content -->
 ///     </button>
 ///     <div x-show="dropdownOpen" x-on:click.outside="dropdownOpen=false"
 ///          class="absolute top-0 left-1/2 z-50 mt-12 w-56 -translate-x-1/2" x-cloak>
-///         <div class="p-1 mt-1 bg-white rounded-md border shadow-md border-neutral-200/70 text-neutral-700">
+///         <div class="p-1 mt-1 bg-background rounded-md border shadow border-border/70 text-foreground">
 ///             <!-- menu items -->
 ///         </div>
 ///     </div>
@@ -43,9 +46,10 @@ import ElementaryTailwind
 /// }
 /// ```
 public func pinesDropdown<Trigger: HTML>(
-    color: PinesColor = .neutral,
+    color: PinesColor? = nil,
     position: PinesDropdownPosition = .belowCenter,
     width: TWTWidth = .size(56),
+    showChevron: Bool = true,
     attributes: [HTMLAttribute<HTMLTag.div>] = [],
     @ContentBuilder trigger: () -> Trigger,
     items: () -> [PinesDropdownContent]
@@ -53,8 +57,39 @@ public func pinesDropdown<Trigger: HTML>(
     let rootAttributes: [HTMLAttribute<HTMLTag.div>] =
         [
             .position(.relative),
+            .display(.inlineBlock),
             .x.data(PinesDropdownState.xData),
         ] + attributes
+    let focusRing: HTMLAttribute<HTMLTag.button> =
+        color == nil
+        ? .class(PinesTheme.ring, variants: [.focus])
+        : color == .neutral
+            ? .class(PinesTheme.ring, variants: [.focus])
+            : .ringColor(color!.shade(.accent), variants: [.focus])
+    let background: HTMLAttribute<HTMLTag.button> =
+        color == nil
+        ? .class(PinesTheme.primary)
+        : color == .neutral
+            ? .class(PinesTheme.background)
+            : .backgroundColor(color!.shade(.tint1))
+    let foreground: HTMLAttribute<HTMLTag.button> =
+        color == nil
+        ? .class(PinesTheme.primaryForeground)
+        : color == .neutral
+            ? .class(PinesTheme.foreground)
+            : .textColor(color!.shade(.deep))
+    let hover: HTMLAttribute<HTMLTag.button> =
+        color == nil
+        ? .class(PinesTheme.utility(PinesTheme.primary, opacity: 90), variants: [.hover])
+        : color == .neutral
+            ? .class(PinesTheme.muted, variants: [.hover])
+            : .backgroundColor(color!.shade(.tint2), variants: [.hover])
+    let active: HTMLAttribute<HTMLTag.button> =
+        color == nil
+        ? .class(PinesTheme.primary, variants: [.active, .focus])
+        : color == .neutral
+            ? .class(PinesTheme.background, variants: [.active, .focus])
+            : .backgroundColor(color!.shade(.tint1), variants: [.active, .focus])
     let html = div(attributes: rootAttributes) {
         button(
             .x.ref("dropdownButton"),
@@ -71,16 +106,33 @@ public func pinesDropdown<Trigger: HTML>(
             .height(.size(12)),
             .fontSize(.sm),
             .fontWeight(.medium),
-            .class(PinesTheme.background),
+            background,
+            .class(PinesTheme.border),
             .borderRadius(.md),
             .borderWidth(.bare),
             .transition(.colors),
-            .textColor(color.shade(.bold)),
-            .backgroundColor(color.shade(.tint2), variants: [.hover]),
-            .backgroundColor(.white, variants: [.active, .focus]),
-            .outlineStyle(.hidden, variants: [.focus])
+            foreground,
+            hover,
+            active,
+            .outlineStyle(.hidden, variants: [.focus]),
+            .ringWidth(.size(2), variants: [.focus]),
+            .ringOffsetWidth(.size(2), variants: [.focus]),
+            focusRing
         ) {
             trigger()
+            if showChevron {
+                span(
+                    .position(.absolute),
+                    .insetY(.zero),
+                    .insetRight(.zero),
+                    .display(.flex),
+                    .items(.center),
+                    .paddingRight(.size(2)),
+                    .pointerEvents(.none)
+                ) {
+                    pinesIcon(.chevronUpDown)
+                }
+            }
         }
 
         let panelAttributes: [HTMLAttribute<HTMLTag.div>] =
@@ -103,13 +155,12 @@ public func pinesDropdown<Trigger: HTML>(
         div(attributes: panelAttributes) {
             div(
                 .padding(.size(1)),
-                .marginTop(.size(1)),
                 .class(PinesTheme.background),
                 .borderRadius(.md),
                 .borderWidth(.bare),
                 .boxShadow(.md),
                 .class(PinesTheme.utility(PinesTheme.border, opacity: 70)),
-                .textColor(color.shade(.bold))
+                .class(PinesTheme.foreground)
             ) {
                 for content in items() {
                     switch content {
@@ -125,7 +176,7 @@ public func pinesDropdown<Trigger: HTML>(
     return HTMLRaw(html.render())
 }
 
-private func pinesDropdownItemView(_ item: PinesDropdownItem, color: PinesColor) -> HTMLRaw {
+private func pinesDropdownItemView(_ item: PinesDropdownItem, color: PinesColor?) -> HTMLRaw {
     if let href = item.href {
         var attrs: [HTMLAttribute<HTMLTag.a>] = pinesDropdownItemAttributes(item, color: color)
         attrs.append(HTMLAttribute(name: "href", value: href))
@@ -153,8 +204,8 @@ private func pinesDropdownSeparatorView() -> HTMLRaw {
     let element = div(
         .marginX(.size(1), negative: true),
         .marginY(.size(1)),
-        .height(.arbitrary("1px")),
-        .backgroundColor(PinesColor.neutral.shade(.subtle))
+        .class("h-px"),
+        .class(PinesTheme.divider)
     ) {}
     return HTMLRaw(element.render())
 }
@@ -179,7 +230,7 @@ private func pinesDropdownItemChildren(_ item: PinesDropdownItem) -> some HTML {
 
 private func pinesDropdownItemAttributes<Tag: HTMLTagDefinition>(
     _ item: PinesDropdownItem,
-    color: PinesColor
+    color: PinesColor?
 ) -> [HTMLAttribute<Tag>] {
     var attrs: [HTMLAttribute<Tag>] = [
         .position(.relative),
@@ -187,7 +238,7 @@ private func pinesDropdownItemAttributes<Tag: HTMLTagDefinition>(
         .items(.center),
         .cursor(.default),
         .userSelect(.none),
-        .borderRadius(.md),
+        .borderRadius(.sm),
         .paddingX(.size(2)),
         .paddingY(.size(1.5)),
         .fontSize(.sm),
@@ -200,9 +251,16 @@ private func pinesDropdownItemAttributes<Tag: HTMLTagDefinition>(
     ]
     if item.danger {
         attrs.append(.textColor(PinesColor.red.shade(.strong)))
+        attrs.append(.textColor(.white, variants: [.dark, .hover]))
         attrs.append(.backgroundColor(PinesColor.red.shade(.tint2), variants: [.hover]))
+        attrs.append(.backgroundColor(PinesColor.red.shade(.bold), variants: [.dark, .hover]))
+    } else if color == nil {
+        attrs.append(.class(PinesTheme.primary, variants: [.hover]))
+        attrs.append(.class(PinesTheme.primaryForeground, variants: [.hover]))
+    } else if color == .neutral {
+        attrs.append(.class(PinesTheme.muted, variants: [.hover]))
     } else {
-        attrs.append(.backgroundColor(color.shade(.tint2), variants: [.hover]))
+        attrs.append(.backgroundColor(color!.shade(.tint2), variants: [.hover]))
     }
     return attrs
 }
