@@ -21,7 +21,8 @@ import ElementaryTailwind
 /// ```
 ///
 /// - Parameters:
-///   - color: The accent color for the thumb and progress. Defaults to blue.
+///   - color: The accent color for the thumb and progress. When omitted, uses
+///     the accent emitted by `setupPines()`.
 ///   - name: The name attribute for the input.
 ///   - id: The id attribute for the input.
 ///   - min: The minimum value. Defaults to 0.
@@ -41,7 +42,8 @@ public func pinesRangeSlider(
     disabled: Bool = false,
     attributes: [HTMLAttribute<HTMLTag.input>] = []
 ) -> some HTML {
-    let resolvedColor = color ?? .blue
+    let resolvedColor = color ?? .neutral
+    let usesSemanticColor = color == nil || resolvedColor == .neutral
     let webkitThumb: [TWVariant] = [.arbitrary("[&::-webkit-slider-thumb]")]
     let webkitTrack: [TWVariant] = [.arbitrary("[&::-webkit-slider-runnable-track]")]
     let mozThumb: [TWVariant] = [.arbitrary("[&::-moz-range-thumb]")]
@@ -49,6 +51,12 @@ public func pinesRangeSlider(
     let mozProgress: [TWVariant] = [.arbitrary("[&::-moz-range-progress]")]
     let msThumb: [TWVariant] = [.arbitrary("[&::-ms-thumb]")]
     let msTrack: [TWVariant] = [.arbitrary("[&::-ms-track]")]
+
+    let trackColor =
+        color == nil
+        ? PinesTheme.muted
+        : usesSemanticColor ? PinesTheme.muted : twValue(.backgroundColor(resolvedColor.shade(.subtle)))
+
     let msFill: [TWVariant] = [.arbitrary("[&::-ms-fill-lower]")]
 
     var inputAttributes: [HTMLAttribute<HTMLTag.input>] = [
@@ -84,22 +92,66 @@ public func pinesRangeSlider(
         .height(.size(2.5), variants: msThumb),
         .appearance(.none, variants: msThumb),
         // Track styles
-        .class(PinesTheme.muted, variants: webkitTrack),
+        .class(
+            trackColor,
+            variants: webkitTrack
+        ),
         .borderRadius(.full, variants: webkitTrack),
         .overflow(.hidden, variants: webkitTrack),
-        .class(PinesTheme.muted, variants: mozTrack),
+        .class(
+            trackColor,
+            variants: mozTrack
+        ),
         .borderRadius(.full, variants: mozTrack),
-        .class(PinesTheme.muted, variants: msTrack),
+        .class(
+            trackColor,
+            variants: msTrack
+        ),
         .borderRadius(.full, variants: msTrack),
         // Color-based styles
-        .backgroundColor(resolvedColor.shade(.strong), variants: webkitThumb),
-        .backgroundColor(resolvedColor.shade(.strong), variants: mozThumb),
-        .backgroundColor(resolvedColor.shade(.strong), variants: msThumb),
-        .backgroundColor(resolvedColor.shade(.accent), variants: mozProgress),
+        .class(
+            color == nil || usesSemanticColor
+                ? PinesTheme.primary : twValue(.backgroundColor(resolvedColor.shade(.strong))),
+            variants: webkitThumb
+        ),
+        .class(
+            color == nil || usesSemanticColor
+                ? PinesTheme.primary : twValue(.backgroundColor(resolvedColor.shade(.strong))),
+            variants: mozThumb
+        ),
+        .class(
+            color == nil || usesSemanticColor
+                ? PinesTheme.primary : twValue(.backgroundColor(resolvedColor.shade(.strong))),
+            variants: msThumb
+        ),
+        .class(
+            color == nil || usesSemanticColor
+                ? PinesTheme.utility(PinesTheme.primary, opacity: 60)
+                : twValue(.backgroundColor(resolvedColor.shade(.accent))),
+            variants: mozProgress
+        ),
         .borderRadius(.full, variants: mozProgress),
-        .backgroundColor(resolvedColor.shade(.accent), variants: msFill),
+        .class(
+            color == nil || usesSemanticColor
+                ? PinesTheme.utility(PinesTheme.primary, opacity: 60)
+                : twValue(.backgroundColor(resolvedColor.shade(.accent))),
+            variants: msFill
+        ),
         .borderRadius(.full, variants: msFill),
-        .boxShadow(.arbitrary("-999px_0px_0px_990px_#" + resolvedColor.cssHex), variants: webkitThumb),
+        color == nil || usesSemanticColor
+            ? .class(
+                TWVariant.apply(
+                    webkitThumb,
+                    to: twValue(.boxShadow(.arbitrary("-999px_0px_0px_990px_color-mix(in_srgb,var(--color-primary)_60%,transparent)")))
+                )
+            )
+            : .boxShadow(
+                .arbitrary(
+                    "-999px_0px_0px_990px_"
+                        + (resolvedColor.cssValues[PinesColor.Shade.accent.rawValue] ?? "var(--color-\(resolvedColor.rawValue)-400)")
+                ),
+                variants: webkitThumb
+            ),
     ]
     if disabled {
         inputAttributes.append(.disabled)
