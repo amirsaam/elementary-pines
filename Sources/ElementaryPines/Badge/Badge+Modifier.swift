@@ -10,8 +10,8 @@ public extension HTMLElement where Tag == HTMLTag.span {
     ///
     /// - Parameters:
     ///   - style: The layout style — `.solid`, `.light`, `.outline`, `.dot`, or `.icon`.
-    ///   - color: The Tailwind color palette. Defaults to `.neutral` (the Pines
-    ///     default, matching the `badge.html` source).
+    ///   - color: The Tailwind color palette. When omitted, the semantic theme
+    ///     accent emitted by `setupPines()` is used.
     ///
     /// **Generated HTML:**
     /// ```html
@@ -25,7 +25,7 @@ public extension HTMLElement where Tag == HTMLTag.span {
     /// span { "Online" }.pinesBadgeStyle(.dot, color: .green)  // user adds the dot element
     /// span { "Active" }.pinesBadgeStyle(.icon, color: .green)  // user adds the icon
     /// ```
-    func pinesBadgeStyle(_ style: PinesBadgeStyle, color: PinesColor = .neutral) -> Self {
+    func pinesBadgeStyle(_ style: PinesBadgeStyle, color: PinesColor? = nil) -> Self {
         self.attributes(contentsOf: style.attributes(color))
     }
 }

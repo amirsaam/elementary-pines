@@ -27,7 +27,7 @@ public enum PinesBadgeStyle: String, Sendable, CaseIterable {
 
 extension PinesBadgeStyle {
     /// Typed HTML attributes for this style + color combination.
-    public func attributes(_ color: PinesColor) -> [HTMLAttribute<HTMLTag.span>] {
+    public func attributes(_ color: PinesColor?) -> [HTMLAttribute<HTMLTag.span>] {
         var attrs: [HTMLAttribute<HTMLTag.span>] = [
             .fontSize(.xs), .fontWeight(.semibold), .borderRadius(.full),
         ]
@@ -47,24 +47,48 @@ extension PinesBadgeStyle {
 
     // MARK: - Per-style helpers
 
-    private func solidAttributes(color: PinesColor) -> [HTMLAttribute<HTMLTag.span>] {
-        let bg: HTMLAttribute<HTMLTag.span>
-        switch color {
-        case .neutral: bg = .backgroundColor(.black)
-        default: bg = .backgroundColor(color.shade(.strong))
+    private func solidAttributes(color: PinesColor?) -> [HTMLAttribute<HTMLTag.span>] {
+        guard let color else {
+            return [.class(PinesTheme.primary), .class(PinesTheme.primaryForeground)]
         }
-        return [bg, .textColor(.white)]
+        let bg: HTMLAttribute<HTMLTag.span> =
+            color == .neutral
+            ? .backgroundColor(color.shade(.darkest)) : .backgroundColor(color.shade(.strong))
+        var attrs: [HTMLAttribute<HTMLTag.span>] = [bg, .textColor(.white)]
+        if color == .neutral {
+            attrs += [
+                .backgroundColor(PinesColor.neutral.shade(.tint1), variants: [.dark]),
+                .textColor(PinesColor.neutral.shade(.darkest), variants: [.dark]),
+            ]
+        }
+        return attrs
     }
 
-    private func lightAttributes(color: PinesColor) -> [HTMLAttribute<HTMLTag.span>] {
-        [
+    private func lightAttributes(color: PinesColor?) -> [HTMLAttribute<HTMLTag.span>] {
+        guard color != nil else {
+            return [
+                .class(PinesTheme.utility(PinesTheme.primary, opacity: 10)),
+                .class(PinesTheme.foreground),
+            ]
+        }
+        let color = color!
+        return [
             .backgroundColor(color.shade(.tint2)),
             .textColor(color.shade(.deep)),
         ]
     }
 
-    private func outlineAttributes(color: PinesColor) -> [HTMLAttribute<HTMLTag.span>] {
-        [
+    private func outlineAttributes(color: PinesColor?) -> [HTMLAttribute<HTMLTag.span>] {
+        guard color != nil else {
+            return [
+                .backgroundColor(.transparent),
+                .class(PinesTheme.foreground),
+                .borderWidth(.bare),
+                .class(PinesTheme.primaryBorder),
+            ]
+        }
+        let color = color!
+        return [
             .backgroundColor(.transparent),
             .textColor(color.shade(.base)),
             .borderWidth(.bare),
@@ -72,26 +96,48 @@ extension PinesBadgeStyle {
         ]
     }
 
-    private func dotAttributes(color: PinesColor) -> [HTMLAttribute<HTMLTag.span>] {
-        [
+    private func dotAttributes(color: PinesColor?) -> [HTMLAttribute<HTMLTag.span>] {
+        guard color != nil else {
+            return [
+                .backgroundColor(.transparent),
+                .class(PinesTheme.foreground),
+                .borderWidth(.bare),
+                .class(PinesTheme.primaryBorder),
+                .display(.inlineFlex), .items(.center),
+            ]
+        }
+        let color = color!
+        return [
             .backgroundColor(.transparent),
             .textColor(color.shade(.base)),
             .borderWidth(.bare),
-            .borderColor(PinesColor.neutral.shade(.light)),
-            .display(.flex), .items(.center),
+            .borderColor(color.shade(.base)),
+            .display(.inlineFlex), .items(.center),
         ]
     }
 
-    private func iconAttributes(color: PinesColor) -> [HTMLAttribute<HTMLTag.span>] {
-        let bg: HTMLAttribute<HTMLTag.span>
-        switch color {
-        case .neutral: bg = .backgroundColor(.black)
-        default: bg = .backgroundColor(color.shade(.strong))
+    private func iconAttributes(color: PinesColor?) -> [HTMLAttribute<HTMLTag.span>] {
+        guard let color else {
+            return [
+                .class(PinesTheme.primary), .class(PinesTheme.primaryForeground),
+                .paddingLeft(.size(2)), .paddingRight(.size(2.5)), .paddingY(.size(1)),
+                .position(.relative), .display(.inlineFlex), .items(.center), .spaceX(.size(1)),
+            ]
         }
-        return [
+        let bg: HTMLAttribute<HTMLTag.span> =
+            color == .neutral
+            ? .backgroundColor(color.shade(.darkest)) : .backgroundColor(color.shade(.strong))
+        var attrs: [HTMLAttribute<HTMLTag.span>] = [
             bg, .textColor(.white),
             .paddingLeft(.size(2)), .paddingRight(.size(2.5)), .paddingY(.size(1)),
-            .position(.relative), .display(.flex), .items(.center),
+            .position(.relative), .display(.inlineFlex), .items(.center), .spaceX(.size(1)),
         ]
+        if color == .neutral {
+            attrs += [
+                .backgroundColor(PinesColor.neutral.shade(.tint1), variants: [.dark]),
+                .textColor(PinesColor.neutral.shade(.darkest), variants: [.dark]),
+            ]
+        }
+        return attrs
     }
 }
