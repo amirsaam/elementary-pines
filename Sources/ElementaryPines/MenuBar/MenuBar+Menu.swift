@@ -1,5 +1,3 @@
-import Foundation
-
 /// A named menu (File, Edit, …) inside a `pinesMenuBar`.
 public struct PinesMenuBarMenu: Sendable {
     /// The menu's button label and the key used in the Alpine state.

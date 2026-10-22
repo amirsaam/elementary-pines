@@ -9,19 +9,20 @@ import ElementaryTailwind
 /// The bar and its panels use the theme surfaces (`bg-background`,
 /// `text-foreground`, `border-border/80`, `hover:bg-muted`), so they follow
 /// `setupPines(accent:bgLight:bgDark:)`. `color:` tints the menu-button and
-/// item hover washes (default `.neutral` keeps the theme `bg-muted`).
+/// item hover washes. When omitted, `color` follows the accent emitted by
+/// `setupPines()`.
 ///
 /// **Generated HTML:**
 /// ```html
 /// <div x-data="{ menuBarOpen: false, menuBarMenu: '' }" x-on:click.outside="menuBarOpen=false" class="relative top-0 left-0 z-50 w-auto transition-all duration-150 ease-out">
 ///   <div class="relative top-0 left-0 z-40 w-auto h-10 transition duration-200 ease-out">
 ///     <div class="w-full h-full p-1 bg-background border rounded-md border-border/80">
-///       <div class="flex justify-between w-full h-full select-none text-foreground">
+///       <div class="flex justify-start space-x-1 w-full h-full select-none text-foreground">
 ///         <div class="relative h-full cursor-default">
 ///           <button x-on:click="menuBarOpen=true; menuBarMenu='File'" x-on:mouseover="menuBarMenu='File'" x-bind:class="{ 'bg-muted' : menuBarOpen && menuBarMenu == 'File'}" class="rounded text-sm cursor-default flex items-center leading-tight justify-center px-3 py-1.5 h-full hover:bg-muted">File</button>
-///           <div x-show="menuBarOpen && menuBarMenu=='File'" x-transition:enter="transition ease-linear duration-100" x-transition:enter-start="-translate-y-1 opacity-90" x-transition:enter-end="translate-y-0 opacity-100" class="absolute top-0 z-50 min-w-[8rem] text-foreground rounded-md border border-border/70 bg-background mt-10 text-sm p-1 shadow-md w-48 -translate-x-0.5" x-cloak>
-///             <button x-on:click="menuBarOpen=false" class="relative flex justify-between w-full cursor-default select-none group items-center rounded px-2 py-1.5 hover:bg-muted hover:text-foreground outline-hidden data-[disabled]:opacity-50 data-[disabled]:pointer-events-none"><span>New Tab</span><span class="ml-auto text-xs tracking-widest text-muted-foreground group-hover:text-foreground">⌘T</span></button>
-///             <div class="h-px my-1 -mx-1 bg-neutral-200"></div>
+///           <div x-show="menuBarOpen && menuBarMenu=='File'" x-transition:enter="transition ease-linear duration-100" x-transition:enter-start="-translate-y-1 opacity-90" x-transition:enter-end="translate-y-0 opacity-100" class="absolute top-0 z-50 min-w-[8rem] text-foreground rounded-md border border-border/70 bg-background mt-10 text-sm p-1 shadow w-48 -translate-x-0.5" x-cloak>
+///             <button x-on:click="menuBarOpen=false" class="relative flex justify-between w-full cursor-default select-none group items-center rounded-sm px-2 py-1.5 hover:bg-muted hover:text-foreground outline-hidden data-[disabled]:opacity-50 data-[disabled]:pointer-events-none"><span>New Tab</span><span class="ml-auto text-xs tracking-widest text-muted-foreground group-hover:text-foreground">⌘T</span></button>
+///             <div class="h-px my-1 -mx-1 bg-border"></div>
 ///           </div>
 ///         </div>
 ///       </div>
@@ -45,7 +46,7 @@ import ElementaryTailwind
 /// ])
 /// ```
 public func pinesMenuBar(
-    color: PinesColor = .neutral,
+    color: PinesColor? = nil,
     attributes: [HTMLAttribute<HTMLTag.div>] = [],
     menus: [PinesMenuBarMenu]
 ) -> some HTML {
@@ -79,9 +80,10 @@ public func pinesMenuBar(
             ) {
                 div(
                     .display(.flex),
-                    .justify(.between),
+                    .justify(.start),
                     .width(.full),
                     .height(.full),
+                    .spaceX(.size(1)),
                     .userSelect(.none),
                     .class(PinesTheme.foreground)
                 ) {
@@ -95,8 +97,21 @@ public func pinesMenuBar(
     return HTMLRaw(html.render())
 }
 
-private func pinesMenuBarButtonView(_ menu: PinesMenuBarMenu, color: PinesColor) -> HTMLRaw {
+private func pinesMenuBarButtonView(_ menu: PinesMenuBarMenu, color: PinesColor?) -> HTMLRaw {
     let name = pinesJavaScriptStringLiteral(menu.title)
+    let hoverClass =
+        color == nil
+        ? "\(PinesTheme.utility(PinesTheme.primary, opacity: 10)) \(PinesTheme.foreground)"
+        : twValue(.backgroundColor(color!.shade(.tint2)))
+    let background: HTMLAttribute<HTMLTag.button> =
+        color == nil
+        ? .class(PinesTheme.background)
+        : .backgroundColor(color!.shade(.tint1))
+    let foreground: HTMLAttribute<HTMLTag.button> = .class(PinesTheme.foreground)
+    let hover: HTMLAttribute<HTMLTag.button> =
+        color == nil
+        ? .class(PinesTheme.utility(PinesTheme.primary, opacity: 10), variants: [.hover])
+        : .backgroundColor(color!.shade(.tint2), variants: [.hover])
     let html = div(.position(.relative), .height(.full), .cursor(.default)) {
         button(
             .type(.button),
@@ -104,20 +119,23 @@ private func pinesMenuBarButtonView(_ menu: PinesMenuBarMenu, color: PinesColor)
             .x.on("mouseover", "menuBarMenu=\(name)"),
             .x.bindClass(
                 pinesAlpineBindClass([
-                    (PinesTheme.accentHoverClass(color), "menuBarOpen && menuBarMenu == \(name)")
+                    (hoverClass, "menuBarOpen && menuBarMenu == \(name)")
                 ])
             ),
-            .borderRadius(.md),
+            .borderRadius(.sm),
             .fontSize(.sm),
             .cursor(.default),
             .display(.flex),
             .items(.center),
-            .lineHeight(.none),
+            .lineHeight(.tight),
             .justify(.center),
             .paddingX(.size(3)),
             .paddingY(.size(1.5)),
             .height(.full),
-            PinesTheme.accentHover(color, variants: [.hover])
+            background,
+            foreground,
+            hover,
+            .class(PinesTheme.foreground, variants: [.hover]),
         ) {
             menu.title
         }
@@ -156,19 +174,24 @@ private func pinesMenuBarButtonView(_ menu: PinesMenuBarMenu, color: PinesColor)
     return HTMLRaw(html.render())
 }
 
-private func pinesMenuBarItemView(_ item: PinesMenuBarItem, color: PinesColor) -> HTMLRaw {
+private func pinesMenuBarItemView(_ item: PinesMenuBarItem, color: PinesColor?) -> HTMLRaw {
     var attrs: [HTMLAttribute<HTMLTag.button>] = [
         .type(.button),
         .x.on("click", item.clickHandler),
         .position(.relative), .display(.flex), .justify(.between), .width(.full),
-        .cursor(.default), .userSelect(.none), .borderRadius(.md),
+        .cursor(.default), .userSelect(.none), .borderRadius(.sm),
         .paddingX(.size(2)), .paddingY(.size(1.5)),
-        PinesTheme.accentHover(color, variants: [.hover]),
+        color == nil
+            ? .class(PinesTheme.utility(PinesTheme.primary, opacity: 10), variants: [.hover])
+            : .backgroundColor(color!.shade(.tint2), variants: [.hover]),
         .class(PinesTheme.foreground, variants: [.hover]),
         .outlineStyle(.hidden),
         .opacity(.value(50), variants: [.arbitrary("[data-disabled]")]),
         .pointerEvents(.none, variants: [.arbitrary("[data-disabled]")]),
     ]
+    if let color {
+        attrs.insert(.backgroundColor(color.shade(.deep), variants: [.dark, .hover]), at: 8)
+    }
     if item.disabled {
         attrs.append(HTMLAttribute<HTMLTag.button>(name: "data-disabled", value: ""))
     }
@@ -191,10 +214,10 @@ private func pinesMenuBarItemView(_ item: PinesMenuBarItem, color: PinesColor) -
 
 private func pinesMenuBarSeparatorView() -> HTMLRaw {
     let html = div(
-        .height(.arbitrary("1px")),
+        .class("h-px"),
         .marginY(.size(1)),
         .marginX(.size(1), negative: true),
-        .backgroundColor(PinesColor.neutral.shade(.subtle))
+        .class(PinesTheme.divider)
     ) {}
     return HTMLRaw(html.render())
 }

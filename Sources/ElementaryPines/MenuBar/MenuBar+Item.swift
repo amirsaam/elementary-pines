@@ -1,5 +1,3 @@
-import Foundation
-
 /// A single selectable row in a `pinesMenuBar` menu.
 public struct PinesMenuBarItem: Sendable {
     /// The row label.
