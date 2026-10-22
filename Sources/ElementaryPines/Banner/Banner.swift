@@ -24,12 +24,12 @@ import ElementaryTailwind
 ///      x-transition:leave-start="translate-y-0"
 ///      x-transition:leave-end="-translate-y-10"
 ///      x-init="setTimeout(()=>{ bannerVisible = true }, bannerVisibleAfter);"
-///      class="fixed top-0 left-0 w-full h-auto py-2 duration-300 ease-out bg-white shadow-xs sm:py-0 sm:h-10" x-cloak>
+///      class="fixed top-0 left-0 w-full h-auto py-2 duration-300 ease-out bg-background shadow-xs sm:py-0 sm:h-10" x-cloak>
 ///     <div class="flex items-center justify-between w-full h-full px-3 mx-auto max-w-7xl">
-///         <a href="#" class="flex flex-col w-full h-full text-xs leading-6 text-black duration-150 ease-out sm:flex-row sm:items-center opacity-80 hover:opacity-100">
+///         <a href="#" class="flex flex-col w-full h-full text-xs leading-6 text-foreground duration-150 ease-out sm:flex-row sm:items-center opacity-80 hover:opacity-100">
 ///             <span class="flex items-center">
 ///                 <!-- icon (unless `icon: nil`) -->
-///                 <strong class="font-semibold">New Feature</strong><span class="hidden w-[1px] h-4 mx-3 rounded-full sm:block bg-neutral-200"></span>
+///                 <strong class="font-semibold">New Feature</strong><span class="hidden w-[1px] h-4 mx-3 rounded-full sm:block bg-border"></span>
 ///             </span>
 ///             <span class="block pt-1 pb-2 leading-none sm:inline sm:pt-0 sm:pb-0">Click here to learn about our latest feature</span>
 ///         </a>
@@ -40,14 +40,14 @@ import ElementaryTailwind
 ///
 /// **Examples:**
 /// ```swift
-/// // Top-of-page example (white banner).
+/// // Top-of-page example (theme surface banner).
 /// pinesBanner(
 ///     label: "New Feature",
 ///     message: "Click here to learn about our latest feature",
 ///     href: "#"
 /// )
 ///
-/// // Bottom-of-page example (black banner).
+/// // Bottom-of-page example (the same theme surface, anchored to the bottom).
 /// pinesBanner(
 ///     label: "New Feature",
 ///     message: "Click here to learn about our latest feature",
@@ -67,8 +67,9 @@ import ElementaryTailwind
 ///     magic-wand SVG). Pass `nil` to omit the icon.
 ///   - dismissible: When `true`, a close button is rendered at the trailing
 ///     edge. Defaults to `true`.
-///   - position: `.top` (default — white banner sliding in from above) or
-///     `.bottom` (black banner sliding in from below).
+///   - position: `.top` (default — theme surface sliding in from above) or
+///     `.bottom` (theme surface sliding in from below). The placement is
+///     purely positional; both variants render the same surface.
 public func pinesBanner(
     label: String,
     message: String,
@@ -110,7 +111,7 @@ public func pinesBanner(
         .paddingY(.size(2)),
         .transitionDuration(.ms(300)),
         .transitionTimingFunction(.easeOut),
-        .backgroundColor(isTop ? .white : .black),
+        .class(PinesTheme.background),
         .boxShadow(.xs),
         .paddingY(.size(0), variants: [.sm]),
         .height(.size(10), variants: [.sm]),
@@ -134,7 +135,7 @@ public func pinesBanner(
                 .height(.full),
                 .fontSize(.xs),
                 .lineHeight(.value(6)),
-                .textColor(isTop ? .black : .white),
+                .class(PinesTheme.foreground),
                 .transitionDuration(.ms(150)),
                 .transitionTimingFunction(.easeOut),
                 .flexDirection(.row, variants: [.sm]),
@@ -163,7 +164,7 @@ public func pinesBanner(
                         .marginX(.size(3)),
                         .borderRadius(.full),
                         .display(.block, variants: [.sm]),
-                        .backgroundColor(isTop ? PinesColor.neutral.shade(.subtle) : PinesColor.neutral.shade(.bold))
+                        .class(PinesTheme.divider)
                     ) {
                         ""
                     }
@@ -194,14 +195,9 @@ public func pinesBanner(
                     .width(.size(6)),
                     .height(.size(6)),
                     .padding(.size(1.5)),
-                    .textColor(isTop ? .black : .white),
+                    .class(PinesTheme.foreground),
                     .borderRadius(.full),
-                    .backgroundColor(
-                        isTop
-                            ? PinesColor.neutral.shade(.tint2)
-                            : PinesColor.neutral.shade(.deep),
-                        variants: [.hover]
-                    )
+                    .class(PinesTheme.muted, variants: [.hover])
                 ) {
                     pinesBannerDismissIcon()
                 }

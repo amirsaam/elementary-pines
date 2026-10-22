@@ -1,11 +1,11 @@
 /// Vertical placement for `pinesBanner(label:message:href:icon:dismissible:position:)`.
 ///
-/// Two variants: a white banner fixed to
-/// the top of the page that slides down on enter, or a black banner fixed to
-/// the bottom that slides up on enter.
+/// The placement is purely positional: both variants render the same
+/// theme-surface banner, one fixed to the top of the page sliding down on
+/// enter, the other fixed to the bottom sliding up on enter.
 public enum PinesBannerPosition: Sendable {
-    /// White banner, `fixed top-0`, slides in from above (the default).
+    /// Theme-surface banner, `fixed top-0`, slides in from above (the default).
     case top
-    /// Black banner, `fixed bottom-0`, slides in from below.
+    /// Theme-surface banner, `fixed bottom-0`, slides in from below.
     case bottom
 }
