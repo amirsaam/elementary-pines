@@ -17,7 +17,7 @@ import Foundation
 ///     <template x-for="(option, index) in radioGroupOptions" x-bind:key="index">
 ///         <label x-on:click="if(!option.disabled){ radioGroupSelectedValue=option.value }"
 ///                x-bind:class="{ 'opacity-50 pointer-events-none' : option.disabled }"
-///                class="flex items-start p-5 space-x-3 bg-white border rounded-md shadow-xs hover:bg-gray-50 border-neutral-200/70">
+///                class="flex items-start p-5 space-x-3 bg-background border rounded-md shadow-xs hover:bg-muted border-border/70">
 ///             <input type="radio" name="..." x-bind:value="option.value"
 ///                    class="text-gray-900 translate-y-px focus:ring-gray-700"
 ///                    x-bind:disabled="option.disabled">

@@ -1,5 +1,3 @@
-import Foundation
-
 /// A single option in a `pinesRadioGroup`.
 ///
 /// `title` is the human-readable label, `value` is the form submission value,
