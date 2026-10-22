@@ -31,7 +31,8 @@ import Foundation
 public func pinesSelect(
     items: [PinesSelectItem] = [],
     placeholder: String = "Select Item",
-    width: TWTWidth = .size(64)
+    width: TWTWidth = .size(64),
+    disabled: Bool = false
 ) -> some HTML {
     let encoder = JSONEncoder()
     encoder.outputFormatting = [.sortedKeys]
@@ -44,6 +45,44 @@ public func pinesSelect(
     let xData = PinesSelectState.xData(itemsLiteral: itemsLiteral)
 
     let xInitScript = PinesSelectState.xInit
+    var selectButtonAttrs: [HTMLAttribute<HTMLTag.button>] = [
+        .x.ref("selectButton"),
+        .type(.button),
+        .x.on("click", disabled ? "" : "selectOpen=!selectOpen"),
+        .x.bindClass(
+            pinesAlpineBindClass([
+                (
+                    twValue(
+                        .ringWidth(.size(2), variants: [.focus]),
+                        .ringOffsetWidth(.size(2), variants: [.focus]),
+                        .class(PinesTheme.ring, variants: [.focus])
+                    ),
+                    "!selectOpen"
+                )
+            ])
+        ),
+        .position(.relative),
+        .minHeight(.arbitrary("38px")),
+        .display(.flex),
+        .items(.center),
+        .justify(.between),
+        .width(.full),
+        .paddingY(.size(2)),
+        .paddingLeft(.size(3)),
+        .paddingRight(.size(10)),
+        .textAlign(.left),
+        .class(PinesTheme.background),
+        .borderWidth(.bare),
+        .borderRadius(.md),
+        .boxShadow(.xs),
+        .cursor(.default),
+        .class(PinesTheme.utility(PinesTheme.border, opacity: 70)),
+        .outlineStyle(.hidden, variants: [.focus]),
+        .fontSize(.sm),
+        .opacity(.value(50), variants: [.disabled]),
+        .cursor(.notAllowed, variants: [.disabled]),
+    ]
+    if disabled { selectButtonAttrs.append(.disabled) }
 
     return div(
         .position(.relative),
@@ -65,41 +104,7 @@ public func pinesSelect(
         .x.on("keydown", "selectKeydown($event);"),
         .x.on("resize", "selectPositionUpdate()", modifiers: [.window])
     ) {
-        button(
-            .x.ref("selectButton"),
-            .type(.button),
-            .x.on("click", "selectOpen=!selectOpen"),
-            .x.bindClass(
-                pinesAlpineBindClass([
-                    (
-                        twValue(
-                            .ringWidth(.size(2), variants: [.focus]),
-                            .ringOffsetWidth(.size(2), variants: [.focus]),
-                            .class(PinesTheme.ring, variants: [.focus])
-                        ),
-                        "!selectOpen"
-                    )
-                ])
-            ),
-            .position(.relative),
-            .minHeight(.arbitrary("38px")),
-            .display(.flex),
-            .items(.center),
-            .justify(.between),
-            .width(.full),
-            .paddingY(.size(2)),
-            .paddingLeft(.size(3)),
-            .paddingRight(.size(10)),
-            .textAlign(.left),
-            .class(PinesTheme.background),
-            .borderWidth(.bare),
-            .borderRadius(.md),
-            .boxShadow(.xs),
-            .cursor(.default),
-            .class(PinesTheme.utility(PinesTheme.border, opacity: 70)),
-            .outlineStyle(.hidden, variants: [.focus]),
-            .fontSize(.sm)
-        ) {
+        button(attributes: selectButtonAttrs) {
             span(
                 .x.text("selectedItem ? selectedItem.title : \(pinesJavaScriptStringLiteral(placeholder))"),
                 .textOverflow(.truncate)
@@ -161,7 +166,7 @@ public func pinesSelect(
                         pinesAlpineBindClass([
                             (
                                 twValue(
-                                    .class(PinesTheme.muted),
+                                    .class(PinesTheme.utility(PinesTheme.primary, opacity: 10)),
                                     .class(PinesTheme.foreground)
                                 ),
                                 "selectableItemIsActive(item)"
@@ -189,7 +194,7 @@ public func pinesSelect(
                         SVGAttribute(name: "viewBox", value: "0 0 20 20"),
                         SVGAttribute(name: "stroke", value: "currentColor"),
                         SVGAttribute(name: "stroke-width", value: "2"),
-                        SVGAttribute(name: "class", value: "absolute left-0 ml-2 w-4 h-4 text-neutral-400")
+                        SVGAttribute(name: "class", value: "absolute left-0 ml-2 w-4 h-4 \(PinesTheme.primaryText)")
                     ) {
                         SVG.polyline(
                             .points("20 6 9 17 4 12"),
