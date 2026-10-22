@@ -59,9 +59,9 @@ public func pinesRadioGroup(
     let xDataString = #"{"radioGroupSelectedValue":null,"radioGroupOptions":\#(optionsLiteral)}"#
 
     var inputAttrs: [HTMLAttribute<HTMLTag.input>] = [
-        .class(PinesSurface.foreground),
+        .class(PinesTheme.foreground),
         .translate(.y("px")),
-        .class(PinesSurface.ring, variants: [.focus]),
+        .class(PinesTheme.ring, variants: [.focus]),
     ]
     if disabled {
         inputAttrs.append(contentsOf: [
@@ -90,10 +90,10 @@ public func pinesRadioGroup(
                 attributes: clickHandler + labelClasses + [
                     .display(.flex), .items(.start), .padding(.size(5)),
                     .spaceX(.size(3)),
-                    .class(PinesSurface.background),
+                    .class(PinesTheme.background),
                     .borderWidth(.bare), .borderRadius(.md), .boxShadow(.xs),
-                    .class(PinesSurface.muted, variants: [.hover]),
-                    .class(PinesSurface.borderSubtle),
+                    .class(PinesTheme.muted, variants: [.hover]),
+                    .class(PinesTheme.utility(PinesTheme.border, opacity: 70)),
                 ]
             ) {
                 let disabledAttribute: [HTMLAttribute<HTMLTag.input>] =

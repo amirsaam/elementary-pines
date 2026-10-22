@@ -61,7 +61,7 @@ public func pinesTextarea(
             .paddingX(.size(3)),
             .paddingY(.size(2)),
             .fontSize(.sm),
-            .class(PinesSurface.background),
+            .class(PinesTheme.background),
             .borderWidth(.bare),
             .borderRadius(.md),
         ]

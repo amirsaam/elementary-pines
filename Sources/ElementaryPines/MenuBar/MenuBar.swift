@@ -72,10 +72,10 @@ public func pinesMenuBar(
                 .width(.full),
                 .height(.full),
                 .padding(.size(1)),
-                .class(PinesSurface.background),
+                .class(PinesTheme.background),
                 .borderWidth(.bare),
                 .borderRadius(.md),
-                .class(PinesSurface.borderSubtle80)
+                .class(PinesTheme.utility(PinesTheme.border, opacity: 80))
             ) {
                 div(
                     .display(.flex),
@@ -83,7 +83,7 @@ public func pinesMenuBar(
                     .width(.full),
                     .height(.full),
                     .userSelect(.none),
-                    .class(PinesSurface.foreground)
+                    .class(PinesTheme.foreground)
                 ) {
                     for menu in menus {
                         pinesMenuBarButtonView(menu, color: color)
@@ -104,7 +104,7 @@ private func pinesMenuBarButtonView(_ menu: PinesMenuBarMenu, color: PinesColor)
             .x.on("mouseover", "menuBarMenu=\(name)"),
             .x.bindClass(
                 pinesAlpineBindClass([
-                    (PinesSurface.accentHoverClass(color), "menuBarOpen && menuBarMenu == \(name)")
+                    (PinesTheme.accentHoverClass(color), "menuBarOpen && menuBarMenu == \(name)")
                 ])
             ),
             .borderRadius(.md),
@@ -117,7 +117,7 @@ private func pinesMenuBarButtonView(_ menu: PinesMenuBarMenu, color: PinesColor)
             .paddingX(.size(3)),
             .paddingY(.size(1.5)),
             .height(.full),
-            PinesSurface.accentHover(color, variants: [.hover])
+            PinesTheme.accentHover(color, variants: [.hover])
         ) {
             menu.title
         }
@@ -130,11 +130,11 @@ private func pinesMenuBarButtonView(_ menu: PinesMenuBarMenu, color: PinesColor)
             .insetTop(.zero),
             .zIndex(.number(50)),
             .minWidth(.arbitrary("8rem")),
-            .class(PinesSurface.foreground),
+            .class(PinesTheme.foreground),
             .borderRadius(.md),
             .borderWidth(.bare),
-            .class(PinesSurface.borderSubtle),
-            .class(PinesSurface.background),
+            .class(PinesTheme.utility(PinesTheme.border, opacity: 70)),
+            .class(PinesTheme.background),
             .marginTop(.size(10)),
             .fontSize(.sm),
             .padding(.size(1)),
@@ -163,8 +163,8 @@ private func pinesMenuBarItemView(_ item: PinesMenuBarItem, color: PinesColor) -
         .position(.relative), .display(.flex), .justify(.between), .width(.full),
         .cursor(.default), .userSelect(.none), .borderRadius(.md),
         .paddingX(.size(2)), .paddingY(.size(1.5)),
-        PinesSurface.accentHover(color, variants: [.hover]),
-        .class(PinesSurface.foreground, variants: [.hover]),
+        PinesTheme.accentHover(color, variants: [.hover]),
+        .class(PinesTheme.foreground, variants: [.hover]),
         .outlineStyle(.hidden),
         .opacity(.value(50), variants: [.arbitrary("[data-disabled]")]),
         .pointerEvents(.none, variants: [.arbitrary("[data-disabled]")]),
@@ -179,8 +179,8 @@ private func pinesMenuBarItemView(_ item: PinesMenuBarItem, color: PinesColor) -
                 .marginLeft(.auto),
                 .fontSize(.xs),
                 .letterSpacing(.widest),
-                .class(PinesSurface.mutedForeground),
-                .class(PinesSurface.foreground, variants: [.groupHover])
+                .class(PinesTheme.mutedForeground),
+                .class(PinesTheme.foreground, variants: [.groupHover])
             ) {
                 shortcut
             }

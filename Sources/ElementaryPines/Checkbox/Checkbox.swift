@@ -47,10 +47,10 @@ public func pinesCheckbox(
         .width(.size(4)),
         .height(.size(4)),
         .backgroundColor(PinesColor.gray.shade(.tint2)),
-        .class(PinesSurface.border),
+        .class(PinesTheme.border),
         .borderRadius(.sm),
         .textColor(textColor),
-        .class(color == nil ? PinesSurface.ring : twValue(.ringColor(focusRingColor)), variants: [.focus]),
+        .class(color == nil ? PinesTheme.ring : twValue(.ringColor(focusRingColor)), variants: [.focus]),
     ]
     if let name { inputAttrs.append(.name(name)) }
     inputAttrs.append(.id(id))
@@ -65,7 +65,7 @@ public func pinesCheckbox(
 
     let html = div(.display(.flex), .items(.center), .marginBottom(.size(4))) {
         input(attributes: inputAttrs)
-        label(.for(id), .marginLeft(.size(2)), .fontSize(.sm), .fontWeight(.medium), .class(PinesSurface.foreground)) {
+        label(.for(id), .marginLeft(.size(2)), .fontSize(.sm), .fontWeight(.medium), .class(PinesTheme.foreground)) {
             labelText
         }
     }
@@ -132,14 +132,14 @@ public func pinesCheckbox(
         .justify(.between),
         .width(.full),
         .padding(.size(5)),
-        .class(PinesSurface.background),
+        .class(PinesTheme.background),
         .borderWidth(.size(2)),
         .borderRadius(.lg),
         .cursor(.pointer),
         .group(.bare),
-        .class(PinesSurface.borderSubtle),
-        .class(PinesSurface.foreground),
-        .class(PinesSurface.foreground, variants: [.hover]),
+        .class(PinesTheme.utility(PinesTheme.border, opacity: 70)),
+        .class(PinesTheme.foreground),
+        .class(PinesTheme.foreground, variants: [.hover]),
         .borderColor(resolvedColor.shade(.strong), variants: peerChecked),
         .textColor(PinesColor.neutral.shade(.dark), variants: peerChecked),
         .backgroundColor(resolvedColor.shade(.tint1), opacity: 50, variants: peerChecked),

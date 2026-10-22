@@ -75,7 +75,7 @@ public func pinesSelect(
                         twValue(
                             .ringWidth(.size(2), variants: [.focus]),
                             .ringOffsetWidth(.size(2), variants: [.focus]),
-                            .class(PinesSurface.ring, variants: [.focus])
+                            .class(PinesTheme.ring, variants: [.focus])
                         ),
                         "!selectOpen"
                     )
@@ -91,12 +91,12 @@ public func pinesSelect(
             .paddingLeft(.size(3)),
             .paddingRight(.size(10)),
             .textAlign(.left),
-            .class(PinesSurface.background),
+            .class(PinesTheme.background),
             .borderWidth(.bare),
             .borderRadius(.md),
             .boxShadow(.xs),
             .cursor(.default),
-            .class(PinesSurface.borderSubtle),
+            .class(PinesTheme.utility(PinesTheme.border, opacity: 70)),
             .outlineStyle(.hidden, variants: [.focus]),
             .fontSize(.sm)
         ) {
@@ -144,7 +144,7 @@ public func pinesSelect(
             .marginTop(.size(1)),
             .overflow(.auto),
             .fontSize(.sm),
-            .class(PinesSurface.background),
+            .class(PinesTheme.background),
             .borderRadius(.md),
             .boxShadow(.md),
             .maxHeight(.size(56)),
@@ -161,8 +161,8 @@ public func pinesSelect(
                         pinesAlpineBindClass([
                             (
                                 twValue(
-                                    .class(PinesSurface.muted),
-                                    .class(PinesSurface.foreground)
+                                    .class(PinesTheme.muted),
+                                    .class(PinesTheme.foreground)
                                 ),
                                 "selectableItemIsActive(item)"
                             ),
@@ -176,7 +176,7 @@ public func pinesSelect(
                     .height(.full),
                     .paddingY(.size(2)),
                     .paddingLeft(.size(8)),
-                    .class(PinesSurface.foreground),
+                    .class(PinesTheme.foreground),
                     .cursor(.default),
                     .userSelect(.none),
                     .opacity(.value(50), variants: [.arbitrary("data-[disabled]")]),

@@ -52,10 +52,10 @@ public func pinesDatePicker(
             .width(.full),
             .height(.size(10)),
             .fontSize(.sm),
-            .class(PinesSurface.background),
+            .class(PinesTheme.background),
             .borderRadius(.md),
             .borderWidth(.bare),
-            .class(PinesSurface.foreground),
+            .class(PinesTheme.foreground),
         ]
         + pinesTextFieldAttributes(
             borderColor: PinesColor.neutral.shade(.light),
@@ -86,7 +86,7 @@ public func pinesDatePicker(
             .display(.block),
             .fontSize(.sm),
             .fontWeight(.medium),
-            .class(PinesSurface.mutedForeground)
+            .class(PinesTheme.mutedForeground)
         ) {
             labelText
         }
@@ -124,12 +124,12 @@ public func pinesDatePicker(
                 .padding(.size(4)),
                 .marginTop(.size(12)),
                 .fontSmoothing(.antialiased),
-                .class(PinesSurface.background),
+                .class(PinesTheme.background),
                 .borderWidth(.bare),
                 .borderRadius(.lg),
                 .boxShadow(.sm),
                 .width(.arbitrary("17rem")),
-                .class(PinesSurface.borderSubtle)
+                .class(PinesTheme.utility(PinesTheme.border, opacity: 70))
             ) {
                 // Month/year header with navigation
                 div(

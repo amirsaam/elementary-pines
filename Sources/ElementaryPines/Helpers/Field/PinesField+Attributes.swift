@@ -10,7 +10,7 @@ func pinesTextFieldAttributes<Tag: HTMLTagDefinition>(
 ) -> [HTMLAttribute<Tag>] {
     var attributes: [HTMLAttribute<Tag>] = []
     if surface {
-        attributes.append(.class(PinesSurface.border))
+        attributes.append(.class(PinesTheme.border))
     } else {
         attributes.append(.borderColor(borderColor))
     }
@@ -19,12 +19,12 @@ func pinesTextFieldAttributes<Tag: HTMLTagDefinition>(
     }
     if surface {
         attributes += [
-            .class(PinesSurface.mutedForeground, variants: [.placeholder]),
-            .class(PinesSurface.border, variants: [.focus]),
+            .class(PinesTheme.mutedForeground, variants: [.placeholder]),
+            .class(PinesTheme.border, variants: [.focus]),
             .outlineStyle(.hidden, variants: [.focus]),
             .ringWidth(.size(2), variants: [.focus]),
             .ringOffsetWidth(.size(2), variants: [.focus]),
-            .class(PinesSurface.ring, variants: [.focus]),
+            .class(PinesTheme.ring, variants: [.focus]),
         ]
     } else {
         attributes += [

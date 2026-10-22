@@ -73,9 +73,9 @@ public func pinesSlideOver(
         .flexDirection(.column),
         .paddingY(.size(5)),
         .height(.full),
-        .class(PinesSurface.background),
+        .class(PinesTheme.background),
         .borderWidth(.l(1)),
-        .class(PinesSurface.borderSubtle),
+        .class(PinesTheme.utility(PinesTheme.border, opacity: 70)),
         .boxShadow(.lg),
         .position(.relative),
     ]
@@ -98,9 +98,9 @@ public func pinesSlideOver(
         .textTransform(.uppercase),
         .borderRadius(.md),
         .borderWidth(.bare),
-        .class(PinesSurface.border),
-        .class(PinesSurface.mutedForeground),
-        .class(PinesSurface.muted, variants: [.hover]),
+        .class(PinesTheme.border),
+        .class(PinesTheme.mutedForeground),
+        .class(PinesTheme.muted, variants: [.hover]),
     ]
     let html = div(
         attributes: [
@@ -110,7 +110,7 @@ public func pinesSlideOver(
     ) {
         let triggerAttrs =
             [HTMLAttribute<HTMLTag.button>.type(.button), .x.on("click", "slideOverOpen=true")]
-            + PinesSurface.overlayTriggerAttributes(color: color)
+            + PinesTheme.overlayTriggerAttributes(color: color)
         button(attributes: triggerAttrs) {
             trigger()
         }
@@ -154,7 +154,7 @@ public func pinesSlideOver(
                                                 .fontSize(.base),
                                                 .fontWeight(.semibold),
                                                 .lineHeight(.value(6)),
-                                                .class(PinesSurface.foreground)
+                                                .class(PinesTheme.foreground)
                                             ) {
                                                 title
                                             }

@@ -1,7 +1,7 @@
 import Elementary
 import ElementaryTailwind
 
-extension PinesSurface {
+extension PinesTheme {
     /// Shared trigger button for overlay components (modal, slide-over).
     /// Surfaces follow the theme; `color` tints the label text, hover wash, and
     /// focus ring (`.neutral` keeps the theme tokens).
@@ -12,7 +12,7 @@ extension PinesSurface {
             .fontSize(.sm), .fontWeight(.medium),
             overlayTriggerText(color),
             .class(background), .borderRadius(.md), .borderWidth(.bare),
-            .class(borderSubtle), .transition(.colors),
+            .class(PinesTheme.utility(PinesTheme.border, opacity: 70)), .transition(.colors),
             accentHover(color, variants: [.hover]),
             .class(background, variants: [.active, .focus]),
             .outlineStyle(.hidden, variants: [.focus]),

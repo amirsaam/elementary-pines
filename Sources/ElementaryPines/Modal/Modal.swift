@@ -53,7 +53,7 @@ public func pinesModal(
     ) {
         let triggerAttrs =
             [HTMLAttribute<HTMLTag.button>.type(.button), .x.on("click", "modalOpen=true")]
-            + PinesSurface.overlayTriggerAttributes(color: color)
+            + PinesTheme.overlayTriggerAttributes(color: color)
         button(attributes: triggerAttrs) {
             trigger()
         }
@@ -111,10 +111,10 @@ public func pinesModal(
                     .paddingX(.size(7)),
                     .paddingY(.size(6)),
                     .width(.full),
-                    .class(PinesSurface.background),
+                    .class(PinesTheme.background),
                     .maxWidth(.lg, variants: [.sm]),
                     .borderRadius(.lg, variants: [.sm]),
-                    .class(PinesSurface.foreground)
+                    .class(PinesTheme.foreground)
                 ) {
                     button(
                         .type(.button),
@@ -130,9 +130,9 @@ public func pinesModal(
                         .width(.size(8)),
                         .height(.size(8)),
                         .borderRadius(.full),
-                        .class(PinesSurface.mutedForeground),
-                        .class(PinesSurface.foreground, variants: [.hover]),
-                        .class(PinesSurface.muted, variants: [.hover])
+                        .class(PinesTheme.mutedForeground),
+                        .class(PinesTheme.foreground, variants: [.hover]),
+                        .class(PinesTheme.muted, variants: [.hover])
                     ) {
                         pinesIcon(.x, size: .md)
                     }

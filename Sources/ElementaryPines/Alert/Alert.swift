@@ -6,10 +6,10 @@ import ElementaryTailwind
 /// that must remain raw.
 let pinesAlertBaseAttributes: [HTMLAttribute<HTMLTag.div>] = [
     .position(.relative), .width(.full), .borderRadius(.lg),
-    .borderWidth(.bare), .class(PinesSurface.background), .padding(.size(4)),
+    .borderWidth(.bare), .class(PinesTheme.background), .padding(.size(4)),
     .position(.absolute, variants: [.arbitrary("[&>svg]")]),
     .position(.absolute, variants: [.arbitrary("[&>img]")]),
-    .class(PinesSurface.foreground, variants: [.arbitrary("[&>svg]")]),
+    .class(PinesTheme.foreground, variants: [.arbitrary("[&>svg]")]),
     .insetLeft(.size(4), variants: [.arbitrary("[&>svg]")]),
     .insetLeft(.size(4), variants: [.arbitrary("[&>img]")]),
     .insetTop(.size(4), variants: [.arbitrary("[&>svg]")]),
@@ -17,7 +17,7 @@ let pinesAlertBaseAttributes: [HTMLAttribute<HTMLTag.div>] = [
     .translate(.y("[-3px]"), variants: [.arbitrary("[&>svg+div]")]),
     .translate(.y("[-3px]"), variants: [.arbitrary("[&>img+div]")]),
     .paddingLeft(.size(11), variants: [.arbitrary("[&:has(svg),&:has(img)]")]),
-    .class(PinesSurface.foreground),
+    .class(PinesTheme.foreground),
 ]
 
 /// Wraps the given content in a Pines-styled alert container.

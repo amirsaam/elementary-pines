@@ -43,7 +43,7 @@ public func pinesCommand(
     let xData = PinesCommandState.xData(items: items)
     let activeClassName: String
     if color == .neutral {
-        activeClassName = "\(PinesSurface.muted) \(PinesSurface.foreground)"
+        activeClassName = "\(PinesTheme.muted) \(PinesTheme.foreground)"
     } else {
         activeClassName =
             "\(twValue(.backgroundColor(color.shade(.tint2)))) \(twValue(.textColor(color.shade(.dark))))"
@@ -62,7 +62,7 @@ public func pinesCommand(
         .outlineStyle(.hidden, variants: [.focus]),
         .ringWidth(.size(0), variants: [.focus]),
         .borderWidth(.size(0), variants: [.focus]),
-        .class(PinesSurface.mutedForeground, variants: [.placeholder]),
+        .class(PinesTheme.mutedForeground, variants: [.placeholder]),
         .height(.size(11)),
         HTMLAttribute(name: "placeholder", value: placeholder),
         HTMLAttribute(name: "autocomplete", value: "off"),
@@ -100,9 +100,9 @@ public func pinesCommand(
             .width(.full),
             .height(.full),
             .overflow(.hidden),
-            .class(PinesSurface.background),
+            .class(PinesTheme.background),
             .borderWidth(.bare),
-            .class(PinesSurface.border),
+            .class(PinesTheme.border),
             .borderRadius(.lg),
             .boxShadow(.md)
         ) {
@@ -111,8 +111,8 @@ public func pinesCommand(
                 .items(.center),
                 .paddingX(.size(3)),
                 .borderWidth(.b(1)),
-                .class(PinesSurface.border),
-                .class(PinesSurface.mutedForeground)
+                .class(PinesTheme.border),
+                .class(PinesTheme.mutedForeground)
             ) {
                 pinesIcon(.search, size: .sm)
                 input(attributes: searchInputAttrs)
@@ -129,14 +129,14 @@ public func pinesCommand(
                 ) {
                     div(.paddingBottom(.size(1)), .spaceY(.size(1))) {
                         template(.x.when("commandShowCategory(item, index)")) {
-                            div(.paddingX(.size(1)), .overflow(.hidden), .class(PinesSurface.foreground)) {
+                            div(.paddingX(.size(1)), .overflow(.hidden), .class(PinesTheme.foreground)) {
                                 div(
                                     .paddingX(.size(2)),
                                     .paddingY(.size(1)),
                                     .marginY(.size(1)),
                                     .fontSize(.xs),
                                     .fontWeight(.medium),
-                                    .class(PinesSurface.mutedForeground),
+                                    .class(PinesTheme.mutedForeground),
                                     .x.text("commandCategoryCapitalize(item.category)")
                                 ) {}
                             }
@@ -151,7 +151,7 @@ public func pinesCommand(
                                             .marginLeft(.auto),
                                             .fontSize(.xs),
                                             .letterSpacing(.widest),
-                                            .class(PinesSurface.mutedForeground),
+                                            .class(PinesTheme.mutedForeground),
                                             .x.text("item.right")
                                         ) {}
                                     }
