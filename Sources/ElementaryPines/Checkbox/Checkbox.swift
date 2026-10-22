@@ -1,6 +1,5 @@
 import Elementary
 import ElementaryTailwind
-import Foundation
 
 /// Renders a styled checkbox matching the Pines UI default checkbox design.
 ///
@@ -10,7 +9,7 @@ import Foundation
 /// **Generated HTML:**
 /// ```html
 /// <div class="flex items-center mb-4">
-///     <input type="checkbox" class="w-4 h-4 bg-gray-100 border-gray-300 rounded-sm text-neutral-900 focus:ring-neutral-900 ..." name="..." id="...">
+///     <input type="checkbox" class="w-4 h-4 bg-muted border-border rounded-xs text-neutral-900 focus:ring-ring ..." name="..." id="...">
 ///     <label for="..." class="ml-2 text-sm font-medium text-gray-900">Label</label>
 /// </div>
 /// ```
@@ -40,17 +39,17 @@ public func pinesCheckbox(
     attributes: () -> [HTMLAttribute<HTMLTag.input>] = { [] }
 ) -> some HTML {
     let textColor = color.map { $0.shade(.strong) } ?? PinesColor.neutral.shade(.dark)
-    let focusRingColor = color.map { $0.shade(.light) } ?? PinesColor.neutral.shade(.dark)
+    let focusRingColor = color.map { $0.shade(.accent) } ?? PinesColor.neutral.shade(.dark)
 
     var inputAttrs: [HTMLAttribute<HTMLTag.input>] = [
         HTMLAttribute(name: "type", value: "checkbox"),
         .width(.size(4)),
         .height(.size(4)),
-        .backgroundColor(PinesColor.gray.shade(.tint2)),
+        .class(PinesTheme.muted),
         .class(PinesTheme.border),
-        .borderRadius(.sm),
-        .textColor(textColor),
-        .class(color == nil ? PinesTheme.ring : twValue(.ringColor(focusRingColor)), variants: [.focus]),
+        .borderRadius(.xs),
+        color == nil ? .class(PinesTheme.primaryText) : .textColor(textColor),
+        color == nil ? .class(PinesTheme.ring, variants: [.focus]) : .ringColor(focusRingColor, variants: [.focus]),
     ]
     if let name { inputAttrs.append(.name(name)) }
     inputAttrs.append(.id(id))
@@ -103,8 +102,11 @@ public func pinesCheckbox(
     attributes: () -> [HTMLAttribute<HTMLTag.input>] = { [] },
     @ContentBuilder content: () -> some HTML
 ) -> some HTML {
-    let resolvedColor = color ?? .blue
+    let resolvedColor = color ?? .neutral
+    let usesAccentColor = color == nil
+    let usesSemanticColor = resolvedColor == .neutral
     let peerChecked: [TWVariant] = [.arbitrary("peer-checked")]
+    let darkPeerChecked: [TWVariant] = [.dark, .arbitrary("peer-checked")]
 
     var inputAttrs: [HTMLAttribute<HTMLTag.input>] = [
         HTMLAttribute(name: "type", value: "checkbox"),
@@ -125,7 +127,7 @@ public func pinesCheckbox(
         extra: attributes()
     )
 
-    let labelAttrs: [HTMLAttribute<HTMLTag.label>] = [
+    var labelAttrs: [HTMLAttribute<HTMLTag.label>] = [
         .for(id),
         .display(.inlineFlex),
         .items(.center),
@@ -140,10 +142,29 @@ public func pinesCheckbox(
         .class(PinesTheme.utility(PinesTheme.border, opacity: 70)),
         .class(PinesTheme.foreground),
         .class(PinesTheme.foreground, variants: [.hover]),
-        .borderColor(resolvedColor.shade(.strong), variants: peerChecked),
-        .textColor(PinesColor.neutral.shade(.dark), variants: peerChecked),
-        .backgroundColor(resolvedColor.shade(.tint1), opacity: 50, variants: peerChecked),
     ]
+    if usesAccentColor {
+        labelAttrs += [
+            .class(PinesTheme.primaryForeground, variants: peerChecked),
+            .class(PinesTheme.utility(PinesTheme.primary, opacity: 10), variants: peerChecked),
+            .class(PinesTheme.primaryBorder, variants: peerChecked),
+        ]
+    } else if usesSemanticColor {
+        labelAttrs += [
+            .class(PinesTheme.foreground, variants: peerChecked),
+            .class(PinesTheme.muted, variants: peerChecked),
+            .class(PinesTheme.borderForeground, variants: peerChecked),
+        ]
+    } else {
+        labelAttrs += [
+            .borderColor(resolvedColor.shade(.strong), variants: peerChecked),
+            .textColor(PinesColor.neutral.shade(.dark), variants: peerChecked),
+            .backgroundColor(resolvedColor.shade(.tint1), opacity: 50, variants: peerChecked),
+            .borderColor(resolvedColor.shade(.accent), variants: darkPeerChecked),
+            .textColor(resolvedColor.shade(.tint1), variants: darkPeerChecked),
+            .backgroundColor(resolvedColor.shade(.dark), opacity: 50, variants: darkPeerChecked),
+        ]
+    }
 
     let html = div(.position(.relative)) {
         input(attributes: inputAttrs)
@@ -183,7 +204,7 @@ public func pinesCheckbox(
     attributes: () -> [HTMLAttribute<HTMLTag.input>] = { [] },
     @ContentBuilder content: () -> some HTML
 ) -> some HTML {
-    let resolvedColor = color ?? .blue
+    let resolvedColor = color ?? .neutral
 
     var inputAttrs: [HTMLAttribute<HTMLTag.input>] = [
         HTMLAttribute(name: "type", value: "checkbox"),
@@ -204,10 +225,13 @@ public func pinesCheckbox(
         extra: attributes()
     )
 
-    let peerCheckedPrefix = TWVariant.apply(
-        [.arbitrary("peer-checked")],
-        to: twValue(.textColor(resolvedColor.shade(.strong)))
-    )
+    let peerCheckedPrefix =
+        color == nil
+        ? "peer-checked:text-primary"
+        : TWVariant.apply(
+            [.arbitrary("peer-checked")],
+            to: twValue(.textColor(resolvedColor.shade(.strong)))
+        )
     let fullLabelClasses = "\(peerCheckedPrefix) select-none \(labelClasses)"
 
     let html = div(
